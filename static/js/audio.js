@@ -3,7 +3,8 @@
  */
 
 // Estado global de áudio
-let audioMutado = false;
+// Carrega estado de mute do localStorage (persiste entre páginas)
+let audioMutado = localStorage.getItem('audioMutado') === 'true';
 let audioLaudoPausado = null;
 let filaAnuncios = [];
 let reproduzindo = false;
@@ -42,11 +43,14 @@ function retomarAudioLaudo() {
 function toggleMute() {
     audioMutado = !audioMutado;
     
+    // Salva estado no localStorage para persistir entre páginas
+    localStorage.setItem('audioMutado', audioMutado);
+    
     const muteBtn = document.getElementById('mute-btn');
     if (!muteBtn) return;
     
     if (audioMutado) {
-        console.log('🔇 Áudio MUTADO');
+        console.log('🔇 Áudio MUTADO (persistente em todas as páginas)');
         muteBtn.textContent = '🔇';
         muteBtn.classList.add('mutado');
         muteBtn.setAttribute('aria-label', 'Desmutar áudio');
@@ -67,7 +71,7 @@ function toggleMute() {
         // Anúncio visual apenas (não gera áudio pois está mutado)
         console.log('💬 Áudio mutado');
     } else {
-        console.log('🔊 Áudio ATIVO');
+        console.log('🔊 Áudio ATIVO (persistente em todas as páginas)');
         muteBtn.textContent = '🔊';
         muteBtn.classList.remove('mutado');
         muteBtn.setAttribute('aria-label', 'Mutar áudio');
@@ -192,6 +196,19 @@ function inicializarControlesAudio() {
     const muteBtn = document.getElementById('mute-btn');
     if (muteBtn) {
         muteBtn.addEventListener('click', toggleMute);
+        
+        // Aplica estado salvo do localStorage ao carregar a página
+        if (audioMutado) {
+            muteBtn.textContent = '🔇';
+            muteBtn.classList.add('mutado');
+            muteBtn.setAttribute('aria-label', 'Desmutar áudio');
+            console.log('🔇 Áudio iniciado como MUTADO (estado persistido)');
+        } else {
+            muteBtn.textContent = '🔊';
+            muteBtn.classList.remove('mutado');
+            muteBtn.setAttribute('aria-label', 'Mutar áudio');
+            console.log('🔊 Áudio iniciado como ATIVO');
+        }
     }
     
     // Nota: Atalho M para mute movido para keyboard.js para evitar listener duplicado
