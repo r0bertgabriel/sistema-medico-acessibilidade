@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}Fila de Resultados{% endblock %}
+
+{% block extra_css %}
+<style>
+    .resultado-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .resultado-card:hover,
+    .resultado-card:focus-within {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border-color: #2563eb;
+    }
+
+    .resultado-card h3 {
+        color: #2563eb;
+        margin-bottom: 15px;
+        font-size: 1.5em;
+    }
+
+    .resultado-card p {
+        color: #6c757d;
+        line-height: 1.8;
+        margin-bottom: 15px;
+    }
+
+    .resultado-card ul {
+        color: #495057;
+        line-height: 1.8;
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .resultado-card ul li {
+        margin-bottom: 8px;
+    }
+
+    #resultado-resultado {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: none;
+    }
+
+    #laudo-texto-resultado {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        font-size: 0.95em;
+        line-height: 1.6;
+        max-height: 600px;
+        overflow-y: auto;
+        border: 2px solid #dee2e6;
+    }
+
+    .audio-player {
+        margin: 20px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 20px;
+        display: none;
+    }
+
+    .loading-spinner {
+        border: 4px solid #e0e7ff;
+        border-top: 4px solid #2563eb;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 style="color: #1e40af; margin-bottom: 20px;">📋 Fila de Resultados de ECG</h2>
+
+<p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
+    Selecione um dos pacientes na fila abaixo para gerar um laudo automático com áudio acelerado.
+    Estes casos demonstram diferentes cenários clínicos para análise.
+</p>
+
+<!-- Resultado 1: Normal -->
+<div class="resultado-card">
+    <h3>✅ ECG Normal</h3>
+    <p><strong>Descrição:</strong> Eletrocardiograma dentro dos padrões de normalidade, sem alterações significativas.</p>
+    
+    <p><strong>Características principais:</strong></p>
+    <ul>
+        <li>Ritmo sinusal regular</li>
+        <li>Frequência cardíaca: 72 bpm</li>
+        <li>Eixo elétrico normal (50°)</li>
+        <li>Intervalos PR, QRS e QT normais</li>
+        <li>Progressão de R preservada</li>
+        <li>Sem alterações de ST/T</li>
+    </ul>
+    
+    <button class="btn" onclick="processarResultado('normal')" 
+            aria-label="Gerar laudo do ECG normal">
+        🔬 Gerar Laudo deste Resultado
+    </button>
+</div>
+
+<!-- Resultado 2: Arritmia Sinusal -->
+<div class="resultado-card">
+    <h3>⚠️ Arritmia Sinusal com Sobrecarga Atrial</h3>
+    <p><strong>Descrição:</strong> Ritmo sinusal irregular com sinais de sobrecarga atrial esquerda.</p>
+    
+    <p><strong>Características principais:</strong></p>
+    <ul>
+        <li>Ritmo sinusal irregular (arritmia sinusal)</li>
+        <li>Frequência cardíaca: 72 bpm (variável)</li>
+        <li>Eixo desviado para esquerda (-18°)</li>
+        <li>Ondas P com sinais de aumento atrial esquerdo</li>
+        <li>Intervalos preservados</li>
+        <li>Sem isquemia</li>
+    </ul>
+    
+    <button class="btn" onclick="processarResultado('arritmia_sinusal')" 
+            aria-label="Gerar laudo do ECG com arritmia sinusal">
+        🔬 Gerar Laudo deste Resultado
+    </button>
+</div>
+
+<!-- Resultado 3: Bloqueio Incompleto -->
+<div class="resultado-card">
+    <h3>🔴 Bloqueio Incompleto do Ramo Direito</h3>
+    <p><strong>Descrição:</strong> ECG com bloqueio incompleto de ramo direito e alterações secundárias da repolarização.</p>
+    
+    <p><strong>Características principais:</strong></p>
+    <ul>
+        <li>Ritmo sinusal regular</li>
+        <li>Frequência cardíaca: 85 bpm</li>
+        <li>Padrão RSR' em V1-V3</li>
+        <li>QRS ligeiramente alargado (0.09s)</li>
+        <li>Infradesnivelamento de ST em V2-V3</li>
+        <li>Inversão de onda T em V1-V3 (alterações secundárias)</li>
+        <li>Sem sinais de isquemia primária</li>
+    </ul>
+    
+    <button class="btn" onclick="processarResultado('bloqueio_ramo')" 
+            aria-label="Gerar laudo do ECG com bloqueio de ramo">
+        🔬 Gerar Laudo deste Resultado
+    </button>
+</div>
+
+<div class="loading" id="loading-resultado" role="status" aria-live="polite">
+    <div class="loading-spinner"></div>
+    <p style="margin-top: 15px; color: #667eea; font-weight: 600;">Analisando ECG e gerando laudo em áudio...</p>
+</div>
+
+<div id="resultado-resultado" role="region" aria-live="polite" aria-label="Resultado da análise do resultado">
+    <h3 style="color: #667eea; margin-bottom: 20px;">📋 Laudo Gerado</h3>
+    
+    <div class="audio-player">
+        <h4 style="color: #495057; margin-bottom: 15px;">🔊 Laudo em Áudio</h4>
+        <audio id="audio-laudo-resultado" controls style="width: 100%; max-width: 500px;" 
+               aria-label="Player de áudio do laudo do resultado">
+            Seu navegador não suporta o elemento de áudio.
+        </audio>
+        <p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
+            Use as teclas de espaço ou setas para controlar a reprodução
+        </p>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h4 style="color: #495057; margin-bottom: 15px;">📄 Laudo em Texto</h4>
+        <div id="laudo-texto-resultado" aria-label="Texto completo do laudo do resultado"></div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <button class="btn" onclick="copiarLaudoResultado()" aria-label="Copiar texto do laudo">
+            📋 Copiar Laudo
+        </button>
+        <button class="btn" onclick="voltarResultados()" 
+                style="background: #6c757d; margin-left: 10px;"
+                aria-label="Voltar para lista de resultados">
+            ⬅️ Voltar aos Resultados
+        </button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function processarResultado(tipo) {
+    // Mostrar loading
+    document.getElementById('loading-resultado').style.display = 'block';
+    document.getElementById('resultado-resultado').style.display = 'none';
+    
+    // Scroll para o loading
+    document.getElementById('loading-resultado').scrollIntoView({ behavior: 'smooth' });
+    
+    try {
+        const response = await fetch(`/api/resultado/${tipo}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const resultado = await response.json();
+        
+        // Esconder loading
+        document.getElementById('loading-resultado').style.display = 'none';
+        
+        if (resultado.success) {
+            // Mostrar resultado
+            document.getElementById('resultado-resultado').style.display = 'block';
+            document.getElementById('laudo-texto-resultado').textContent = resultado.laudo_texto;
+            
+            // Configurar áudio
+            const audioPlayer = document.getElementById('audio-laudo-resultado');
+            audioPlayer.src = resultado.audio_url;
+            
+            // Aguarda 2 segundos antes de reproduzir (deixa tempo para anúncios)
+            setTimeout(() => {
+                if (!audioPlayer.paused) return; // Já está tocando
+                
+                // Auto-reproduzir áudio para acessibilidade
+                audioPlayer.play().catch(e => {
+                    console.log('Auto-play bloqueado pelo navegador:', e);
+                });
+            }, 2000);
+            
+            // Focar no resultado
+            document.getElementById('resultado-resultado').focus();
+            document.getElementById('resultado-resultado').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert('Erro ao gerar laudo: ' + resultado.error);
+        }
+    } catch (error) {
+        document.getElementById('loading-resultado').style.display = 'none';
+        alert('Erro ao conectar com o servidor: ' + error);
+    }
+}
+
+function copiarLaudoResultado() {
+    const texto = document.getElementById('laudo-texto-resultado').textContent;
+    navigator.clipboard.writeText(texto).then(() => {
+        alert('Laudo copiado para a área de transferência!');
+    }).catch(err => {
+        alert('Erro ao copiar laudo: ' + err);
+    });
+}
+
+function voltarResultados() {
+    document.getElementById('resultado-resultado').style.display = 'none';
+    
+    // Pausar áudio
+    const audioPlayer = document.getElementById('audio-laudo-resultado');
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+    
+    // Scroll para o topo
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== ATALHOS CONTEXTUAIS DA PÁGINA DE RESULTADOS =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Registra atalhos específicos desta página
+    registrarAtalhos({
+        '1': {
+            descricao: 'Processar resultado Normal',
+            acao: function() {
+                anunciar('Processando resultado Normal');
+                processarResultado('normal');
+            }
+        },
+        '2': {
+            descricao: 'Processar resultado Arritmia Sinusal',
+            acao: function() {
+                anunciar('Processando resultado Arritmia Sinusal');
+                processarResultado('arritmia_sinusal');
+            }
+        },
+        '3': {
+            descricao: 'Processar resultado Bloqueio de Ramo',
+            acao: function() {
+                anunciar('Processando resultado Bloqueio de Ramo');
+                processarResultado('bloqueio_ramo');
+            }
+        },
+        'v': {
+            descricao: 'Voltar à lista de resultados',
+            acao: function() {
+                const resultado = document.getElementById('resultado-resultado');
+                if (resultado && resultado.style.display !== 'none') {
+                    voltarResultados();
+                    anunciar('Voltando à lista de resultados');
+                } else {
+                    anunciar('Já está na lista de resultados');
+                }
+            }
+        },
+        'c': {
+            descricao: 'Copiar laudo',
+            acao: function() {
+                const resultado = document.getElementById('resultado-resultado');
+                if (resultado && resultado.style.display !== 'none') {
+                    copiarLaudoResultado();
+                } else {
+                    anunciar('Nenhum laudo sendo exibido');
+                }
+            }
+        },
+        'r': {
+            descricao: 'Reproduzir áudio',
+            acao: function() {
+                const audioPlayer = document.getElementById('audio-laudo-resultado');
+                if (audioPlayer && audioPlayer.src) {
+                    audioPlayer.currentTime = 0;
+                    audioPlayer.play();
+                    anunciar('Reproduzindo laudo');
+                } else {
+                    anunciar('Nenhum áudio disponível');
+                }
+            }
+        },
+        'p': {
+            descricao: 'Pausar/Continuar áudio',
+            acao: function() {
+                const audioPlayer = document.getElementById('audio-laudo-resultado');
+                if (audioPlayer && audioPlayer.src) {
+                    if (audioPlayer.paused) {
+                        audioPlayer.play();
+                        anunciar('Áudio retomado');
+                    } else {
+                        audioPlayer.pause();
+                        anunciar('Áudio pausado');
+                    }
+                }
+            }
+        }
+    });
+    
+    // Anuncia os atalhos ao carregar a página
+    setTimeout(anunciarAtalhosPagina, 1000);
+});
+</script>
+{% endblock %}

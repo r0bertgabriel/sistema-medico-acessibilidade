@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Teste de Acessibilidade{% endblock %}
+
+{% block content %}
+<div class="resultado-card" style="max-width: 600px; margin: 0 auto; padding: 30px;">
+    <h2>🧪 Teste de Feedback Auditivo</h2>
+    <p style="margin: 20px 0;">Use a tecla <strong>Tab</strong> para navegar entre os campos e ouvir o feedback.</p>
+    
+    <div style="margin: 20px 0;">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" placeholder="Digite seu nome" required>
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <label for="idade">Idade:</label>
+        <input type="number" id="idade" placeholder="Digite sua idade">
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <label for="genero">Gênero:</label>
+        <select id="genero">
+            <option value="">Selecione...</option>
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+            <option value="O">Outro</option>
+        </select>
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <input type="checkbox" id="termos">
+        <label for="termos">Aceito os termos</label>
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <button type="button" onclick="alert('Botão clicado!')">Testar Botão</button>
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <textarea id="comentarios" placeholder="Comentários" rows="4" style="width: 100%;"></textarea>
+    </div>
+    
+    <div style="background: #f0f9ff; padding: 15px; border-radius: 5px; border-left: 4px solid #2563eb;">
+        <h3>📋 Instruções:</h3>
+        <ol>
+            <li>Pressione <kbd>F12</kbd> para abrir o console do navegador</li>
+            <li>Use <kbd>Tab</kbd> para navegar entre os campos</li>
+            <li>Observe os logs no console começando com 🔊</li>
+            <li>Ouça o feedback de áudio em português</li>
+            <li>Teste alterar valores nos campos</li>
+        </ol>
+    </div>
+</div>
+
+<style>
+    .resultado-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #374151;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #d1d5db;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #2563eb;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    button {
+        background: #2563eb;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    button:hover {
+        background: #1d4ed8;
+    }
+    
+    button:focus {
+        outline: 3px solid #93c5fd;
+    }
+    
+    kbd {
+        background: #1f2937;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+        font-size: 0.9em;
+    }
+    
+    input[type="checkbox"] {
+        width: auto;
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}

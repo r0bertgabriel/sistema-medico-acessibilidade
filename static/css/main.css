@@ -1,0 +1,225 @@
+/* 
+ * Estilos principais do Sistema de Laudos ECG
+ */
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background: #1e40af;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+/* Navegação */
+nav {
+    background: #f8f9fa;
+    padding: 15px 30px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: #1e40af;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+nav a:hover, nav a:focus {
+    background: #1e40af;
+    color: white;
+    outline: 3px solid #3b82f6;
+}
+
+nav a .atalho {
+    display: inline-block;
+    background: #e0e7ff;
+    color: #1e40af;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin-left: 8px;
+    font-family: monospace;
+}
+
+/* Conteúdo */
+.content {
+    padding: 30px;
+}
+
+/* Botões */
+.btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn:hover, .btn:focus {
+    background: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    outline: 3px solid #3b82f6;
+}
+
+.btn:active {
+    transform: translateY(0);
+    background: #1e3a8a;
+}
+
+/* Alertas */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Acessibilidade */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.high-contrast {
+    background: #000;
+    color: #fff;
+}
+
+/* Botão de mute discreto */
+.mute-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(37, 99, 235, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 1.3em;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 9999;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mute-btn:hover {
+    background: rgba(30, 64, 175, 0.9);
+    transform: scale(1.1);
+}
+
+.mute-btn:focus {
+    outline: 3px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+.mute-btn.mutado {
+    background: rgba(239, 68, 68, 0.9);
+}
+
+.mute-btn.mutado:hover {
+    background: rgba(220, 38, 38, 0.9);
+}
+
+/* Footer */
+footer {
+    background: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    border-top: 2px solid #e9ecef;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .mute-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1em;
+    }
+}

@@ -1,0 +1,65 @@
+/* Estilos personalizados adicionais */
+
+/* Melhorias de acessibilidade */
+:focus {
+    outline: 3px solid #667eea !important;
+    outline-offset: 2px;
+}
+
+/* Skip link para leitores de tela */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #667eea;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Melhor contraste para textos */
+p, li, span, div {
+    color: #212529;
+}
+
+/* Botões com estados visuais claros */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Animações suaves */
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Print styles para impressão de laudos */
+@media print {
+    header, nav, footer, .btn {
+        display: none;
+    }
+    
+    body {
+        background: white;
+    }
+    
+    .container {
+        box-shadow: none;
+    }
+    
+    #laudo-texto {
+        border: 1px solid #000;
+        font-size: 12pt;
+    }
+}

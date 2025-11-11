@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Laudos ECG - Acessibilidade{% endblock %}</title>
+    
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Botão de Mute Discreto -->
+    <button id="mute-btn" class="mute-btn" 
+            aria-label="Mutar/Desmutar áudio"
+            title="Clique para mutar/desmutar áudio (Atalho: M)">
+        🔊
+    </button>
+
+    <!-- Container principal -->
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Sistema de Laudos de ECG</h1>
+            <p>Sistema Acessível com Feedback Auditivo</p>
+        </header>
+
+        <!-- Navegação -->
+        <nav>
+            <ul>
+                <li><a href="/" aria-label="Ir para página inicial">Início <span class="atalho">Menu: 1</span></a></li>
+                <li><a href="/analise" aria-label="Ir para análise de ECG">Análise <span class="atalho">Menu: 2</span></a></li>
+                <li><a href="/resultados" aria-label="Ir para fila de resultados">Resultados <span class="atalho">Menu: 3</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo da página -->
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Sistema de Laudos ECG - Desenvolvido com acessibilidade em foco</p>
+            <p>Pressione <kbd>H</kbd> para ajuda | <kbd>-</kbd> para menu de navegação | <kbd>M</kbd> para mutar áudio</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript externo -->
+    <script src="{{ url_for('static', filename='js/audio.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/keyboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/accessibility.js') }}"></script>
+    
+    <!-- Inicialização -->
+    <script>
+        // Inicializa sistemas quando página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarAcessibilidade();
+            inicializarAtalhos();
+            inicializarControlesAudio();
+            
+            console.log('✅ Sistema completo inicializado');
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

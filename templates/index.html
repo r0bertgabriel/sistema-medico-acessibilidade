@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Início - Sistema de Laudos ECG{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 40px 20px;">
+    <h2 style="font-size: 2.5em; color: #1e40af; margin-bottom: 20px;">
+        Bem-vindo ao Sistema de Laudos de ECG
+    </h2>
+    
+    <p style="font-size: 1.3em; color: #6c757d; max-width: 800px; margin: 0 auto 40px;">
+        Sistema desenvolvido especialmente para acessibilidade de médicos com deficiência visual.
+        <br><br>
+        <strong>Todos os laudos são gerados em formato de texto e áudio acelerado</strong>, permitindo total 
+        autonomia na interpretação rápida de eletrocardiogramas.
+    </p>
+
+    <div style="background: #f8fafc; border-radius: 12px; padding: 30px; margin: 30px 0; border: 1px solid #e2e8f0;">
+        <h3 style="color: #1e40af; margin-bottom: 20px; font-size: 1.8em;">🎯 Funcionalidades</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; text-align: left;">
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); border: 1px solid #e0e7ff;">
+                <h4 style="color: #2563eb; margin-bottom: 10px;">📊 Análise Inteligente</h4>
+                <p>Interpretação completa baseada em diretrizes da AHA e padrões internacionais</p>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); border: 1px solid #e0e7ff;">
+                <h4 style="color: #2563eb; margin-bottom: 10px;">🔊 Áudio Acelerado 1.5x</h4>
+                <p>Narração dos laudos em velocidade otimizada para maior eficiência</p>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); border: 1px solid #e0e7ff;">
+                <h4 style="color: #2563eb; margin-bottom: 10px;">⌨️ Atalhos Rápidos</h4>
+                <p>Navegação por teclado simples: teclas 1, 2, 3 para acesso direto</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+        <h3 style="color: #1e40af; margin-bottom: 20px; font-size: 1.8em;">🚀 Comece Agora</h3>
+        
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <a href="/analise" style="text-decoration: none;">
+                <button class="btn" aria-label="Iniciar nova análise de ECG">
+                    📊 Nova Análise
+                </button>
+            </a>
+            
+            <a href="/resultados" style="text-decoration: none;">
+                <button class="btn" aria-label="Ver fila de resultados de pacientes">
+                    📋 Fila de Resultados
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; margin-top: 40px; text-align: left;">
+        <h4 style="color: #92400e; margin-bottom: 10px;">⌨️ Sistema de Navegação Contextual</h4>
+        <p style="color: #92400e; line-height: 1.8; margin-bottom: 15px;">
+            <strong>Novo sistema inteligente de atalhos:</strong> Cada página tem seus próprios atalhos numéricos específicos!
+        </p>
+        <ul style="color: #92400e; line-height: 2;">
+            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">-</kbd> (hífen) - Abre menu principal (escolha: 1=Início, 2=Análise, 3=Resultados)</li>
+            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">1</kbd> - Nova análise de ECG (atalho desta página)</li>
+            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">2</kbd> - Ver fila de resultados (atalho desta página)</li>
+            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">H</kbd> - Ajuda (lista todos os atalhos da página atual)</li>
+            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">Tab</kbd> - Navegar entre campos com feedback auditivo</li>
+        </ul>
+    </div>
+
+    <div style="background: #dbeafe; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-top: 20px; text-align: left;">
+        <h4 style="color: #1e40af; margin-bottom: 10px;">🩺 Sobre o Sistema</h4>
+        <p style="color: #1e40af; line-height: 1.8;">
+            Este sistema utiliza algoritmos de análise de ECG baseados em diretrizes da AHA (American Heart Association) e padrões internacionais.
+            Os laudos gerados identificam automaticamente:
+        </p>
+        <ul style="color: #1e40af; line-height: 2; margin-top: 10px;">
+            <li>Ritmo cardíaco e frequência (bradicardia, taquicardia, arritmias)</li>
+            <li>Intervalos PR, QRS e QT (bloqueios de condução)</li>
+            <li>Eixo elétrico e desvios patológicos</li>
+            <li>Bloqueios de ramo e fasciculares</li>
+            <li>Alterações de segmento ST e onda T (isquemia)</li>
+            <li>Ondas Q patológicas (infarto prévio)</li>
+            <li>Sobrecargas atriais e ventriculares</li>
+            <li>Localização anatômica de lesões isquêmicas</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ===== ATALHOS CONTEXTUAIS DA PÁGINA INICIAL =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Registra atalhos específicos desta página
+    registrarAtalhos({
+        '1': {
+            descricao: 'Ir para Nova Análise',
+            acao: function() {
+                anunciar('Indo para Nova Análise de ECG');
+                window.location.href = '/analise';
+            }
+        },
+        '2': {
+            descricao: 'Ir para Fila de Resultados',
+            acao: function() {
+                anunciar('Indo para Fila de Resultados');
+                window.location.href = '/resultados';
+            }
+        }
+    });
+    
+    // Anuncia os atalhos ao carregar a página
+    setTimeout(anunciarAtalhosPagina, 1000);
+});
+</script>
+{% endblock %}
+

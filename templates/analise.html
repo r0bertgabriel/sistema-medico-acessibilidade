@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block title %}Análise de ECG{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #495057;
+        font-size: 1.1em;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ced4da;
+        border-radius: 5px;
+        font-size: 1em;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #2563eb;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    #resultado {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: none;
+    }
+
+    #laudo-texto {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        font-size: 0.95em;
+        line-height: 1.6;
+        max-height: 600px;
+        overflow-y: auto;
+        border: 2px solid #dee2e6;
+    }
+
+    .audio-player {
+        margin: 20px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 20px;
+        display: none;
+    }
+
+    .loading-spinner {
+        border: 4px solid #e0e7ff;
+        border-top: 4px solid #2563eb;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 style="color: #1e40af; margin-bottom: 20px;">📊 Análise de Eletrocardiograma</h2>
+
+<p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
+    Preencha os campos abaixo com os dados do ECG. Todos os campos marcados com (*) são obrigatórios.
+</p>
+
+<form id="form-ecg" aria-label="Formulário de análise de ECG">
+    <!-- Dados do Paciente -->
+    <fieldset style="border: 2px solid #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <legend style="color: #667eea; font-weight: 600; font-size: 1.2em;">Identificação do Paciente</legend>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="nome_paciente">Nome do Paciente</label>
+                <input type="text" id="nome_paciente" name="nome_paciente" 
+                       placeholder="Ex: João Silva" aria-label="Nome do paciente">
+            </div>
+            
+            <div class="form-group">
+                <label for="paciente_id">ID do Paciente</label>
+                <input type="text" id="paciente_id" name="paciente_id" 
+                       placeholder="Ex: 12345" aria-label="ID do paciente">
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- Dados Básicos do ECG -->
+    <fieldset style="border: 2px solid #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <legend style="color: #667eea; font-weight: 600; font-size: 1.2em;">Dados Básicos do ECG *</legend>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="ritmo">Ritmo *</label>
+                <select id="ritmo" name="ritmo" required aria-label="Selecione o ritmo cardíaco">
+                    <option value="sinusal">Sinusal</option>
+                    <option value="fibrilacao_atrial">Fibrilação Atrial</option>
+                    <option value="flutter_atrial">Flutter Atrial</option>
+                    <option value="taquicardia_supraventricular">Taquicardia Supraventricular</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="frequencia_cardiaca">Frequência Cardíaca (bpm) *</label>
+                <input type="number" id="frequencia_cardiaca" name="frequencia_cardiaca" 
+                       value="70" min="30" max="250" required 
+                       aria-label="Frequência cardíaca em batimentos por minuto">
+            </div>
+            
+            <div class="form-group">
+                <label for="regularidade">Regularidade *</label>
+                <select id="regularidade" name="regularidade" required aria-label="Regularidade do ritmo">
+                    <option value="regular">Regular</option>
+                    <option value="irregular">Irregular</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="eixo_qrs">Eixo Elétrico (graus) *</label>
+                <input type="number" id="eixo_qrs" name="eixo_qrs" 
+                       value="60" min="-180" max="180" required 
+                       aria-label="Eixo elétrico do QRS em graus">
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- Intervalos -->
+    <fieldset style="border: 2px solid #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <legend style="color: #667eea; font-weight: 600; font-size: 1.2em;">Intervalos (em segundos) *</legend>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="pr">Intervalo PR *</label>
+                <input type="number" id="pr" name="pr" step="0.01" value="0.16" 
+                       min="0.08" max="0.40" required aria-label="Intervalo PR em segundos">
+            </div>
+            
+            <div class="form-group">
+                <label for="qrs">Duração QRS *</label>
+                <input type="number" id="qrs" name="qrs" step="0.01" value="0.08" 
+                       min="0.04" max="0.20" required aria-label="Duração do QRS em segundos">
+            </div>
+            
+            <div class="form-group">
+                <label for="qt">Intervalo QT *</label>
+                <input type="number" id="qt" name="qt" step="0.01" value="0.40" 
+                       min="0.20" max="0.60" required aria-label="Intervalo QT em segundos">
+            </div>
+            
+            <div class="form-group">
+                <label for="qtc">QT Corrigido *</label>
+                <input type="number" id="qtc" name="qtc" step="0.01" value="0.42" 
+                       min="0.20" max="0.60" required aria-label="QT corrigido em segundos">
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- Bloqueios -->
+    <fieldset style="border: 2px solid #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <legend style="color: #667eea; font-weight: 600; font-size: 1.2em;">Bloqueios e Alterações</legend>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="bloqueio_ramo">Bloqueio de Ramo</label>
+                <select id="bloqueio_ramo" name="bloqueio_ramo" aria-label="Tipo de bloqueio de ramo">
+                    <option value="">Nenhum</option>
+                    <option value="incompleto_direito">Incompleto de Ramo Direito</option>
+                    <option value="completo_direito">Completo de Ramo Direito</option>
+                    <option value="incompleto_esquerdo">Incompleto de Ramo Esquerdo</option>
+                    <option value="completo_esquerdo">Completo de Ramo Esquerdo</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="bloqueio_av">Bloqueio AV</label>
+                <select id="bloqueio_av" name="bloqueio_av" aria-label="Tipo de bloqueio atrioventricular">
+                    <option value="">Nenhum</option>
+                    <option value="primeiro_grau">1º Grau</option>
+                    <option value="segundo_grau">2º Grau</option>
+                    <option value="terceiro_grau">3º Grau (Completo)</option>
+                </select>
+            </div>
+        </div>
+    </fieldset>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <button type="submit" class="btn" aria-label="Gerar laudo do ECG">
+            🔬 Gerar Laudo
+        </button>
+    </div>
+</form>
+
+<div class="loading" id="loading" role="status" aria-live="polite">
+    <div class="loading-spinner"></div>
+    <p style="margin-top: 15px; color: #667eea; font-weight: 600;">Analisando ECG e gerando laudo em áudio...</p>
+</div>
+
+<div id="resultado" role="region" aria-live="polite" aria-label="Resultado da análise">
+    <h3 style="color: #667eea; margin-bottom: 20px;">📋 Laudo Gerado</h3>
+    
+    <div class="audio-player">
+        <h4 style="color: #495057; margin-bottom: 15px;">🔊 Laudo em Áudio</h4>
+        <audio id="audio-laudo" controls style="width: 100%; max-width: 500px;" 
+               aria-label="Player de áudio do laudo">
+            Seu navegador não suporta o elemento de áudio.
+        </audio>
+        <p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
+            Use as teclas de espaço ou setas para controlar a reprodução
+        </p>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <h4 style="color: #495057; margin-bottom: 15px;">📄 Laudo em Texto</h4>
+        <div id="laudo-texto" aria-label="Texto completo do laudo"></div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <button class="btn" onclick="copiarLaudo()" aria-label="Copiar texto do laudo">
+            📋 Copiar Laudo
+        </button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('form-ecg').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Mostrar loading
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('resultado').style.display = 'none';
+    
+    // Coletar dados do formulário
+    const dados = {
+        nome_paciente: document.getElementById('nome_paciente').value,
+        paciente_id: document.getElementById('paciente_id').value,
+        ritmo: document.getElementById('ritmo').value,
+        frequencia_cardiaca: parseInt(document.getElementById('frequencia_cardiaca').value),
+        regularidade: document.getElementById('regularidade').value,
+        eixo_qrs: parseInt(document.getElementById('eixo_qrs').value),
+        intervalos: {
+            pr: parseFloat(document.getElementById('pr').value),
+            qrs: parseFloat(document.getElementById('qrs').value),
+            qt: parseFloat(document.getElementById('qt').value),
+            qtc: parseFloat(document.getElementById('qtc').value)
+        },
+        bloqueio_ramo: document.getElementById('bloqueio_ramo').value || null,
+        bloqueio_av: document.getElementById('bloqueio_av').value || null,
+        onda_p: {
+            presente: true,
+            positiva_dII: true,
+            positiva_dIII: true,
+            positiva_aVF: true,
+            morfologia: "normal"
+        }
+    };
+    
+    try {
+        const response = await fetch('/api/analisar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        });
+        
+        const resultado = await response.json();
+        
+        // Esconder loading
+        document.getElementById('loading').style.display = 'none';
+        
+        if (resultado.success) {
+            // Mostrar resultado
+            document.getElementById('resultado').style.display = 'block';
+            document.getElementById('laudo-texto').textContent = resultado.laudo_texto;
+            
+            // Configurar áudio
+            const audioPlayer = document.getElementById('audio-laudo');
+            audioPlayer.src = resultado.audio_url;
+            
+            // Aguarda 2 segundos antes de reproduzir (deixa tempo para anúncios)
+            setTimeout(() => {
+                if (!audioPlayer.paused) return; // Já está tocando
+                
+                // Auto-reproduzir áudio para acessibilidade
+                audioPlayer.play().catch(e => {
+                    console.log('Auto-play bloqueado pelo navegador:', e);
+                });
+            }, 2000);
+            
+            // Focar no resultado
+            document.getElementById('resultado').focus();
+            document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert('Erro ao gerar laudo: ' + resultado.error);
+        }
+    } catch (error) {
+        document.getElementById('loading').style.display = 'none';
+        alert('Erro ao conectar com o servidor: ' + error);
+    }
+});
+
+function copiarLaudo() {
+    const texto = document.getElementById('laudo-texto').textContent;
+    navigator.clipboard.writeText(texto).then(() => {
+        alert('Laudo copiado para a área de transferência!');
+    }).catch(err => {
+        alert('Erro ao copiar laudo: ' + err);
+    });
+}
+
+// ===== ATALHOS CONTEXTUAIS DA PÁGINA DE ANÁLISE =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Registra atalhos específicos desta página
+    registrarAtalhos({
+        'Enter': {
+            descricao: 'Gerar laudo',
+            acao: function() {
+                const btnGerar = document.getElementById('btn-gerar');
+                if (btnGerar && !btnGerar.disabled) {
+                    btnGerar.click();
+                } else {
+                    anunciar('Preencha todos os campos obrigatórios primeiro');
+                }
+            }
+        },
+        '1': {
+            descricao: 'Focar no primeiro campo (Frequência Cardíaca)',
+            acao: function() {
+                document.getElementById('frequencia_cardiaca').focus();
+            }
+        },
+        'c': {
+            descricao: 'Copiar laudo',
+            acao: function() {
+                const resultado = document.getElementById('resultado');
+                if (resultado && resultado.style.display !== 'none') {
+                    copiarLaudo();
+                } else {
+                    anunciar('Nenhum laudo gerado ainda');
+                }
+            }
+        },
+        'r': {
+            descricao: 'Reproduzir áudio do laudo',
+            acao: function() {
+                const audioPlayer = document.getElementById('audio-laudo');
+                if (audioPlayer && audioPlayer.src) {
+                    audioPlayer.currentTime = 0;
+                    audioPlayer.play();
+                    anunciar('Reproduzindo laudo');
+                } else {
+                    anunciar('Nenhum áudio disponível');
+                }
+            }
+        },
+        'p': {
+            descricao: 'Pausar/Continuar áudio',
+            acao: function() {
+                const audioPlayer = document.getElementById('audio-laudo');
+                if (audioPlayer && audioPlayer.src) {
+                    if (audioPlayer.paused) {
+                        audioPlayer.play();
+                        anunciar('Áudio retomado');
+                    } else {
+                        audioPlayer.pause();
+                        anunciar('Áudio pausado');
+                    }
+                }
+            }
+        }
+    });
+    
+    // Anuncia os atalhos ao carregar a página
+    setTimeout(anunciarAtalhosPagina, 1000);
+});
+</script>
+{% endblock %}

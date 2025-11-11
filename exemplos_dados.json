@@ -1,0 +1,102 @@
+{
+  "exemplos": {
+    "ecg_normal": {
+      "nome_paciente": "João Silva",
+      "paciente_id": "12345",
+      "ritmo": "sinusal",
+      "frequencia_cardiaca": 72,
+      "regularidade": "regular",
+      "eixo_qrs": 50,
+      "intervalos": {
+        "pr": 0.16,
+        "qrs": 0.08,
+        "qt": 0.38,
+        "qtc": 0.40
+      },
+      "onda_p": {
+        "presente": true,
+        "positiva_dII": true,
+        "positiva_dIII": true,
+        "positiva_aVF": true,
+        "morfologia": "normal"
+      }
+    },
+    "bloqueio_ramo_direito": {
+      "nome_paciente": "Maria Santos",
+      "paciente_id": "67890",
+      "ritmo": "sinusal",
+      "frequencia_cardiaca": 85,
+      "regularidade": "regular",
+      "eixo_qrs": -18,
+      "intervalos": {
+        "pr": 0.16,
+        "qrs": 0.09,
+        "qt": 0.40,
+        "qtc": 0.42
+      },
+      "bloqueio_ramo": "incompleto_direito",
+      "complexo_qrs": {
+        "morfologia": "RSR'",
+        "progressao_r": "preservada",
+        "zona_transicao": "V3-V4",
+        "ondas_q_patologicas": false,
+        "amplitude_v1_v3": "aumentada",
+        "amplitude_v4_v6": "normal"
+      },
+      "segmento_st": {
+        "supradesnivelamento": [],
+        "infradesnivelamento": ["V2", "V3"],
+        "normal": ["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V4-V6"]
+      },
+      "onda_t": {
+        "invertida": ["V1", "V2", "V3"],
+        "apiculada": [],
+        "normal": ["DI", "DII", "DIII", "aVL", "aVF", "V4-V6"]
+      }
+    },
+    "taquicardia_sinusal": {
+      "nome_paciente": "Carlos Oliveira",
+      "ritmo": "sinusal",
+      "frequencia_cardiaca": 115,
+      "regularidade": "regular",
+      "eixo_qrs": 60,
+      "intervalos": {
+        "pr": 0.14,
+        "qrs": 0.08,
+        "qt": 0.34,
+        "qtc": 0.42
+      }
+    },
+    "bradicardia": {
+      "nome_paciente": "Ana Costa",
+      "ritmo": "sinusal",
+      "frequencia_cardiaca": 52,
+      "regularidade": "regular",
+      "eixo_qrs": 45,
+      "intervalos": {
+        "pr": 0.18,
+        "qrs": 0.08,
+        "qt": 0.44,
+        "qtc": 0.41
+      }
+    },
+    "bloqueio_av_primeiro_grau": {
+      "nome_paciente": "Pedro Almeida",
+      "ritmo": "sinusal",
+      "frequencia_cardiaca": 70,
+      "regularidade": "regular",
+      "eixo_qrs": 55,
+      "intervalos": {
+        "pr": 0.24,
+        "qrs": 0.08,
+        "qt": 0.40,
+        "qtc": 0.42
+      },
+      "bloqueio_av": "primeiro_grau"
+    }
+  },
+  "instrucoes": {
+    "uso": "Use estes exemplos para testar a API enviando requisições POST para /api/analisar",
+    "exemplo_curl": "curl -X POST http://localhost:5000/api/analisar -H 'Content-Type: application/json' -d @exemplo_ecg_normal.json"
+  }
+}
