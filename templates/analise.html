@@ -115,6 +115,21 @@
                 <input type="text" id="paciente_id" name="paciente_id" 
                        placeholder="Ex: 12345" aria-label="ID do paciente">
             </div>
+            
+            <div class="form-group">
+                <label for="idade">Idade (anos)</label>
+                <input type="number" id="idade" name="idade" 
+                       placeholder="Ex: 45" min="0" max="150" 
+                       aria-label="Idade do paciente em anos">
+            </div>
+            
+            <div class="form-group">
+                <label for="pressao_arterial">Pressão Arterial (PA)</label>
+                <input type="text" id="pressao_arterial" name="pressao_arterial" 
+                       placeholder="Ex: 120/80 mmHg" 
+                       pattern="[0-9]{2,3}/[0-9]{2,3}"
+                       aria-label="Pressão arterial sistólica sobre diastólica">
+            </div>
         </div>
     </fieldset>
 
@@ -269,6 +284,8 @@ document.getElementById('form-ecg').addEventListener('submit', async function(e)
     const dados = {
         nome_paciente: document.getElementById('nome_paciente').value,
         paciente_id: document.getElementById('paciente_id').value,
+        idade: document.getElementById('idade').value ? parseInt(document.getElementById('idade').value) : null,
+        pressao_arterial: document.getElementById('pressao_arterial').value || null,
         ritmo: document.getElementById('ritmo').value,
         frequencia_cardiaca: parseInt(document.getElementById('frequencia_cardiaca').value),
         regularidade: document.getElementById('regularidade').value,
@@ -314,13 +331,20 @@ document.getElementById('form-ecg').addEventListener('submit', async function(e)
             audioPlayer.src = resultado.audio_url;
             
             // Aguarda 2 segundos antes de reproduzir (deixa tempo para anúncios)
+            // IMPORTANTE: Respeita o estado de mute global
             setTimeout(() => {
                 if (!audioPlayer.paused) return; // Já está tocando
                 
-                // Auto-reproduzir áudio para acessibilidade
-                audioPlayer.play().catch(e => {
-                    console.log('Auto-play bloqueado pelo navegador:', e);
-                });
+                // Verifica se áudio NÃO está mutado antes de reproduzir
+                const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
+                if (!audioMutadoAtual) {
+                    // Auto-reproduzir áudio para acessibilidade
+                    audioPlayer.play().catch(e => {
+                        console.log('Auto-play bloqueado pelo navegador:', e);
+                    });
+                } else {
+                    console.log('🔇 Áudio do laudo não reproduzido (sistema mutado)');
+                }
             }, 2000);
             
             // Focar no resultado
@@ -381,6 +405,12 @@ document.addEventListener('DOMContentLoaded', function() {
             acao: function() {
                 const audioPlayer = document.getElementById('audio-laudo');
                 if (audioPlayer && audioPlayer.src) {
+                    // Verifica se sistema está mutado
+                    const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
+                    if (audioMutadoAtual) {
+                        anunciar('Sistema de áudio está mutado. Pressione M para desmutar');
+                        return;
+                    }
                     audioPlayer.currentTime = 0;
                     audioPlayer.play();
                     anunciar('Reproduzindo laudo');
@@ -395,6 +425,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const audioPlayer = document.getElementById('audio-laudo');
                 if (audioPlayer && audioPlayer.src) {
                     if (audioPlayer.paused) {
+                        // Verifica se sistema está mutado antes de reproduzir
+                        const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
+                        if (audioMutadoAtual) {
+                            anunciar('Sistema de áudio está mutado. Pressione M para desmutar');
+                            return;
+                        }
                         audioPlayer.play();
                         anunciar('Áudio retomado');
                     } else {

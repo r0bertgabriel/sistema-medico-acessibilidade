@@ -27,7 +27,7 @@ body {
 
 /* Header */
 header {
-    background: #1e40af;
+    background: #7c3aed;
     color: white;
     padding: 30px;
     text-align: center;
@@ -58,7 +58,7 @@ nav ul {
 }
 
 nav a {
-    color: #1e40af;
+    color: #7c3aed;
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1em;
@@ -69,15 +69,15 @@ nav a {
 }
 
 nav a:hover, nav a:focus {
-    background: #1e40af;
+    background: #7c3aed;
     color: white;
-    outline: 3px solid #3b82f6;
+    outline: 3px solid #a78bfa;
 }
 
 nav a .atalho {
     display: inline-block;
-    background: #e0e7ff;
-    color: #1e40af;
+    background: #ede9fe;
+    color: #7c3aed;
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 0.85em;
@@ -92,7 +92,7 @@ nav a .atalho {
 
 /* Botões */
 .btn {
-    background: #2563eb;
+    background: #7c3aed;
     color: white;
     border: none;
     padding: 12px 30px;
@@ -104,15 +104,15 @@ nav a .atalho {
 }
 
 .btn:hover, .btn:focus {
-    background: #1e40af;
+    background: #6d28d9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    outline: 3px solid #3b82f6;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    outline: 3px solid #a78bfa;
 }
 
 .btn:active {
     transform: translateY(0);
-    background: #1e3a8a;
+    background: #5b21b6;
 }
 
 /* Alertas */
@@ -163,7 +163,7 @@ nav a .atalho {
     position: fixed;
     top: 10px;
     right: 10px;
-    background: rgba(37, 99, 235, 0.9);
+    background: rgba(124, 58, 237, 0.9);
     color: white;
     border: none;
     border-radius: 50%;
@@ -180,12 +180,12 @@ nav a .atalho {
 }
 
 .mute-btn:hover {
-    background: rgba(30, 64, 175, 0.9);
+    background: rgba(109, 40, 217, 0.9);
     transform: scale(1.1);
 }
 
 .mute-btn:focus {
-    outline: 3px solid #93c5fd;
+    outline: 3px solid #c4b5fd;
     outline-offset: 2px;
 }
 

@@ -238,13 +238,20 @@ async function processarResultado(tipo) {
             audioPlayer.src = resultado.audio_url;
             
             // Aguarda 2 segundos antes de reproduzir (deixa tempo para anúncios)
+            // IMPORTANTE: Respeita o estado de mute global
             setTimeout(() => {
                 if (!audioPlayer.paused) return; // Já está tocando
                 
-                // Auto-reproduzir áudio para acessibilidade
-                audioPlayer.play().catch(e => {
-                    console.log('Auto-play bloqueado pelo navegador:', e);
-                });
+                // Verifica se áudio NÃO está mutado antes de reproduzir
+                const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
+                if (!audioMutadoAtual) {
+                    // Auto-reproduzir áudio para acessibilidade
+                    audioPlayer.play().catch(e => {
+                        console.log('Auto-play bloqueado pelo navegador:', e);
+                    });
+                } else {
+                    console.log('🔇 Áudio do laudo não reproduzido (sistema mutado)');
+                }
             }, 2000);
             
             // Focar no resultado
@@ -333,6 +340,12 @@ document.addEventListener('DOMContentLoaded', function() {
             acao: function() {
                 const audioPlayer = document.getElementById('audio-laudo-resultado');
                 if (audioPlayer && audioPlayer.src) {
+                    // Verifica se sistema está mutado
+                    const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
+                    if (audioMutadoAtual) {
+                        anunciar('Sistema de áudio está mutado. Pressione M para desmutar');
+                        return;
+                    }
                     audioPlayer.currentTime = 0;
                     audioPlayer.play();
                     anunciar('Reproduzindo laudo');
@@ -347,6 +360,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const audioPlayer = document.getElementById('audio-laudo-resultado');
                 if (audioPlayer && audioPlayer.src) {
                     if (audioPlayer.paused) {
+                        // Verifica se sistema está mutado antes de reproduzir
+                        const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
+                        if (audioMutadoAtual) {
+                            anunciar('Sistema de áudio está mutado. Pressione M para desmutar');
+                            return;
+                        }
                         audioPlayer.play();
                         anunciar('Áudio retomado');
                     } else {
