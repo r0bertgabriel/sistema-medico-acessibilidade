@@ -3,3 +3,6 @@ gtts==2.5.0
 pygame==2.5.2
 pydub==0.25.1
 Werkzeug==3.0.1
+openai==2.7.2
+requests==2.31.0
+Pillow==12.0.0

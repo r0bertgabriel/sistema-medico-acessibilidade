@@ -7,7 +7,15 @@ from pathlib import Path
 
 import gtts
 import pygame
-from pydub import AudioSegment
+
+# Importação condicional do pydub para compatibilidade com Python 3.13
+try:
+    from pydub import AudioSegment
+    PYDUB_AVAILABLE = True
+except (ImportError, ModuleNotFoundError):
+    PYDUB_AVAILABLE = False
+    print("⚠️  Aviso: pydub não disponível. Aceleração de áudio desabilitada.")
+    print("   Para habilitar aceleração, use Python 3.8-3.12 ou instale dependências.")
 
 
 class AudioLaudoGenerator:
@@ -25,6 +33,7 @@ class AudioLaudoGenerator:
         self.audio_dir.mkdir(parents=True, exist_ok=True)
         self.lang = "pt-br"
         self.speed = speed
+        self.pydub_available = PYDUB_AVAILABLE
     
     def gerar_audio_laudo(self, texto: str, filename: str | None = None, acelerar: bool = True) -> str:
         """
@@ -54,21 +63,28 @@ class AudioLaudoGenerator:
         tts = gtts.gTTS(texto, lang=self.lang, slow=False)
         tts.save(str(temp_filepath))
         
-        # Acelerar o áudio se solicitado
-        if acelerar:
-            audio = AudioSegment.from_mp3(str(temp_filepath))
-            
-            # Acelerar mantendo o pitch (tom) original
-            # speedup_factor: quanto maior, mais rápido
-            sped_up_audio = audio.speedup(playback_speed=self.speed)
-            
-            # Salvar áudio acelerado
-            sped_up_audio.export(str(final_filepath), format="mp3")
-            
-            # Remover arquivo temporário
-            temp_filepath.unlink()
+        # Acelerar o áudio se solicitado e pydub estiver disponível
+        if acelerar and self.pydub_available:
+            try:
+                audio = AudioSegment.from_mp3(str(temp_filepath))
+                
+                # Acelerar mantendo o pitch (tom) original
+                # speedup_factor: quanto maior, mais rápido
+                sped_up_audio = audio.speedup(playback_speed=self.speed)
+                
+                # Salvar áudio acelerado
+                sped_up_audio.export(str(final_filepath), format="mp3")
+                
+                # Remover arquivo temporário
+                temp_filepath.unlink()
+            except Exception as e:
+                print(f"⚠️  Erro ao acelerar áudio: {e}. Usando áudio sem aceleração.")
+                if temp_filepath.exists():
+                    temp_filepath.rename(final_filepath)
         else:
-            # Se não acelerar, apenas renomear
+            # Se não acelerar ou pydub não disponível, apenas renomear
+            if acelerar and not self.pydub_available:
+                print("ℹ️  Aceleração de áudio não disponível (pydub não instalado)")
             temp_filepath.rename(final_filepath)
         
         # Retornar caminho relativo para uso no HTML

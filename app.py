@@ -3,8 +3,9 @@ Aplicação Flask para o Sistema de Laudos de ECG com Acessibilidade
 Versão refatorada com arquitetura modular
 """
 from flask import Flask
-from routes import main_bp, api_bp
+
 import config
+from routes import api_bp, main_bp
 
 
 def create_app():
@@ -14,6 +15,8 @@ def create_app():
     # Configurações
     app.config['SECRET_KEY'] = config.SECRET_KEY
     app.config['DEBUG'] = config.DEBUG
+    app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_LENGTH
+    app.config['UPLOAD_FOLDER'] = str(config.UPLOAD_FOLDER)
     
     # Registrar blueprints
     app.register_blueprint(main_bp)

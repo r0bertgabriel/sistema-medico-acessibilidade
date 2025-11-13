@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}Módulo ECG - Sistema de Análise de Exames{% endblock %}
+
+{% block content %}
+<div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+    <h2 style="font-size: 2.5em; color: #3b82f6; margin-bottom: 10px;">
+        ⚡ Módulo de Eletrocardiograma (ECG)
+    </h2>
+    
+    <p style="color: #6c757d; margin-bottom: 40px; font-size: 1.1em;">
+        Análise completa de traçado cardíaco com interpretação automática baseada em diretrizes da AHA
+    </p>
+
+    <!-- Opções do Módulo ECG -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-bottom: 40px;">
+        
+        <!-- Análise por Dados -->
+        <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); 
+                    padding: 30px; border-radius: 12px; border: 2px solid #3b82f6; 
+                    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.15);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="background: white; width: 70px; height: 70px; border-radius: 50%; 
+                            display: inline-flex; align-items: center; justify-content: center;
+                            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);">
+                    <span style="font-size: 2em;">📊</span>
+                </div>
+            </div>
+            
+            <h3 style="color: #1e40af; margin-bottom: 15px; font-size: 1.5em; text-align: center;">
+                Análise por Dados
+            </h3>
+            
+            <p style="color: #475569; margin-bottom: 20px; line-height: 1.6; text-align: center;">
+                Digite os valores do ECG (FC, intervalos, segmentos) para análise automática
+            </p>
+            
+            <ul style="color: #475569; line-height: 2; margin-bottom: 25px; padding-left: 20px;">
+                <li>✅ Entrada manual de dados</li>
+                <li>✅ Exemplos pré-carregados</li>
+                <li>✅ Validação automática</li>
+                <li>✅ Laudo completo em áudio</li>
+            </ul>
+            
+            <a href="/analise" style="text-decoration: none;">
+                <button class="btn" aria-label="Ir para análise por dados" 
+                        style="width: 100%; font-size: 1.1em; padding: 15px; font-weight: bold;
+                               background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                    📊 Iniciar Análise
+                </button>
+            </a>
+        </div>
+        
+        <!-- Análise por Imagem -->
+        <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
+                    padding: 30px; border-radius: 12px; border: 2px solid #dc2626; 
+                    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.15);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="background: white; width: 70px; height: 70px; border-radius: 50%; 
+                            display: inline-flex; align-items: center; justify-content: center;
+                            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);">
+                    <span style="font-size: 2em;">📸</span>
+                </div>
+            </div>
+            
+            <h3 style="color: #dc2626; margin-bottom: 15px; font-size: 1.5em; text-align: center;">
+                Análise por Imagem
+            </h3>
+            
+            <p style="color: #475569; margin-bottom: 20px; line-height: 1.6; text-align: center;">
+                Envie foto/PDF do traçado de ECG para análise com inteligência artificial
+            </p>
+            
+            <ul style="color: #475569; line-height: 2; margin-bottom: 25px; padding-left: 20px;">
+                <li>✅ Upload de imagem/PDF</li>
+                <li>✅ Extração automática (IA)</li>
+                <li>✅ Suporta vários formatos</li>
+                <li>✅ Análise completa</li>
+            </ul>
+            
+            <a href="/analise-imagem" style="text-decoration: none;">
+                <button class="btn" aria-label="Ir para análise por imagem" 
+                        style="width: 100%; font-size: 1.1em; padding: 15px; font-weight: bold;
+                               background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+                    📸 Analisar Imagem
+                </button>
+            </a>
+        </div>
+        
+        <!-- Fila de Resultados -->
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); 
+                    padding: 30px; border-radius: 12px; border: 2px solid #10b981; 
+                    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.15);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="background: white; width: 70px; height: 70px; border-radius: 50%; 
+                            display: inline-flex; align-items: center; justify-content: center;
+                            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
+                    <span style="font-size: 2em;">📋</span>
+                </div>
+            </div>
+            
+            <h3 style="color: #059669; margin-bottom: 15px; font-size: 1.5em; text-align: center;">
+                Fila de Resultados
+            </h3>
+            
+            <p style="color: #475569; margin-bottom: 20px; line-height: 1.6; text-align: center;">
+                Acesse exemplos de ECGs analisados ou resultados salvos anteriormente
+            </p>
+            
+            <ul style="color: #475569; line-height: 2; margin-bottom: 25px; padding-left: 20px;">
+                <li>✅ 8 exemplos clínicos</li>
+                <li>✅ Casos normais e patológicos</li>
+                <li>✅ Análise instantânea</li>
+                <li>✅ Histórico de análises</li>
+            </ul>
+            
+            <a href="/resultados" style="text-decoration: none;">
+                <button class="btn" aria-label="Ir para fila de resultados" 
+                        style="width: 100%; font-size: 1.1em; padding: 15px; font-weight: bold;
+                               background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    📋 Ver Resultados
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Informações sobre ECG -->
+    <div style="background: #dbeafe; border: 2px solid #3b82f6; border-radius: 12px; padding: 30px; margin-top: 30px;">
+        <h3 style="color: #1e40af; margin-bottom: 20px; font-size: 1.6em;">ℹ️ Sobre o Módulo ECG</h3>
+        
+        <p style="color: #1e40af; line-height: 1.8; margin-bottom: 15px;">
+            Este sistema utiliza algoritmos de análise de ECG baseados em diretrizes da <strong>AHA (American Heart Association)</strong> 
+            e padrões internacionais. Os laudos gerados identificam automaticamente:
+        </p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <h4 style="color: #2563eb; margin-bottom: 10px;">⚡ Ritmo e Frequência</h4>
+                <ul style="color: #475569; line-height: 1.8; margin: 0; padding-left: 20px;">
+                    <li>Bradicardia (< 60 bpm)</li>
+                    <li>Taquicardia (> 100 bpm)</li>
+                    <li>Arritmias</li>
+                </ul>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <h4 style="color: #2563eb; margin-bottom: 10px;">⏱️ Intervalos</h4>
+                <ul style="color: #475569; line-height: 1.8; margin: 0; padding-left: 20px;">
+                    <li>PR (bloqueios AV)</li>
+                    <li>QRS (bloqueios de ramo)</li>
+                    <li>QT/QTc (arritmias)</li>
+                </ul>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <h4 style="color: #2563eb; margin-bottom: 10px;">📐 Eixo Elétrico</h4>
+                <ul style="color: #475569; line-height: 1.8; margin: 0; padding-left: 20px;">
+                    <li>Desvio à esquerda</li>
+                    <li>Desvio à direita</li>
+                    <li>Sobrecargas</li>
+                </ul>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <h4 style="color: #2563eb; margin-bottom: 10px;">🫀 Isquemia/Infarto</h4>
+                <ul style="color: #475569; line-height: 1.8; margin: 0; padding-left: 20px;">
+                    <li>Alterações de ST</li>
+                    <li>Ondas Q patológicas</li>
+                    <li>Localização anatômica</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Atalhos de Navegação -->
+    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-top: 30px;">
+        <h4 style="color: #92400e; margin-bottom: 15px; font-size: 1.4em;">⌨️ Atalhos do Módulo ECG</h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">1</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Voltar ao Início</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">2</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Análise por Dados</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">3</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Análise por Imagem</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">4</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Ver Resultados</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Anunciar página ao carregar
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        anunciar('Módulo E C G. Três opções disponíveis: análise por dados, análise por imagem e fila de resultados.');
+    }, 500);
+});
+
+function anunciar(texto) {
+    fetch('/api/anunciar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ texto: texto })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.audio_url) {
+            const audio = new Audio(data.audio_url);
+            audio.play();
+        }
+    })
+    .catch(error => console.error('Erro ao anunciar:', error));
+}
+</script>
+{% endblock %}

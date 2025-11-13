@@ -17,7 +17,16 @@ O sistema gera laudos completos em formato de **texto e áudio**, permitindo tot
 - Diagnóstico de isquemia e infarto
 - Detecção de sobrecargas atriais e ventriculares
 
-### 🔊 Geração de Áudio
+### 📸 **NOVO: Análise por Imagem com IA**
+- Upload de imagens de ECG (PNG, JPG, JPEG, GIF, BMP, TIFF)
+- Processamento automático com GPT-4o Vision da OpenAI
+- Extração inteligente de todos os parâmetros do ECG
+- Mesma geração de laudo em texto e áudio
+- Drag-and-drop para facilitar o upload
+- ⚠️ **IMPORTANTE**: [Limitações da API OpenAI para imagens médicas](LIMITACOES_API_OPENAI.md)
+- 📖 [Ver documentação completa](ANALISE_POR_IMAGEM.md)
+
+### �🔊 Geração de Áudio
 - Conversão automática de laudos para áudio em português brasileiro
 - Narração natural e clara usando Google Text-to-Speech
 - Player de áudio integrado com controles acessíveis

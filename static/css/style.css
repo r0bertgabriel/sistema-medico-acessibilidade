@@ -2,7 +2,7 @@
 
 /* Melhorias de acessibilidade */
 :focus {
-    outline: 3px solid #667eea !important;
+    outline: 3px solid #dc2626 !important;
     outline-offset: 2px;
 }
 
@@ -11,7 +11,7 @@
     position: absolute;
     top: -40px;
     left: 0;
-    background: #667eea;
+    background: #dc2626;
     color: white;
     padding: 8px;
     text-decoration: none;
@@ -35,7 +35,7 @@ button:disabled {
 
 button:focus-visible,
 a:focus-visible {
-    outline: 3px solid #667eea;
+    outline: 3px solid #dc2626;
     outline-offset: 2px;
 }
 

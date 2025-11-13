@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}Análise de Hemograma - Sistema de Laudos{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <h2 style="font-size: 2.2em; color: #1e40af; margin-bottom: 10px;">
+        🩸 Análise de Hemograma Completo
+    </h2>
+    
+    <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
+        Preencha os dados do hemograma para gerar laudo automático com áudio acelerado
+    </p>
+
+    <!-- Botões de Exemplo -->
+    <div style="margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <button onclick="carregarExemplo('normal')" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            Carregar Exemplo Normal
+        </button>
+        <button onclick="carregarExemplo('anemia')" class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+            Carregar Exemplo Anemia
+        </button>
+        <button onclick="carregarExemplo('leucocitose')" class="btn" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+            Carregar Exemplo Leucocitose
+        </button>
+        <button onclick="carregarExemplo('plaquetopenia')" class="btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            Carregar Exemplo Plaquetopenia
+        </button>
+    </div>
+
+    <form id="formHemograma" style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        
+        <!-- Dados do Paciente -->
+        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #2563eb;">
+            <h3 style="color: #1e40af; margin-bottom: 20px;">👤 Dados do Paciente</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div>
+                    <label for="nome" style="display: block; font-weight: bold; margin-bottom: 5px;">Nome:</label>
+                    <input type="text" id="nome" name="nome" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="idade" style="display: block; font-weight: bold; margin-bottom: 5px;">Idade:</label>
+                    <input type="number" id="idade" name="idade" required min="0" max="150"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="sexo" style="display: block; font-weight: bold; margin-bottom: 5px;">Sexo:</label>
+                    <select id="sexo" name="sexo" required
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="data_coleta" style="display: block; font-weight: bold; margin-bottom: 5px;">Data da Coleta:</label>
+                    <input type="text" id="data_coleta" name="data_coleta" placeholder="DD/MM/AAAA"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Série Vermelha (Eritrograma) -->
+        <div style="background: #fef2f2; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #dc2626;">
+            <h3 style="color: #dc2626; margin-bottom: 20px;">🔴 Série Vermelha (Eritrograma)</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                <div>
+                    <label for="hemacias" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Hemácias: <span style="font-size: 0.85em; color: #666;">(milhões/µL)</span>
+                    </label>
+                    <input type="number" id="hemacias" name="hemacias" step="0.01" required
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="hemoglobina" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Hemoglobina: <span style="font-size: 0.85em; color: #666;">(g/dL)</span>
+                    </label>
+                    <input type="number" id="hemoglobina" name="hemoglobina" step="0.1" required
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="hematocrito" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Hematócrito: <span style="font-size: 0.85em; color: #666;">(%)</span>
+                    </label>
+                    <input type="number" id="hematocrito" name="hematocrito" step="0.1" required
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="vcm" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        VCM: <span style="font-size: 0.85em; color: #666;">(fL)</span>
+                    </label>
+                    <input type="number" id="vcm" name="vcm" step="0.1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="hcm" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        HCM: <span style="font-size: 0.85em; color: #666;">(pg)</span>
+                    </label>
+                    <input type="number" id="hcm" name="hcm" step="0.1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="chcm" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        CHCM: <span style="font-size: 0.85em; color: #666;">(g/dL)</span>
+                    </label>
+                    <input type="number" id="chcm" name="chcm" step="0.1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="rdw" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        RDW: <span style="font-size: 0.85em; color: #666;">(%)</span>
+                    </label>
+                    <input type="number" id="rdw" name="rdw" step="0.1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Série Branca (Leucograma) -->
+        <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #10b981;">
+            <h3 style="color: #059669; margin-bottom: 20px;">⚪ Série Branca (Leucograma)</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                <div>
+                    <label for="leucocitos" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Leucócitos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                    </label>
+                    <input type="number" id="leucocitos" name="leucocitos" step="1" required
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="neutrofilos" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Neutrófilos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                    </label>
+                    <input type="number" id="neutrofilos" name="neutrofilos" step="1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="linfocitos" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Linfócitos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                    </label>
+                    <input type="number" id="linfocitos" name="linfocitos" step="1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="monocitos" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Monócitos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                    </label>
+                    <input type="number" id="monocitos" name="monocitos" step="1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="eosinofilos" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Eosinófilos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                    </label>
+                    <input type="number" id="eosinofilos" name="eosinofilos" step="1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+                
+                <div>
+                    <label for="basofilos" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                        Basófilos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                    </label>
+                    <input type="number" id="basofilos" name="basofilos" step="1"
+                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Plaquetas -->
+        <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #f59e0b;">
+            <h3 style="color: #d97706; margin-bottom: 20px;">🔶 Plaquetas</h3>
+            
+            <div style="max-width: 300px;">
+                <label for="plaquetas" style="display: block; font-weight: bold; margin-bottom: 5px;">
+                    Plaquetas: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                </label>
+                <input type="number" id="plaquetas" name="plaquetas" step="1000" required
+                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+            </div>
+        </div>
+
+        <!-- Observações -->
+        <div style="margin-bottom: 30px;">
+            <label for="observacoes" style="display: block; font-weight: bold; margin-bottom: 5px; color: #1e40af;">
+                📝 Observações Clínicas:
+            </label>
+            <textarea id="observacoes" name="observacoes" rows="3" 
+                      placeholder="Informações adicionais sobre o paciente (opcional)"
+                      style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; font-family: inherit;"></textarea>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button type="submit" class="btn" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+                🔬 Analisar Hemograma
+            </button>
+            
+            <button type="button" onclick="limparFormulario()" class="btn" 
+                    style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);">
+                🗑️ Limpar Formulário
+            </button>
+        </div>
+    </form>
+
+    <!-- Área de Resultado -->
+    <div id="resultado" style="margin-top: 40px; display: none;">
+        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <h3 style="color: #1e40af; margin-bottom: 20px; font-size: 1.8em;">
+                📋 Laudo do Hemograma
+            </h3>
+            
+            <!-- Player de Áudio -->
+            <div id="audioPlayer" style="margin-bottom: 30px; display: none;">
+                <audio id="audioLaudo" controls style="width: 100%; margin-bottom: 10px;"></audio>
+                <p style="color: #059669; font-weight: bold;">
+                    🔊 Áudio do laudo em velocidade acelerada (1.35x) para maior eficiência
+                </p>
+            </div>
+            
+            <!-- Texto do Laudo -->
+            <div id="textoLaudo" style="background: #f8fafc; padding: 25px; border-radius: 8px; 
+                                      font-family: 'Courier New', monospace; white-space: pre-wrap; 
+                                      font-size: 0.95em; line-height: 1.6; max-height: 600px; overflow-y: auto;">
+            </div>
+            
+            <!-- Botão para copiar laudo -->
+            <div style="margin-top: 20px; text-align: center;">
+                <button onclick="copiarLaudo()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    📋 Copiar Laudo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" style="display: none; text-align: center; margin-top: 40px;">
+        <div style="display: inline-block; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <div style="border: 4px solid #f3f4f6; border-top: 4px solid #2563eb; border-radius: 50%; 
+                        width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+            <p style="color: #1e40af; font-weight: bold; font-size: 1.1em;">Analisando hemograma...</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+// Carregar exemplo de hemograma
+async function carregarExemplo(tipo) {
+    try {
+        const response = await fetch(`/api/hemograma/exemplo/${tipo}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const exemplo = data.exemplo;
+            
+            // Preencher dados do paciente
+            document.getElementById('nome').value = exemplo.paciente.nome;
+            document.getElementById('idade').value = exemplo.paciente.idade;
+            document.getElementById('sexo').value = exemplo.paciente.sexo;
+            document.getElementById('data_coleta').value = exemplo.paciente.data_coleta;
+            
+            // Preencher série vermelha
+            document.getElementById('hemacias').value = exemplo.serie_vermelha.hemacias;
+            document.getElementById('hemoglobina').value = exemplo.serie_vermelha.hemoglobina;
+            document.getElementById('hematocrito').value = exemplo.serie_vermelha.hematocrito;
+            document.getElementById('vcm').value = exemplo.serie_vermelha.vcm || '';
+            document.getElementById('hcm').value = exemplo.serie_vermelha.hcm || '';
+            document.getElementById('chcm').value = exemplo.serie_vermelha.chcm || '';
+            document.getElementById('rdw').value = exemplo.serie_vermelha.rdw || '';
+            
+            // Preencher série branca
+            document.getElementById('leucocitos').value = exemplo.serie_branca.leucocitos;
+            document.getElementById('neutrofilos').value = exemplo.serie_branca.neutrofilos || '';
+            document.getElementById('linfocitos').value = exemplo.serie_branca.linfocitos || '';
+            document.getElementById('monocitos').value = exemplo.serie_branca.monocitos || '';
+            document.getElementById('eosinofilos').value = exemplo.serie_branca.eosinofilos || '';
+            document.getElementById('basofilos').value = exemplo.serie_branca.basofilos || '';
+            
+            // Preencher plaquetas
+            document.getElementById('plaquetas').value = exemplo.plaquetas.contagem;
+            
+            // Observações
+            document.getElementById('observacoes').value = exemplo.observacoes || '';
+            
+            // Anunciar
+            anunciar(`Exemplo de hemograma tipo ${tipo} carregado com sucesso`);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar exemplo:', error);
+        alert('Erro ao carregar exemplo');
+    }
+}
+
+// Limpar formulário
+function limparFormulario() {
+    document.getElementById('formHemograma').reset();
+    document.getElementById('resultado').style.display = 'none';
+    anunciar('Formulário limpo');
+}
+
+// Copiar laudo para área de transferência
+function copiarLaudo() {
+    const texto = document.getElementById('textoLaudo').textContent;
+    navigator.clipboard.writeText(texto).then(() => {
+        anunciar('Laudo copiado para área de transferência');
+        alert('Laudo copiado!');
+    });
+}
+
+// Função para anunciar texto via áudio
+function anunciar(texto) {
+    fetch('/api/anunciar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ texto: texto })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.audio_url) {
+            const audio = new Audio(data.audio_url);
+            audio.play();
+        }
+    })
+    .catch(error => console.error('Erro ao anunciar:', error));
+}
+
+// Submeter formulário
+document.getElementById('formHemograma').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Mostrar loading
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('resultado').style.display = 'none';
+    
+    // Coletar dados
+    const dados = {
+        paciente: {
+            nome: document.getElementById('nome').value,
+            idade: parseInt(document.getElementById('idade').value),
+            sexo: document.getElementById('sexo').value,
+            data_coleta: document.getElementById('data_coleta').value
+        },
+        serie_vermelha: {
+            hemacias: parseFloat(document.getElementById('hemacias').value),
+            hemoglobina: parseFloat(document.getElementById('hemoglobina').value),
+            hematocrito: parseFloat(document.getElementById('hematocrito').value),
+            vcm: document.getElementById('vcm').value ? parseFloat(document.getElementById('vcm').value) : null,
+            hcm: document.getElementById('hcm').value ? parseFloat(document.getElementById('hcm').value) : null,
+            chcm: document.getElementById('chcm').value ? parseFloat(document.getElementById('chcm').value) : null,
+            rdw: document.getElementById('rdw').value ? parseFloat(document.getElementById('rdw').value) : null
+        },
+        serie_branca: {
+            leucocitos: parseInt(document.getElementById('leucocitos').value),
+            neutrofilos: document.getElementById('neutrofilos').value ? parseInt(document.getElementById('neutrofilos').value) : null,
+            linfocitos: document.getElementById('linfocitos').value ? parseInt(document.getElementById('linfocitos').value) : null,
+            monocitos: document.getElementById('monocitos').value ? parseInt(document.getElementById('monocitos').value) : null,
+            eosinofilos: document.getElementById('eosinofilos').value ? parseInt(document.getElementById('eosinofilos').value) : null,
+            basofilos: document.getElementById('basofilos').value ? parseInt(document.getElementById('basofilos').value) : null
+        },
+        plaquetas: {
+            contagem: parseInt(document.getElementById('plaquetas').value)
+        },
+        observacoes: document.getElementById('observacoes').value
+    };
+    
+    try {
+        const response = await fetch('/api/analisar_hemograma', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        });
+        
+        const result = await response.json();
+        
+        // Esconder loading
+        document.getElementById('loading').style.display = 'none';
+        
+        if (result.success) {
+            // Mostrar resultado
+            document.getElementById('resultado').style.display = 'block';
+            document.getElementById('textoLaudo').textContent = result.laudo;
+            
+            // Configurar áudio
+            if (result.audio_url) {
+                const audioPlayer = document.getElementById('audioPlayer');
+                const audioElement = document.getElementById('audioLaudo');
+                audioElement.src = result.audio_url;
+                audioElement.playbackRate = 1.35; // Velocidade acelerada
+                audioPlayer.style.display = 'block';
+                
+                // Tocar automaticamente
+                audioElement.play();
+            }
+            
+            // Scroll para resultado
+            document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+            
+            anunciar('Análise concluída. Laudo disponível.');
+        } else {
+            alert('Erro: ' + (result.error || 'Erro desconhecido'));
+            anunciar('Erro ao processar hemograma');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('loading').style.display = 'none';
+        alert('Erro ao processar hemograma');
+        anunciar('Erro ao processar hemograma');
+    }
+});
+</script>
+{% endblock %}

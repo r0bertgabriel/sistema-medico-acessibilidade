@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Análise por Imagem - Sistema de Laudos ECG{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 40px 20px;">
+    <h2 style="font-size: 2.5em; color: #1e40af; margin-bottom: 20px; text-align: center;">
+        📸 Análise de ECG por Imagem
+    </h2>
+    
+    <p style="font-size: 1.2em; color: #6c757d; text-align: center; margin-bottom: 30px;">
+        Envie uma imagem de ECG e obtenha análise completa com áudio usando inteligência artificial GPT-4o Vision
+    </p>
+
+    <!-- Card de informações -->
+    <div style="background: #f0f9ff; border-radius: 12px; padding: 25px; margin-bottom: 30px; border: 2px solid #bfdbfe;">
+        <h3 style="color: #1e40af; margin-bottom: 15px; font-size: 1.5em;">ℹ️ Como funciona?</h3>
+        <ol style="line-height: 2; color: #334155; font-size: 1.1em;">
+            <li>Selecione uma imagem de ECG (formatos: PNG, JPG, JPEG, GIF, BMP, TIFF)</li>
+            <li>A IA GPT-4o Vision analisa a imagem e extrai todos os dados do ECG</li>
+            <li>O sistema processa os dados e gera um laudo completo</li>
+            <li>O laudo é convertido em áudio acelerado para acessibilidade</li>
+        </ol>
+    </div>
+
+    <!-- Formulário de upload -->
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); border: 1px solid #e0e7ff;">
+        <form id="formImagemECG" enctype="multipart/form-data" style="text-align: center;">
+            <!-- Área de upload -->
+            <div style="border: 3px dashed #93c5fd; border-radius: 12px; padding: 40px; margin-bottom: 20px; background: #f8fafc; transition: all 0.3s;" 
+                 id="dropArea"
+                 ondragover="event.preventDefault(); this.style.background='#dbeafe'; this.style.borderColor='#2563eb';"
+                 ondragleave="this.style.background='#f8fafc'; this.style.borderColor='#93c5fd';"
+                 ondrop="handleDrop(event)">
+                
+                <div style="font-size: 4em; margin-bottom: 15px;">📋</div>
+                <p style="font-size: 1.3em; color: #475569; margin-bottom: 15px;">
+                    Arraste e solte a imagem aqui<br>ou
+                </p>
+                
+                <label for="inputImagem" class="btn" style="cursor: pointer; display: inline-block; margin: 10px 0;">
+                    📁 Selecionar Arquivo
+                </label>
+                <input type="file" 
+                       id="inputImagem" 
+                       name="imagem" 
+                       accept="image/*" 
+                       required 
+                       style="display: none;"
+                       onchange="previewImage(event)">
+            </div>
+
+            <!-- Preview da imagem -->
+            <div id="previewContainer" style="display: none; margin-bottom: 20px;">
+                <p style="font-weight: bold; color: #1e40af; margin-bottom: 10px;">📷 Imagem selecionada:</p>
+                <img id="imagePreview" style="max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <p id="fileName" style="margin-top: 10px; color: #64748b; font-size: 0.95em;"></p>
+            </div>
+
+            <!-- Botão de envio -->
+            <button type="submit" class="btn" id="btnAnalisar" style="font-size: 1.3em; padding: 15px 40px;">
+                🔍 Analisar ECG
+            </button>
+        </form>
+    </div>
+
+    <!-- Área de loading -->
+    <div id="loadingArea" style="display: none; text-align: center; margin-top: 30px; padding: 30px; background: #f0f9ff; border-radius: 12px;">
+        <div style="font-size: 3em; margin-bottom: 15px;">⏳</div>
+        <p style="font-size: 1.3em; color: #1e40af; font-weight: bold;">Processando imagem com IA...</p>
+        <p style="color: #64748b; margin-top: 10px;">A análise pode levar alguns segundos</p>
+    </div>
+
+    <!-- Área de resultados -->
+    <div id="resultadosArea" style="display: none; margin-top: 30px;">
+        <!-- Card de conclusão IA -->
+        <div id="conclusaoIA" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border-radius: 12px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);">
+            <h3 style="font-size: 1.8em; margin-bottom: 20px;">🤖 Análise da Inteligência Artificial</h3>
+            <div id="conclusaoIAContent"></div>
+        </div>
+
+        <!-- Card do laudo -->
+        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); border: 1px solid #e0e7ff; margin-bottom: 20px;">
+            <h3 style="color: #1e40af; font-size: 1.8em; margin-bottom: 20px;">📋 Laudo Médico</h3>
+            <div id="laudoTexto" style="background: #f8fafc; padding: 25px; border-radius: 8px; line-height: 1.8; white-space: pre-wrap; font-family: 'Courier New', monospace; color: #1e293b;"></div>
+        </div>
+
+        <!-- Player de áudio -->
+        <div style="background: #dbeafe; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);">
+            <h3 style="color: #1e40af; font-size: 1.8em; margin-bottom: 20px;">🔊 Laudo em Áudio</h3>
+            <audio id="audioPlayer" controls style="width: 100%; max-width: 600px;">
+                <source id="audioSource" type="audio/mpeg">
+                Seu navegador não suporta o elemento de áudio.
+            </audio>
+            <p style="margin-top: 15px; color: #475569; font-size: 0.95em;">
+                ⚡ Áudio acelerado para maior eficiência
+            </p>
+        </div>
+
+        <!-- Botão para nova análise -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="novaAnalise()" class="btn" style="font-size: 1.2em;">
+                🔄 Nova Análise
+            </button>
+        </div>
+    </div>
+
+    <!-- Área de erro -->
+    <div id="erroArea" style="display: none; margin-top: 30px; padding: 25px; background: #fee2e2; border-radius: 12px; border: 2px solid #fca5a5;">
+        <h3 style="color: #dc2626; font-size: 1.5em; margin-bottom: 15px;">❌ Erro no Processamento</h3>
+        <p id="erroMensagem" style="color: #7f1d1d; font-size: 1.1em;"></p>
+        <button onclick="novaAnalise()" class="btn" style="margin-top: 20px; background: #dc2626;">
+            🔄 Tentar Novamente
+        </button>
+    </div>
+</div>
+
+<script>
+// Preview da imagem
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imagePreview').src = e.target.result;
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('previewContainer').style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+// Handle drag and drop
+function handleDrop(event) {
+    event.preventDefault();
+    event.currentTarget.style.background = '#f8fafc';
+    event.currentTarget.style.borderColor = '#93c5fd';
+    
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        document.getElementById('inputImagem').files = files;
+        previewImage({target: {files: files}});
+    }
+}
+
+// Submissão do formulário
+document.getElementById('formImagemECG').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    // Mostrar loading
+    document.getElementById('loadingArea').style.display = 'block';
+    document.getElementById('resultadosArea').style.display = 'none';
+    document.getElementById('erroArea').style.display = 'none';
+    document.getElementById('btnAnalisar').disabled = true;
+    
+    try {
+        const response = await fetch('/api/analisar_imagem', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        // Esconder loading
+        document.getElementById('loadingArea').style.display = 'none';
+        document.getElementById('btnAnalisar').disabled = false;
+        
+        if (data.success) {
+            // Exibir conclusão da IA
+            if (data.conclusao_ia) {
+                let conclusaoHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <strong style="font-size: 1.3em;">⚠️ Gravidade: ${data.conclusao_ia.gravidade || 'Não especificada'}</strong>
+                    </div>
+                `;
+                
+                if (data.conclusao_ia.principais_achados && data.conclusao_ia.principais_achados.length > 0) {
+                    conclusaoHTML += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>🔍 Principais Achados:</strong>
+                            <ul style="margin-top: 10px; text-align: left;">
+                                ${data.conclusao_ia.principais_achados.map(achado => `<li>${achado}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                if (data.conclusao_ia.diagnosticos && data.conclusao_ia.diagnosticos.length > 0) {
+                    conclusaoHTML += `
+                        <div style="margin-bottom: 15px;">
+                            <strong>💡 Diagnósticos Suspeitos:</strong>
+                            <ul style="margin-top: 10px; text-align: left;">
+                                ${data.conclusao_ia.diagnosticos.map(diag => `<li>${diag}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                if (data.conclusao_ia.recomendacoes && data.conclusao_ia.recomendacoes.length > 0) {
+                    conclusaoHTML += `
+                        <div>
+                            <strong>📋 Recomendações:</strong>
+                            <ul style="margin-top: 10px; text-align: left;">
+                                ${data.conclusao_ia.recomendacoes.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('conclusaoIAContent').innerHTML = conclusaoHTML;
+                document.getElementById('conclusaoIA').style.display = 'block';
+            }
+            
+            // Exibir laudo
+            document.getElementById('laudoTexto').textContent = data.laudo_texto;
+            
+            // Configurar áudio
+            document.getElementById('audioSource').src = data.audio_url;
+            document.getElementById('audioPlayer').load();
+            
+            // Mostrar resultados
+            document.getElementById('resultadosArea').style.display = 'block';
+            
+            // Anunciar sucesso
+            if (window.anunciarTexto) {
+                window.anunciarTexto('Análise concluída com sucesso. Resultados disponíveis.');
+            }
+            
+        } else {
+            throw new Error(data.error || 'Erro desconhecido');
+        }
+        
+    } catch (error) {
+        document.getElementById('loadingArea').style.display = 'none';
+        document.getElementById('btnAnalisar').disabled = false;
+        document.getElementById('erroMensagem').textContent = error.message;
+        document.getElementById('erroArea').style.display = 'block';
+        
+        if (window.anunciarTexto) {
+            window.anunciarTexto('Erro ao processar imagem: ' + error.message);
+        }
+    }
+});
+
+// Nova análise
+function novaAnalise() {
+    document.getElementById('formImagemECG').reset();
+    document.getElementById('previewContainer').style.display = 'none';
+    document.getElementById('resultadosArea').style.display = 'none';
+    document.getElementById('erroArea').style.display = 'none';
+    window.scrollTo(0, 0);
+}
+</script>
+{% endblock %}

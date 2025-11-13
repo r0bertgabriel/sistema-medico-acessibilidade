@@ -24,4 +24,7 @@ htmlcov/
 .mypy_cache/
 static/audio/*.mp3
 !static/audio/.gitkeep
+static/uploads/*
+!static/uploads/.gitkeep
 *.log
+.env

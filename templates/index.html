@@ -1,118 +1,209 @@
 {% extends "base.html" %}
 
-{% block title %}Início - Sistema de Laudos ECG{% endblock %}
+{% block title %}Início - Sistema de Análise de Exames Médicos{% endblock %}
 
 {% block content %}
 <div style="text-align: center; padding: 40px 20px;">
-    <h2 style="font-size: 2.5em; color: #1e40af; margin-bottom: 20px;">
-        Bem-vindo ao Sistema de Laudos de ECG
+    <h2 style="font-size: 2.8em; color: #1e40af; margin-bottom: 20px; font-weight: bold;">
+        🏥 Sistema de Análise de Exames Médicos
     </h2>
     
-    <p style="font-size: 1.3em; color: #6c757d; max-width: 800px; margin: 0 auto 40px;">
+    <p style="font-size: 1.3em; color: #6c757d; max-width: 900px; margin: 0 auto 50px; line-height: 1.6;">
         Sistema desenvolvido especialmente para acessibilidade de médicos com deficiência visual.
         <br><br>
         <strong>Todos os laudos são gerados em formato de texto e áudio acelerado</strong>, permitindo total 
-        autonomia na interpretação rápida de eletrocardiogramas.
+        autonomia na interpretação rápida de exames médicos.
     </p>
 
-    <div style="background: #f8fafc; border-radius: 12px; padding: 30px; margin: 30px 0; border: 1px solid #e2e8f0;">
-        <h3 style="color: #1e40af; margin-bottom: 20px; font-size: 1.8em;">🎯 Funcionalidades</h3>
+    <!-- Cards dos Módulos -->
+    <div style="max-width: 1200px; margin: 0 auto 50px;">
+        <h3 style="color: #1e40af; margin-bottom: 30px; font-size: 2em;">📊 Módulos Disponíveis</h3>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; text-align: left;">
-            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); border: 1px solid #e0e7ff;">
-                <h4 style="color: #2563eb; margin-bottom: 10px;">📊 Análise Inteligente</h4>
-                <p>Interpretação completa baseada em diretrizes da AHA e padrões internacionais</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+            
+            <!-- Módulo ECG -->
+            <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); 
+                        padding: 35px; border-radius: 16px; border: 3px solid #3b82f6; 
+                        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2); transition: transform 0.3s;">
+                
+                <div style="background: white; width: 80px; height: 80px; border-radius: 50%; 
+                            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+                            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                    <span style="font-size: 2.5em;">⚡</span>
+                </div>
+                
+                <h4 style="color: #1e40af; margin-bottom: 15px; font-size: 1.8em; font-weight: bold;">
+                    Eletrocardiograma (ECG)
+                </h4>
+                
+                <p style="color: #475569; margin-bottom: 25px; font-size: 1.05em; line-height: 1.6;">
+                    Análise completa de traçado cardíaco com interpretação automática baseada em diretrizes da AHA
+                </p>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 25px; text-align: left;">
+                    <p style="color: #1e40af; font-weight: bold; margin-bottom: 10px;">✨ Funcionalidades:</p>
+                    <ul style="color: #475569; line-height: 2; margin: 0; padding-left: 20px;">
+                        <li>📊 Análise por dados numéricos</li>
+                        <li>📸 Análise por imagem (IA)</li>
+                        <li>📋 Fila de resultados</li>
+                        <li>🔊 Áudio em 1.5x velocidade</li>
+                    </ul>
+                </div>
+                
+                <a href="/ecg" style="text-decoration: none;">
+                    <button class="btn" aria-label="Acessar módulo de ECG" 
+                            style="width: 100%; font-size: 1.1em; padding: 15px; font-weight: bold;
+                                   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                        🚀 Acessar Módulo ECG
+                    </button>
+                </a>
             </div>
             
-            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); border: 1px solid #e0e7ff;">
-                <h4 style="color: #2563eb; margin-bottom: 10px;">🔊 Áudio Acelerado 1.5x</h4>
-                <p>Narração dos laudos em velocidade otimizada para maior eficiência</p>
-            </div>
-            
-            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); border: 1px solid #e0e7ff;">
-                <h4 style="color: #2563eb; margin-bottom: 10px;">⌨️ Atalhos Rápidos</h4>
-                <p>Navegação por teclado simples: teclas 1, 2, 3 para acesso direto</p>
+            <!-- Módulo Hemograma -->
+            <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
+                        padding: 35px; border-radius: 16px; border: 3px solid #dc2626; 
+                        box-shadow: 0 8px 24px rgba(220, 38, 38, 0.2); transition: transform 0.3s;">
+                
+                <div style="background: white; width: 80px; height: 80px; border-radius: 50%; 
+                            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+                            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);">
+                    <span style="font-size: 2.5em;">🩸</span>
+                </div>
+                
+                <h4 style="color: #dc2626; margin-bottom: 15px; font-size: 1.8em; font-weight: bold;">
+                    Hemograma Completo
+                </h4>
+                
+                <p style="color: #475569; margin-bottom: 25px; font-size: 1.05em; line-height: 1.6;">
+                    Análise de série vermelha, branca e plaquetas com interpretação automática e detecção de alterações
+                </p>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 25px; text-align: left;">
+                    <p style="color: #dc2626; font-weight: bold; margin-bottom: 10px;">✨ Funcionalidades:</p>
+                    <ul style="color: #475569; line-height: 2; margin: 0; padding-left: 20px;">
+                        <li>🔴 Análise série vermelha</li>
+                        <li>⚪ Análise série branca</li>
+                        <li>🔶 Análise de plaquetas</li>
+                        <li>🔊 Áudio em 1.35x velocidade</li>
+                    </ul>
+                </div>
+                
+                <a href="/hemograma" style="text-decoration: none;">
+                    <button class="btn" aria-label="Acessar módulo de Hemograma" 
+                            style="width: 100%; font-size: 1.1em; padding: 15px; font-weight: bold;
+                                   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+                        🚀 Acessar Módulo Hemograma
+                    </button>
+                </a>
             </div>
         </div>
     </div>
 
-    <div style="margin-top: 40px;">
-        <h3 style="color: #1e40af; margin-bottom: 20px; font-size: 1.8em;">🚀 Comece Agora</h3>
+    <!-- Recursos de Acessibilidade -->
+    <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 16px; padding: 35px; 
+                max-width: 1200px; margin: 0 auto 40px;">
+        <h3 style="color: #059669; margin-bottom: 25px; font-size: 1.8em;">
+            ♿ Recursos de Acessibilidade
+        </h3>
         
-        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-            <a href="/analise" style="text-decoration: none;">
-                <button class="btn" aria-label="Iniciar nova análise de ECG">
-                    📊 Nova Análise
-                </button>
-            </a>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align: left;">
+            <div style="background: white; padding: 20px; border-radius: 10px; border: 1px solid #10b981;">
+                <h4 style="color: #059669; margin-bottom: 10px; font-size: 1.2em;">🔊 Feedback Auditivo</h4>
+                <p style="color: #475569; line-height: 1.6;">
+                    Todos os laudos são narrados em áudio acelerado para maior eficiência na análise
+                </p>
+            </div>
             
-            <a href="/resultados" style="text-decoration: none;">
-                <button class="btn" aria-label="Ver fila de resultados de pacientes">
-                    📋 Fila de Resultados
-                </button>
-            </a>
+            <div style="background: white; padding: 20px; border-radius: 10px; border: 1px solid #10b981;">
+                <h4 style="color: #059669; margin-bottom: 10px; font-size: 1.2em;">⌨️ Navegação por Teclado</h4>
+                <p style="color: #475569; line-height: 1.6;">
+                    Atalhos numéricos contextuais e navegação completa sem necessidade de mouse
+                </p>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 10px; border: 1px solid #10b981;">
+                <h4 style="color: #059669; margin-bottom: 10px; font-size: 1.2em;">📋 Textos Estruturados</h4>
+                <p style="color: #475569; line-height: 1.6;">
+                    Laudos formatados de forma clara e hierárquica para fácil compreensão
+                </p>
+            </div>
         </div>
     </div>
 
-    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; margin-top: 40px; text-align: left;">
-        <h4 style="color: #92400e; margin-bottom: 10px;">⌨️ Sistema de Navegação Contextual</h4>
-        <p style="color: #92400e; line-height: 1.8; margin-bottom: 15px;">
-            <strong>Novo sistema inteligente de atalhos:</strong> Cada página tem seus próprios atalhos numéricos específicos!
+    <!-- Atalhos de Teclado -->
+    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 16px; padding: 30px; 
+                max-width: 1200px; margin: 0 auto; text-align: left;">
+        <h4 style="color: #92400e; margin-bottom: 15px; font-size: 1.6em;">⌨️ Atalhos Globais de Navegação</h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <kbd style="background: #92400e; color: white; padding: 5px 10px; border-radius: 4px;">1</kbd>
+                <span style="color: #92400e; margin-left: 10px;">Ir para Início</span>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <kbd style="background: #92400e; color: white; padding: 5px 10px; border-radius: 4px;">2</kbd>
+                <span style="color: #92400e; margin-left: 10px;">Módulo ECG</span>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <kbd style="background: #92400e; color: white; padding: 5px 10px; border-radius: 4px;">3</kbd>
+                <span style="color: #92400e; margin-left: 10px;">Módulo Hemograma</span>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <kbd style="background: #92400e; color: white; padding: 5px 10px; border-radius: 4px;">H</kbd>
+                <span style="color: #92400e; margin-left: 10px;">Ajuda</span>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <kbd style="background: #92400e; color: white; padding: 5px 10px; border-radius: 4px;">M</kbd>
+                <span style="color: #92400e; margin-left: 10px;">Mutar/Desmutar</span>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <kbd style="background: #92400e; color: white; padding: 5px 10px; border-radius: 4px;">-</kbd>
+                <span style="color: #92400e; margin-left: 10px;">Menu de Navegação</span>
+            </div>
+        </div>
+        
+        <p style="color: #92400e; margin-top: 20px; font-style: italic;">
+            💡 Cada módulo possui seus próprios atalhos contextuais específicos para agilizar o trabalho!
         </p>
-        <ul style="color: #92400e; line-height: 2;">
-            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">-</kbd> (hífen) - Abre menu principal (escolha: 1=Início, 2=Análise, 3=Resultados)</li>
-            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">1</kbd> - Nova análise de ECG (atalho desta página)</li>
-            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">2</kbd> - Ver fila de resultados (atalho desta página)</li>
-            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">H</kbd> - Ajuda (lista todos os atalhos da página atual)</li>
-            <li><kbd style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #f59e0b;">Tab</kbd> - Navegar entre campos com feedback auditivo</li>
-        </ul>
-    </div>
-
-    <div style="background: #dbeafe; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-top: 20px; text-align: left;">
-        <h4 style="color: #1e40af; margin-bottom: 10px;">🩺 Sobre o Sistema</h4>
-        <p style="color: #1e40af; line-height: 1.8;">
-            Este sistema utiliza algoritmos de análise de ECG baseados em diretrizes da AHA (American Heart Association) e padrões internacionais.
-            Os laudos gerados identificam automaticamente:
-        </p>
-        <ul style="color: #1e40af; line-height: 2; margin-top: 10px;">
-            <li>Ritmo cardíaco e frequência (bradicardia, taquicardia, arritmias)</li>
-            <li>Intervalos PR, QRS e QT (bloqueios de condução)</li>
-            <li>Eixo elétrico e desvios patológicos</li>
-            <li>Bloqueios de ramo e fasciculares</li>
-            <li>Alterações de segmento ST e onda T (isquemia)</li>
-            <li>Ondas Q patológicas (infarto prévio)</li>
-            <li>Sobrecargas atriais e ventriculares</li>
-            <li>Localização anatômica de lesões isquêmicas</li>
-        </ul>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
+<style>
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+</style>
+
 <script>
-// ===== ATALHOS CONTEXTUAIS DA PÁGINA INICIAL =====
+// Anunciar página ao carregar
 document.addEventListener('DOMContentLoaded', function() {
-    // Registra atalhos específicos desta página
-    registrarAtalhos({
-        '1': {
-            descricao: 'Ir para Nova Análise',
-            acao: function() {
-                anunciar('Indo para Nova Análise de ECG');
-                window.location.href = '/analise';
-            }
-        },
-        '2': {
-            descricao: 'Ir para Fila de Resultados',
-            acao: function() {
-                anunciar('Indo para Fila de Resultados');
-                window.location.href = '/resultados';
-            }
-        }
-    });
-    
-    // Anuncia os atalhos ao carregar a página
-    setTimeout(anunciarAtalhosPagina, 1000);
+    setTimeout(() => {
+        anunciar('Sistema de Análise de Exames Médicos. Dois módulos disponíveis: ECG e Hemograma. Use teclas 2 ou 3 para acessar.');
+    }, 500);
 });
+
+function anunciar(texto) {
+    fetch('/api/anunciar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ texto: texto })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.audio_url) {
+            const audio = new Audio(data.audio_url);
+            audio.play();
+        }
+    })
+    .catch(error => console.error('Erro ao anunciar:', error));
+}
 </script>
 {% endblock %}
-

@@ -23,3 +23,12 @@ TTS_TLD = 'com.br'  # Top-level domain para sotaque brasileiro
 # Configurações de acessibilidade
 KEYBOARD_SHORTCUTS_ENABLED = True
 AUDIO_FEEDBACK_ENABLED = True
+
+# Configurações OpenAI GPT-4o Vision
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
+OPENAI_MODEL = 'gpt-4o'  # Modelo com capacidade de visão
+
+# Configurações de upload de imagens
+UPLOAD_FOLDER = BASE_DIR / 'static' / 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff'}
+MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max

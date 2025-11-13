@@ -9,8 +9,8 @@ let modoMenu = false;
 // Atalhos do modo menu (tecla -)
 const atalhosMenu = {
     '1': { descricao: 'Voltar para Página Inicial', acao: () => window.location.href = '/' },
-    '2': { descricao: 'Ir para Análise de ECG', acao: () => window.location.href = '/analise' },
-    '3': { descricao: 'Ir para Fila de Resultados', acao: () => window.location.href = '/resultados' }
+    '2': { descricao: 'Ir para Módulo ECG', acao: () => window.location.href = '/ecg' },
+    '3': { descricao: 'Ir para Módulo Hemograma', acao: () => window.location.href = '/hemograma' }
 };
 
 /**
