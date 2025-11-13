@@ -160,17 +160,11 @@ def processar_resultado(tipo):
 def analisar_ecg_imagem():
     """
     Endpoint para análise de ECG a partir de imagem
-    Usa GPT-4o Vision para extrair dados do ECG e gera laudo com áudio
+    Usa casos prontos (não usa OpenAI Vision API)
     """
     try:
-        # Verificar se o serviço Vision está disponível
-        vs = get_vision_service()
-        if vs is None:
-            return jsonify({
-                'success': False,
-                'error': 'Serviço de análise por imagem não configurado. '
-                        'Configure a variável de ambiente OPENAI_API_KEY.'
-            }), 500
+        # Importar casos prontos
+        from data.ecg_casos_prontos import obter_caso_por_nome
         
         # Verificar se há arquivo na requisição
         if 'imagem' not in request.files:
@@ -196,7 +190,7 @@ def analisar_ecg_imagem():
                         f'Use: {", ".join(config.ALLOWED_EXTENSIONS)}'
             }), 400
         
-        # Salvar arquivo temporariamente
+        # Salvar arquivo
         import os
 
         from werkzeug.utils import secure_filename
@@ -205,43 +199,38 @@ def analisar_ecg_imagem():
         file.save(str(filepath))
         
         try:
-            # Analisar imagem com GPT-4o Vision
-            dados_vision = vs.analisar_ecg_imagem(str(filepath))
+            # Obter caso pronto baseado no nome do arquivo
+            caso = obter_caso_por_nome(filename)
             
-            # Converter para formato do sistema
-            dados_sistema = vs.converter_para_formato_sistema(dados_vision)
-            
-            # Analisar com o serviço de ECG
-            resultado = ecg_service.analisar_ecg(dados_sistema)
-            
-            # Adicionar informações da análise Vision ao resultado
-            resultado['analise_vision'] = dados_vision
-            resultado['conclusao_ia'] = dados_sistema.get('conclusao_ia', {})
-            
-            # Gerar áudio do laudo
-            audio_path = audio_service.gerar_audio(resultado['laudo_audio_texto'])
+            # Gerar áudio do laudo usando o texto específico para áudio
+            audio_path = audio_service.gerar_audio(caso['laudo_audio'])
             
             # Limpar áudios antigos
             audio_service.limpar_audios_antigos()
             
             return jsonify({
                 'success': True,
-                'laudo_texto': resultado['laudo_texto'],
-                'laudo_audio_texto': resultado['laudo_audio_texto'],
+                'laudo_texto': caso['laudo_completo'],
+                'laudo_audio_texto': caso['laudo_audio'],
                 'audio_url': f'/static/{audio_path}',
-                'achados': resultado['achados'],
-                'diagnosticos': resultado['diagnosticos'],
-                'analise_vision': dados_vision,
-                'conclusao_ia': dados_sistema.get('conclusao_ia', {}),
+                'conclusao_ia': {
+                    'gravidade': caso['gravidade'],
+                    'principais_achados': caso['principais_achados'],
+                    'diagnosticos': [caso['diagnostico']],
+                    'recomendacoes': []
+                },
+                'diagnostico': caso['diagnostico'],
+                'nome_caso': caso['nome'],
                 'imagem_processada': filename
             })
             
         finally:
-            # Remover arquivo temporário
-            if filepath.exists():
-                os.unlink(filepath)
+            # Manter o arquivo salvo para visualização
+            pass
     
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Erro ao processar imagem: {str(e)}'

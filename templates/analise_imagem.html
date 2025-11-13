@@ -4,33 +4,46 @@
 
 {% block content %}
 <div style="max-width: 1000px; margin: 0 auto; padding: 40px 20px;">
-    <h2 style="font-size: 2.5em; color: #1e40af; margin-bottom: 20px; text-align: center;">
+    <h2 style="font-size: 2.5em; color: #dc2626; margin-bottom: 20px; text-align: center;">
         📸 Análise de ECG por Imagem
     </h2>
     
     <p style="font-size: 1.2em; color: #6c757d; text-align: center; margin-bottom: 30px;">
-        Envie uma imagem de ECG e obtenha análise completa com áudio usando inteligência artificial GPT-4o Vision
+        Sistema com casos prontos e conversão para áudio com feedback TTS
     </p>
 
     <!-- Card de informações -->
-    <div style="background: #f0f9ff; border-radius: 12px; padding: 25px; margin-bottom: 30px; border: 2px solid #bfdbfe;">
-        <h3 style="color: #1e40af; margin-bottom: 15px; font-size: 1.5em;">ℹ️ Como funciona?</h3>
+    <div style="background: #fee2e2; border-radius: 12px; padding: 25px; margin-bottom: 30px; border: 2px solid #fca5a5;">
+        <h3 style="color: #dc2626; margin-bottom: 15px; font-size: 1.5em;">ℹ️ Como funciona?</h3>
         <ol style="line-height: 2; color: #334155; font-size: 1.1em;">
-            <li>Selecione uma imagem de ECG (formatos: PNG, JPG, JPEG, GIF, BMP, TIFF)</li>
-            <li>A IA GPT-4o Vision analisa a imagem e extrai todos os dados do ECG</li>
-            <li>O sistema processa os dados e gera um laudo completo</li>
-            <li>O laudo é convertido em áudio acelerado para acessibilidade</li>
+            <li>Visualize o exemplo de ECG de Arritmia Sinusal abaixo</li>
+            <li>Você pode enviar a mesma imagem ou outra similar</li>
+            <li>O sistema identifica o caso e retorna o laudo correspondente</li>
+            <li>O laudo é convertido em áudio otimizado (sem caracteres especiais)</li>
         </ol>
     </div>
 
+    <!-- Exemplo de imagem -->
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15); border: 1px solid #fca5a5; margin-bottom: 30px;">
+        <h3 style="color: #dc2626; margin-bottom: 20px; text-align: center; font-size: 1.8em;">📋 Exemplo: Arritmia Sinusal</h3>
+        <div style="text-align: center;">
+            <img src="{{ url_for('static', filename='ecg_images/ecg_448158e83eba.png') }}" 
+                 alt="Exemplo de ECG - Arritmia Sinusal" 
+                 style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 2px solid #dc2626;">
+            <p style="margin-top: 15px; color: #64748b; font-size: 1.1em;">
+                <strong>Caso:</strong> Arritmia Sinusal com Bloqueio Incompleto de Ramo Direito
+            </p>
+        </div>
+    </div>
+
     <!-- Formulário de upload -->
-    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); border: 1px solid #e0e7ff;">
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15); border: 1px solid #fca5a5;">
         <form id="formImagemECG" enctype="multipart/form-data" style="text-align: center;">
             <!-- Área de upload -->
-            <div style="border: 3px dashed #93c5fd; border-radius: 12px; padding: 40px; margin-bottom: 20px; background: #f8fafc; transition: all 0.3s;" 
+            <div style="border: 3px dashed #fca5a5; border-radius: 12px; padding: 40px; margin-bottom: 20px; background: #f8fafc; transition: all 0.3s;" 
                  id="dropArea"
-                 ondragover="event.preventDefault(); this.style.background='#dbeafe'; this.style.borderColor='#2563eb';"
-                 ondragleave="this.style.background='#f8fafc'; this.style.borderColor='#93c5fd';"
+                 ondragover="event.preventDefault(); this.style.background='#fee2e2'; this.style.borderColor='#dc2626';"
+                 ondragleave="this.style.background='#f8fafc'; this.style.borderColor='#fca5a5';"
                  ondrop="handleDrop(event)">
                 
                 <div style="font-size: 4em; margin-bottom: 15px;">📋</div>
@@ -52,8 +65,8 @@
 
             <!-- Preview da imagem -->
             <div id="previewContainer" style="display: none; margin-bottom: 20px;">
-                <p style="font-weight: bold; color: #1e40af; margin-bottom: 10px;">📷 Imagem selecionada:</p>
-                <img id="imagePreview" style="max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <p style="font-weight: bold; color: #dc2626; margin-bottom: 10px;">📷 Imagem selecionada:</p>
+                <img id="imagePreview" style="max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 2px solid #dc2626;">
                 <p id="fileName" style="margin-top: 10px; color: #64748b; font-size: 0.95em;"></p>
             </div>
 
@@ -65,10 +78,10 @@
     </div>
 
     <!-- Área de loading -->
-    <div id="loadingArea" style="display: none; text-align: center; margin-top: 30px; padding: 30px; background: #f0f9ff; border-radius: 12px;">
+    <div id="loadingArea" style="display: none; text-align: center; margin-top: 30px; padding: 30px; background: #fee2e2; border-radius: 12px;">
         <div style="font-size: 3em; margin-bottom: 15px;">⏳</div>
-        <p style="font-size: 1.3em; color: #1e40af; font-weight: bold;">Processando imagem com IA...</p>
-        <p style="color: #64748b; margin-top: 10px;">A análise pode levar alguns segundos</p>
+        <p style="font-size: 1.3em; color: #dc2626; font-weight: bold;">Processando imagem...</p>
+        <p style="color: #64748b; margin-top: 10px;">Identificando caso e gerando laudo com áudio</p>
     </div>
 
     <!-- Área de resultados -->
@@ -80,20 +93,20 @@
         </div>
 
         <!-- Card do laudo -->
-        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); border: 1px solid #e0e7ff; margin-bottom: 20px;">
-            <h3 style="color: #1e40af; font-size: 1.8em; margin-bottom: 20px;">📋 Laudo Médico</h3>
+        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15); border: 1px solid #fca5a5; margin-bottom: 20px;">
+            <h3 style="color: #dc2626; font-size: 1.8em; margin-bottom: 20px;">📋 Laudo Médico</h3>
             <div id="laudoTexto" style="background: #f8fafc; padding: 25px; border-radius: 8px; line-height: 1.8; white-space: pre-wrap; font-family: 'Courier New', monospace; color: #1e293b;"></div>
         </div>
 
         <!-- Player de áudio -->
-        <div style="background: #dbeafe; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);">
-            <h3 style="color: #1e40af; font-size: 1.8em; margin-bottom: 20px;">🔊 Laudo em Áudio</h3>
+        <div style="background: #fee2e2; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);">
+            <h3 style="color: #dc2626; font-size: 1.8em; margin-bottom: 20px;">🔊 Laudo em Áudio</h3>
             <audio id="audioPlayer" controls style="width: 100%; max-width: 600px;">
                 <source id="audioSource" type="audio/mpeg">
                 Seu navegador não suporta o elemento de áudio.
             </audio>
             <p style="margin-top: 15px; color: #475569; font-size: 0.95em;">
-                ⚡ Áudio acelerado para maior eficiência
+                ⚡ Áudio otimizado sem caracteres especiais
             </p>
         </div>
 
