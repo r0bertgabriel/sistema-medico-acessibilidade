@@ -1,689 +1,368 @@
-/**/**/**
-
- * Sistema de atalhos de teclado - APENAS caracteres numéricos e matemáticos
-
- * Atalhos permitidos: 0-9, /, *, -, +, . * Sistema de atalhos de teclado - APENAS caracteres numéricos e matemáticos * Sistema de atalhos de teclado com suporte a numpad
-
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * SISTEMA DE ATALHOS DE TECLADO - Hierarquia Clara e Organizada
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * REGRAS:
+ * - Apenas caracteres numéricos e matemáticos: 0-9, /, *, -, +, .
+ * - Suporte total ao teclado numérico (numpad)
+ * - Não funciona dentro de campos de texto (INPUT, TEXTAREA)
+ * 
+ * HIERARQUIA DE PRIORIDADE (maior → menor):
+ * 1. MODO MENU (ativado por '-')      → Teclas 0-9 viram navegação
+ * 2. ATALHOS UTILITÁRIOS (/, *, +)    → Sempre disponíveis
+ * 3. ATALHOS CONTEXTUAIS (0-9)        → Dependem da página atual
+ * 
+ * ═══════════════════════════════════════════════════════════════════════════
  */
 
- * Atalhos permitidos: 0-9, /, *, -, +, . */
-
-// Estado global
-
-let atalhosContexto = {}; */
-
-let modoMenu = false;
-
-let ultimoAnuncio = '';// Mapeamento de atalhos por contexto (página)
-
-
-
-// ===== ATALHOS GLOBAIS =====// Mapeamento de atalhos por contexto (página)let atalhosContexto = {};
-
-// Estes atalhos funcionam em TODAS as páginas
-
-const ATALHOS_GLOBAIS = {let atalhosContexto = {};let modoMenu = false;
-
-    '-': { descricao: 'Menu de navegação', acao: ativarModoMenu },
-
-    '/': { descricao: 'Ajuda - Listar todos os atalhos', acao: listarAtalhos },let modoMenu = false;
-
-    '*': { descricao: 'Repetir último anúncio', acao: repetirUltimoAnuncio },
-
-    '+': { descricao: 'Mutar ou desmutar áudio', acao: toggleMuteAtalho }let ultimoAnuncio = '';// Atalhos do modo menu (tecla -)
-
+// ═══════════════════════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════════════════════════════════
+const Estado = {
+    modoMenuAtivo: false,           // Se true, teclas 0-9 viram navegação
+    atalhosContextuais: {},         // Atalhos da página atual
+    ultimoAnuncio: ''               // Último texto anunciado (para *)
 };
 
-const atalhosMenu = {
-
-// Atalhos do modo menu (tecla -)
-
-const atalhosMenu = {// ===== ATALHOS GLOBAIS =====    '1': { descricao: 'Voltar para Página Inicial', acao: () => window.location.href = '/' },
-
-    '1': { descricao: 'Voltar para Página Inicial', acao: () => window.location.href = '/' },
-
-    '2': { descricao: 'Ir para Módulo ECG', acao: () => window.location.href = '/ecg' },// Estes atalhos funcionam em TODAS as páginas    '2': { descricao: 'Ir para Módulo ECG', acao: () => window.location.href = '/ecg' },
-
-    '3': { descricao: 'Ir para Módulo Hemograma', acao: () => window.location.href = '/hemograma' },
-
-    '0': { descricao: 'Cancelar menu', acao: cancelarMenu }    '3': { descricao: 'Ir para Módulo Hemograma', acao: () => window.location.href = '/hemograma' }
-
+// ═══════════════════════════════════════════════════════════════════════════
+// CAMADA 1: ATALHOS UTILITÁRIOS (Sempre disponíveis, exceto em text fields)
+// ═══════════════════════════════════════════════════════════════════════════
+const UTILITARIOS = {
+    '-': { 
+        nome: 'Menu de Navegação',
+        descricao: 'Ativa menu com opções 1, 2, 3 para navegar entre módulos',
+        acao: () => ativarMenu()
+    },
+    '/': { 
+        nome: 'Ajuda',
+        descricao: 'Lista todos os atalhos disponíveis',
+        acao: () => listarAjuda()
+    },
+    '*': { 
+        nome: 'Repetir',
+        descricao: 'Repete o último anúncio de áudio',
+        acao: () => repetirAnuncio()
+    },
+    '+': { 
+        nome: 'Mute/Unmute',
+        descricao: 'Alterna entre mutar e desmutar o áudio',
+        acao: () => alternarMute()
+    }
 };
 
-const ATALHOS_GLOBAIS = {};
+// ═══════════════════════════════════════════════════════════════════════════
+// CAMADA 2: MENU DE NAVEGAÇÃO (Ativado por '-', usa teclas 0-9)
+// ═══════════════════════════════════════════════════════════════════════════
+const MENU_NAVEGACAO = {
+    '1': { 
+        nome: 'Página Inicial',
+        acao: () => navegar('/')
+    },
+    '2': { 
+        nome: 'Módulo ECG',
+        acao: () => navegar('/ecg')
+    },
+    '3': { 
+        nome: 'Módulo Hemograma',
+        acao: () => navegar('/hemograma')
+    },
+    '0': { 
+        nome: 'Cancelar Menu',
+        acao: () => desativarMenu()
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CAMADA 3: ATALHOS CONTEXTUAIS (Definidos por cada página, usam 0-9)
+// ═══════════════════════════════════════════════════════════════════════════
+// Exemplo de uso em uma página:
+// registrarAtalhos({
+//     '1': { nome: 'Análise por Dados', acao: () => irPara('/analise') },
+//     '2': { nome: 'Análise por Imagem', acao: () => irPara('/analise-imagem') }
+// });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UTILITÁRIOS: Tradução de Teclas
+// ═══════════════════════════════════════════════════════════════════════════
 
 /**
-
- * Traduz teclas do numpad para seu equivalente numérico    '-': { descricao: 'Menu de navegação', acao: ativarModoMenu },
-
+ * Traduz teclas do numpad para equivalente normal
+ * Numpad1 → '1', NumpadAdd → '+', etc.
  */
-
-function traduzirNumpad(code) {    '/': { descricao: 'Ajuda - Listar todos os atalhos', acao: listarAtalhos },/**
-
-    const mapeamento = {
-
-        'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3',    '*': { descricao: 'Repetir último anúncio', acao: repetirUltimoAnuncio }, * Registra atalhos para a página atual
-
+function traduzirNumpad(code) {
+    const mapa = {
+        'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3',
         'Numpad4': '4', 'Numpad5': '5', 'Numpad6': '6', 'Numpad7': '7',
-
-        'Numpad8': '8', 'Numpad9': '9',    '+': { descricao: 'Mutar ou desmutar áudio', acao: toggleMuteAtalho } */
-
+        'Numpad8': '8', 'Numpad9': '9',
         'NumpadDivide': '/', 'NumpadMultiply': '*',
-
-        'NumpadSubtract': '-', 'NumpadAdd': '+',};function registrarAtalhos(atalhos) {
-
+        'NumpadSubtract': '-', 'NumpadAdd': '+',
         'NumpadDecimal': '.'
-
-    };    atalhosContexto = atalhos;
-
-    return mapeamento[code] || null;
-
-}// Atalhos do modo menu (tecla -)    console.log('📋 Atalhos registrados:', Object.keys(atalhos));
-
-
-
-/**const atalhosMenu = {}
-
- * Verifica se a tecla pressionada é permitida
-
- */    '1': { descricao: 'Voltar para Página Inicial', acao: () => window.location.href = '/' },
-
-function isTeclaPermitida(key) {
-
-    const permitidas = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',     '2': { descricao: 'Ir para Módulo ECG', acao: () => window.location.href = '/ecg' },/**
-
-                        '/', '*', '-', '+', '.'];
-
-    return permitidas.includes(key);    '3': { descricao: 'Ir para Módulo Hemograma', acao: () => window.location.href = '/hemograma' }, * Anuncia os atalhos disponíveis na página
-
+    };
+    return mapa[code] || null;
 }
 
-    '0': { descricao: 'Cancelar menu', acao: () => { modoMenu = false; anunciar('Menu cancelado'); } } */
-
 /**
-
- * Registra atalhos contextuais para a página atual};function anunciarAtalhosPagina() {
-
+ * Verifica se a tecla é permitida (0-9, /, *, -, +, .)
  */
-
-function registrarAtalhos(atalhos) {    let mensagem = 'Atalhos disponíveis: ';
-
-    atalhosContexto = atalhos;
-
-    console.log('📋 Atalhos registrados:', Object.keys(atalhos));/**    const atalhos = [];
-
+function ehTeclaPermitida(key) {
+    return /^[0-9\/\*\-\+\.]$/.test(key);
 }
 
- * Registra atalhos para a página atual    
-
 /**
-
- * Salva o último anúncio para poder repetir com * */    for (const [tecla, config] of Object.entries(atalhosContexto)) {
-
+ * Verifica se o elemento atual é campo de texto
  */
+function ehCampoDeTexto(element) {
+    const tag = element.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || element.isContentEditable;
+}
 
-function salvarUltimoAnuncio(texto) {function registrarAtalhos(atalhos) {        if (tecla !== 'Enter') { // Não anunciar Enter separadamente
+// ═══════════════════════════════════════════════════════════════════════════
+// AÇÕES: Camada 1 (Utilitários)
+// ═══════════════════════════════════════════════════════════════════════════
 
-    ultimoAnuncio = texto;
-
-}    atalhosContexto = atalhos;            atalhos.push(`${tecla}: ${config.descricao}`);
-
-
-
-/**    console.log('📋 Atalhos registrados:', Object.keys(atalhos));        }
-
- * Ativa o modo menu de navegação
-
- */}    }
-
-function ativarModoMenu() {
-
-    modoMenu = true;    
-
-    const opcoes = [];
-
-    for (const [tecla, config] of Object.entries(atalhosMenu)) {/**    mensagem += atalhos.join(', ');
-
-        opcoes.push(`Tecla ${tecla}: ${config.descricao}`);
-
-    } * Ativa modo menu de navegação    mensagem += '. Pressione menos para menu de navegação, H para ajuda.';
-
-    const mensagem = 'Menu de navegação. ' + opcoes.join('. ');
-
-     */    
-
-    if (typeof anunciar !== 'undefined') {
-
-        anunciar(mensagem);function ativarModoMenu() {    if (typeof anunciar !== 'undefined') {
-
-    }
-
-}    if (!modoMenu) {        anunciar(mensagem);
-
-
-
-/**        modoMenu = true;    }
-
- * Cancela o modo menu
-
- */        console.log('📋 Modo Menu ativado');}
-
-function cancelarMenu() {
-
-    modoMenu = false;        
-
-    if (typeof anunciar !== 'undefined') {
-
-        anunciar('Menu cancelado');        let mensagem = 'Menu de navegação ativado. Pressione: ';/**
-
-    }
-
-}        const opcoes = []; * Detecta se a tecla é do numpad
-
-
-
-/**        for (const [tecla, config] of Object.entries(atalhosMenu)) { */
-
- * Lista todos os atalhos disponíveis
-
- */            opcoes.push(`${tecla} para ${config.descricao}`);function isNumpadKey(code) {
-
-function listarAtalhos() {
-
-    let mensagem = 'Atalhos disponíveis. ';        }    const numpadKeys = [
-
+function ativarMenu() {
+    Estado.modoMenuAtivo = true;
     
-
-    // Atalhos globais        mensagem += opcoes.join(', ');        'Numpad0', 'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4',
-
-    mensagem += 'Atalhos globais: ';
-
-    for (const [tecla, config] of Object.entries(ATALHOS_GLOBAIS)) {                'Numpad5', 'Numpad6', 'Numpad7', 'Numpad8', 'Numpad9',
-
-        mensagem += `Tecla ${tecla}: ${config.descricao}. `;
-
-    }        if (typeof anunciar !== 'undefined') {        'NumpadSubtract', 'NumpadEnter', 'NumLock'
-
+    const opcoes = Object.entries(MENU_NAVEGACAO)
+        .map(([tecla, config]) => `${tecla}: ${config.nome}`)
+        .join('. ');
     
+    anunciarSeDisponivel(`Menu de navegação ativado. ${opcoes}`);
+    console.log('📂 Menu de navegação ATIVADO');
+}
 
-    // Atalhos contextuais (se houver)            anunciar(mensagem);    ];
+function desativarMenu() {
+    Estado.modoMenuAtivo = false;
+    anunciarSeDisponivel('Menu cancelado');
+    console.log('📂 Menu de navegação DESATIVADO');
+}
 
-    if (Object.keys(atalhosContexto).length > 0) {
-
-        mensagem += 'Atalhos desta página: ';        }    return numpadKeys.includes(code);
-
-        for (const [tecla, config] of Object.entries(atalhosContexto)) {
-
-            mensagem += `Tecla ${tecla}: ${config.descricao}. `;    }}
-
+function listarAjuda() {
+    let ajuda = 'Atalhos disponíveis. ';
+    
+    // Utilitários
+    ajuda += 'Utilitários: ';
+    for (const [tecla, config] of Object.entries(UTILITARIOS)) {
+        ajuda += `${tecla} para ${config.nome}. `;
+    }
+    
+    // Contextuais (se houver)
+    const contextuais = Object.keys(Estado.atalhosContextuais);
+    if (contextuais.length > 0) {
+        ajuda += 'Nesta página: ';
+        for (const [tecla, config] of Object.entries(Estado.atalhosContextuais)) {
+            ajuda += `${tecla} para ${config.nome}. `;
         }
-
-    }}
-
+    }
     
-
-    if (typeof anunciar !== 'undefined') {/**
-
-        anunciar(mensagem, true);
-
-    }/** * Converte código do numpad para tecla
-
+    anunciarSeDisponivel(ajuda, true);
 }
 
- * Lista todos os atalhos disponíveis (/ para ajuda) */
-
-/**
-
- * Repete o último anúncio de áudio */function numpadToKey(code) {
-
- */
-
-function repetirUltimoAnuncio() {function listarAtalhos() {    if (code.startsWith('Numpad')) {
-
-    if (ultimoAnuncio) {
-
-        if (typeof anunciar !== 'undefined') {    let mensagem = 'Atalhos disponíveis. ';        return code.replace('Numpad', '');
-
-            anunciar(ultimoAnuncio);
-
-        }        }
-
+function repetirAnuncio() {
+    if (Estado.ultimoAnuncio) {
+        anunciarSeDisponivel(Estado.ultimoAnuncio);
     } else {
-
-        if (typeof anunciar !== 'undefined') {    // Atalhos globais    return null;
-
-            anunciar('Nenhum anúncio anterior para repetir');
-
-        }    mensagem += 'Globais: ';}
-
+        anunciarSeDisponivel('Nenhum anúncio anterior para repetir');
     }
+}
 
-}    const globais = [];
-
-
-
-/**    for (const [tecla, config] of Object.entries(ATALHOS_GLOBAIS)) {/**
-
- * Alterna entre mutar e desmutar
-
- */        globais.push(`${tecla} para ${config.descricao}`); * Processa evento de teclado
-
-function toggleMuteAtalho() {
-
-    if (typeof toggleMute !== 'undefined') {    } */
-
+function alternarMute() {
+    if (typeof toggleMute === 'function') {
         toggleMute();
-
-    }    mensagem += globais.join(', ') + '. ';function processarTecla(e) {
-
+    } else {
+        console.warn('⚠️ Função toggleMute não disponível');
+    }
 }
 
-        // Ignora em campos de texto (exceto para alguns atalhos especiais)
+// ═══════════════════════════════════════════════════════════════════════════
+// AÇÕES: Camada 2 (Menu de Navegação)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function navegar(url) {
+    console.log('🔗 Navegando para:', url);
+    window.location.href = url;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AÇÕES: Camada 3 (Contextuais)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function executarContextual(tecla) {
+    const config = Estado.atalhosContextuais[tecla];
+    if (config) {
+        anunciarSeDisponivel(config.nome);
+        config.acao();
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UTILITÁRIOS: Integração com Sistema de Áudio
+// ═══════════════════════════════════════════════════════════════════════════
+
+function anunciarSeDisponivel(texto, prioridade = false) {
+    Estado.ultimoAnuncio = texto;
+    
+    if (typeof anunciar === 'function') {
+        anunciar(texto, prioridade);
+    } else {
+        console.log('🔊', texto);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROCESSADOR PRINCIPAL DE TECLAS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROCESSADOR PRINCIPAL DE TECLAS
+// ═══════════════════════════════════════════════════════════════════════════
 
 /**
-
- * Processa a tecla pressionada    // Atalhos da página    const isTextField = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-
+ * Processa cada tecla pressionada seguindo a hierarquia:
+ * 1º) Normaliza tecla (numpad → normal)
+ * 2º) Valida se é permitida (0-9, /, *, -, +, .)
+ * 3º) Ignora se está em campo de texto (exceto utilitários)
+ * 4º) Aplica hierarquia: Menu > Utilitários > Contextuais
  */
-
-function processarTecla(e) {    if (Object.keys(atalhosContexto).length > 0) {    
-
-    // Traduzir numpad
-
-    let tecla = e.key;        mensagem += 'Atalhos desta página: ';    // Detecta se é numpad
-
-    if (e.code && e.code.startsWith('Numpad')) {
-
-        const traduzida = traduzirNumpad(e.code);        const contextuais = [];    const isNumpad = isNumpadKey(e.code);
-
-        if (traduzida) {
-
-            tecla = traduzida;        for (const [tecla, config] of Object.entries(atalhosContexto)) {    let tecla = isNumpad ? numpadToKey(e.code) : e.key;
-
-        }
-
-    }            contextuais.push(`${tecla} para ${config.descricao}`);    
-
+function processarTecla(evento) {
+    // ─────────────────────────────────────────────────────────────────────
+    // PASSO 1: Normalizar tecla (traduzir numpad)
+    // ─────────────────────────────────────────────────────────────────────
+    let tecla = evento.key;
     
-
-    // Verificar se é uma tecla permitida        }    console.log('⌨️ Tecla:', e.key, 'Code:', e.code, 'Numpad:', isNumpad, 'Tecla processada:', tecla);
-
-    if (!isTeclaPermitida(tecla)) {
-
-        return; // Ignora teclas não permitidas        mensagem += contextuais.join(', ');    
-
+    if (evento.code && evento.code.startsWith('Numpad')) {
+        const traduzida = traduzirNumpad(evento.code);
+        if (traduzida) tecla = traduzida;
     }
-
-        }    // Modo Menu (tecla -)
-
-    // Verificar se está em campo de texto
-
-    const isTextField = e.target.tagName === 'INPUT' ||         if ((e.key === '-' || e.code === 'NumpadSubtract') && !isTextField) {
-
-                       e.target.tagName === 'TEXTAREA' ||
-
-                       e.target.isContentEditable;    if (typeof anunciar !== 'undefined') {        e.preventDefault();
-
     
-
-    // Em campos de texto, permitir apenas atalhos globais        anunciar(mensagem);        
-
-    if (isTextField && !ATALHOS_GLOBAIS[tecla]) {
-
-        return;    }        if (!modoMenu) {
-
+    // ─────────────────────────────────────────────────────────────────────
+    // PASSO 2: Validar tecla permitida
+    // ─────────────────────────────────────────────────────────────────────
+    if (!ehTeclaPermitida(tecla)) {
+        return; // Ignora teclas não permitidas silenciosamente
     }
-
-    }            modoMenu = true;
-
-    console.log('🔑 Tecla pressionada:', tecla, 'Modo menu:', modoMenu);
-
-                console.log('📋 Modo Menu ativado');
-
-    // MODO MENU ATIVO
-
-    if (modoMenu) {/**            
-
-        e.preventDefault();
-
-         * Repete o último anúncio (* para repetir)            let mensagem = 'Menu de navegação: ';
-
-        if (atalhosMenu[tecla]) {
-
-            const config = atalhosMenu[tecla]; */            const opcoes = [];
-
-            console.log('🎯 Executando ação do menu:', config.descricao);
-
-            config.acao();function repetirUltimoAnuncio() {            for (const [tecla, config] of Object.entries(atalhosMenu)) {
-
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // PASSO 3: Verificar contexto (campo de texto?)
+    // ─────────────────────────────────────────────────────────────────────
+    const emCampoTexto = ehCampoDeTexto(evento.target);
+    
+    // Em campos de texto, só processa utilitários
+    if (emCampoTexto && !UTILITARIOS[tecla]) {
+        return; // Permite digitação normal
+    }
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // PASSO 4: Aplicar HIERARQUIA de processamento
+    // ─────────────────────────────────────────────────────────────────────
+    
+    console.log(`🔑 Tecla: "${tecla}" | Menu: ${Estado.modoMenuAtivo} | Contexto: ${emCampoTexto ? 'TEXTO' : 'NORMAL'}`);
+    
+    // ╔═══════════════════════════════════════════════════════════════════╗
+    // ║ PRIORIDADE 1: MODO MENU ATIVO (teclas 0-9 viram navegação)       ║
+    // ╚═══════════════════════════════════════════════════════════════════╝
+    if (Estado.modoMenuAtivo) {
+        evento.preventDefault();
+        
+        const opcaoMenu = MENU_NAVEGACAO[tecla];
+        if (opcaoMenu) {
+            console.log(`📂 Executando menu: ${opcaoMenu.nome}`);
+            opcaoMenu.acao();
             
-
-            // Cancelar menu após execução (exceto se for cancelar)    if (ultimoAnuncio) {                opcoes.push(`${tecla} para ${config.descricao}`);
-
+            // Desativa menu automaticamente (exceto na opção '0' que já desativa)
             if (tecla !== '0') {
-
-                modoMenu = false;        console.log('🔁 Repetindo último anúncio:', ultimoAnuncio);            }
-
+                Estado.modoMenuAtivo = false;
             }
-
-        } else {        if (typeof anunciar !== 'undefined') {            mensagem += opcoes.join(', ') + '. Pressione Escape para cancelar.';
-
-            if (typeof anunciar !== 'undefined') {
-
-                anunciar(`Opção ${tecla} não disponível no menu`);            anunciar(ultimoAnuncio, true);            
-
-            }
-
-        }        }            if (typeof anunciar !== 'undefined') {
-
+        } else {
+            anunciarSeDisponivel(`Opção ${tecla} não existe no menu`);
+        }
         return;
-
-    }    } else {                anunciar(mensagem);
-
+    }
     
-
-    // ATALHOS GLOBAIS (fora de campos de texto ou dentro com tecla global)        console.log('❌ Nenhum anúncio anterior');            }
-
-    if (ATALHOS_GLOBAIS[tecla] && !isTextField) {
-
-        e.preventDefault();        if (typeof anunciar !== 'undefined') {        }
-
-        const config = ATALHOS_GLOBAIS[tecla];
-
-        console.log('🌍 Executando atalho global:', config.descricao);            anunciar('Nenhum anúncio anterior para repetir');        return;
-
-        config.acao();
-
-        return;        }    }
-
+    // ╔═══════════════════════════════════════════════════════════════════╗
+    // ║ PRIORIDADE 2: ATALHOS UTILITÁRIOS (-, /, *, +)                   ║
+    // ╚═══════════════════════════════════════════════════════════════════╝
+    if (UTILITARIOS[tecla]) {
+        evento.preventDefault();
+        
+        const utilitario = UTILITARIOS[tecla];
+        console.log(`🛠️ Executando utilitário: ${utilitario.nome}`);
+        utilitario.acao();
+        return;
     }
-
-        }    
-
-    // ATALHOS CONTEXTUAIS (da página atual)
-
-    if (atalhosContexto[tecla] && !isTextField) {}    // Se está em modo menu
-
-        e.preventDefault();
-
-        const config = atalhosContexto[tecla];    if (modoMenu) {
-
-        console.log('📄 Executando atalho contextual:', config.descricao);
-
-        /**        if (isNumpad && tecla && /^[0-9]$/.test(tecla)) {
-
-        if (typeof anunciar !== 'undefined') {
-
-            anunciar(config.descricao); * Salva o último anúncio (para repetir com *)            const atalho = atalhosMenu[tecla];
-
-        }
-
-         */            if (atalho) {
-
-        config.acao();
-
-        return;function salvarUltimoAnuncio(texto) {                e.preventDefault();
-
+    
+    // ╔═══════════════════════════════════════════════════════════════════╗
+    // ║ PRIORIDADE 3: ATALHOS CONTEXTUAIS (0-9 definidos pela página)    ║
+    // ╚═══════════════════════════════════════════════════════════════════╝
+    if (Estado.atalhosContextuais[tecla]) {
+        evento.preventDefault();
+        
+        const contextual = Estado.atalhosContextuais[tecla];
+        console.log(`📄 Executando contextual: ${contextual.nome}`);
+        executarContextual(tecla);
+        return;
     }
+    
+    // Se chegou aqui, tecla é válida mas não tem ação associada
+    console.log(`⚠️ Tecla "${tecla}" sem ação definida neste contexto`);
+}
 
-}    ultimoAnuncio = texto;                console.log(`📋 Menu: ${tecla} - ${atalho.descricao}`);
+// ═══════════════════════════════════════════════════════════════════════════
+// API PÚBLICA: Funções expostas para uso externo
+// ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * Registra atalhos contextuais para a página atual
+ * @param {Object} atalhos - Objeto com tecla: {nome, acao}
+ * 
+ * Exemplo:
+ * registrarAtalhos({
+ *     '1': { nome: 'Análise por Dados', acao: () => location.href = '/analise' },
+ *     '2': { nome: 'Ver Exemplos', acao: () => location.href = '/exemplos' }
+ * });
+ */
+function registrarAtalhos(atalhos) {
+    Estado.atalhosContextuais = atalhos;
+    const teclas = Object.keys(atalhos).join(', ');
+    console.log(`📋 Atalhos contextuais registrados: ${teclas}`);
+}
 
+/**
+ * Salva texto para função de repetir (*)
+ * @param {string} texto - Texto do anúncio
+ */
+function salvarUltimoAnuncio(texto) {
+    Estado.ultimoAnuncio = texto;
+}
 
-/**}                if (typeof anunciar !== 'undefined') {
-
+/**
  * Inicializa o sistema de atalhos
-
- */                    anunciar(atalho.descricao);
-
-function inicializarAtalhos() {
-
-    console.log('⌨️ Inicializando sistema de atalhos de teclado');/**                }
-
-    console.log('📋 Atalhos globais disponíveis:', Object.keys(ATALHOS_GLOBAIS));
-
-     * Toggle mute (+ para mutar/desmutar)                atalho.acao();
-
-    // Registrar listener para todas as teclas
-
-    document.addEventListener('keydown', processarTecla); */                modoMenu = false;
-
-    
-
-    console.log('✅ Sistema de atalhos inicializado');function toggleMuteAtalho() {            }
-
-}
-
-    // Esta função é definida em audio.js        } else if (e.key === 'Escape') {
-
-// Expor funções globalmente
-
-window.registrarAtalhos = registrarAtalhos;    if (typeof window.toggleMute !== 'undefined') {            e.preventDefault();
-
-window.salvarUltimoAnuncio = salvarUltimoAnuncio;
-
-window.inicializarAtalhos = inicializarAtalhos;        window.toggleMute();            modoMenu = false;
-
-
-
-console.log('✅ Módulo keyboard.js carregado');    } else {            if (typeof anunciar !== 'undefined') {
-
-
-        console.warn('⚠️ Função toggleMute não encontrada');                anunciar('Menu cancelado');
-
-        if (typeof anunciar !== 'undefined') {            }
-
-            anunciar('Função de mute não disponível');            console.log('❌ Modo Menu desativado');
-
-        }        }
-
-    }        return;
-
-}    }
-
-    
-
-/**    // Atalhos contextuais - Prioridade numpad numérico
-
- * Detecta se a tecla é do numpad    if (isNumpad && tecla && /^[0-9]$/.test(tecla) && !isTextField) {
-
- */        const atalho = atalhosContexto[tecla];
-
-function isNumpadKey(code) {        if (atalho) {
-
-    const numpadKeys = [            e.preventDefault();
-
-        'Numpad0', 'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4',            console.log(`⚡ Atalho Numpad: ${tecla} - ${atalho.descricao}`);
-
-        'Numpad5', 'Numpad6', 'Numpad7', 'Numpad8', 'Numpad9',            if (typeof anunciar !== 'undefined') {
-
-        'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract',                 anunciar(atalho.descricao);
-
-        'NumpadAdd', 'NumpadDecimal'            }
-
-    ];            atalho.acao();
-
-    return numpadKeys.includes(code);            return;
-
-}        }
-
-    }
-
-/**    
-
- * Converte código do numpad para tecla    // Atalhos com letras (teclado principal)
-
- */    if (!isTextField) {
-
-function numpadToKey(code) {        const atalho = atalhosContexto[e.key.toLowerCase()];
-
-    const mapa = {        if (atalho && /^[a-z]$/i.test(e.key)) {
-
-        'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3', 'Numpad4': '4',            e.preventDefault();
-
-        'Numpad5': '5', 'Numpad6': '6', 'Numpad7': '7', 'Numpad8': '8', 'Numpad9': '9',            console.log(`⚡ Atalho letra: ${e.key} - ${atalho.descricao}`);
-
-        'NumpadDivide': '/',            if (typeof anunciar !== 'undefined') {
-
-        'NumpadMultiply': '*',                anunciar(atalho.descricao);
-
-        'NumpadSubtract': '-',            }
-
-        'NumpadAdd': '+',            atalho.acao();
-
-        'NumpadDecimal': '.'            return;
-
-    };        }
-
-    return mapa[code] || null;    }
-
-}    
-
-    // NumpadEnter
-
-/**    if (e.code === 'NumpadEnter' && atalhosContexto['Enter']) {
-
- * Verifica se a tecla é permitida (apenas 0-9, /, *, -, +, .)        e.preventDefault();
-
- */        const atalhoEnter = atalhosContexto['Enter'];
-
-function isTeclaPermitida(tecla) {        console.log(`⚡ NumpadEnter - ${atalhoEnter.descricao}`);
-
-    return /^[0-9\/\*\-\+\.]$/.test(tecla);        if (typeof anunciar !== 'undefined') {
-
-}            anunciar(atalhoEnter.descricao);
-
-        }
-
-/**        atalhoEnter.acao();
-
- * Processa evento de teclado        return;
-
- */    }
-
-function processarTecla(e) {    
-
-    // Ignora em campos de texto (exceto para alguns atalhos especiais)    // Tecla M: Toggle Mute (integrado de audio.js)
-
-    const isTextField = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';    if ((e.key === 'm' || e.key === 'M') && !isTextField) {
-
-            e.preventDefault();
-
-    // Detecta se é numpad        if (typeof toggleMute !== 'undefined') {
-
-    const isNumpad = isNumpadKey(e.code);            toggleMute();
-
-    let tecla = isNumpad ? numpadToKey(e.code) : e.key;        }
-
-        }
-
-    // Ignora teclas não permitidas    
-
-    if (!isTeclaPermitida(tecla)) {    // Tecla H: Ajuda
-
-        return;    if ((e.key === 'h' || e.key === 'H') && !isTextField) {
-
-    }        e.preventDefault();
-
-            anunciarAtalhosPagina();
-
-    console.log('⌨️ Tecla:', e.key, 'Code:', e.code, 'Numpad:', isNumpad, 'Tecla processada:', tecla);    }
-
-    }
-
-    // ===== MODO MENU (após pressionar -) =====
-
-    if (modoMenu && !isTextField) {/**
-
-        const atalhoMenu = atalhosMenu[tecla]; * Inicializa sistema de atalhos
-
-        if (atalhoMenu) { */
-
-            e.preventDefault();function inicializarAtalhos() {
-
-            console.log(`📋 Menu: ${tecla} - ${atalhoMenu.descricao}`);    document.addEventListener('keydown', processarTecla);
-
-            if (typeof anunciar !== 'undefined') {    console.log('⌨️ Sistema de atalhos inicializado');
-
-                anunciar(atalhoMenu.descricao);}
-
-            }
-
-            atalhoMenu.acao();// Exportar para uso global
-
-            modoMenu = false;if (typeof window !== 'undefined') {
-
-            return;    window.registrarAtalhos = registrarAtalhos;
-
-        }    window.anunciarAtalhosPagina = anunciarAtalhosPagina;
-
-    }    window.inicializarAtalhos = inicializarAtalhos;
-
-    }
-
-    // ===== ATALHOS GLOBAIS =====
-    if (!isTextField) {
-        const atalhoGlobal = ATALHOS_GLOBAIS[tecla];
-        if (atalhoGlobal) {
-            e.preventDefault();
-            console.log(`🌐 Atalho global: ${tecla} - ${atalhoGlobal.descricao}`);
-            
-            // Não anuncia o próprio atalho se for repetir (*)
-            if (tecla !== '*') {
-                if (typeof anunciar !== 'undefined') {
-                    anunciar(atalhoGlobal.descricao);
-                }
-            }
-            
-            atalhoGlobal.acao();
-            return;
-        }
-    }
-    
-    // ===== ATALHOS CONTEXTUAIS (da página) =====
-    if (!isTextField) {
-        const atalhoContexto = atalhosContexto[tecla];
-        if (atalhoContexto) {
-            e.preventDefault();
-            console.log(`⚡ Atalho contextual: ${tecla} - ${atalhoContexto.descricao}`);
-            if (typeof anunciar !== 'undefined') {
-                anunciar(atalhoContexto.descricao);
-            }
-            atalhoContexto.acao();
-            return;
-        }
-    }
-    
-    // Se chegou aqui em modo menu e não encontrou atalho
-    if (modoMenu && !isTextField) {
-        e.preventDefault();
-        if (typeof anunciar !== 'undefined') {
-            anunciar('Opção inválida. Pressione 0 para cancelar ou barra para ajuda');
-        }
-    }
-}
-
-/**
- * Inicializa sistema de atalhos
+ * Chamada automaticamente pelo base.html
  */
 function inicializarAtalhos() {
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('⌨️  SISTEMA DE ATALHOS INICIALIZADO');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('Utilitários disponíveis:');
+    for (const [tecla, config] of Object.entries(UTILITARIOS)) {
+        console.log(`  ${tecla} → ${config.nome}`);
+    }
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('');
+    
+    // Registra listener único
     document.addEventListener('keydown', processarTecla);
-    console.log('⌨️ Sistema de atalhos inicializado');
-    console.log('📋 Atalhos globais:', Object.keys(ATALHOS_GLOBAIS));
 }
 
-/**
- * Anuncia os atalhos disponíveis na página (compatibilidade)
- */
-function anunciarAtalhosPagina() {
-    listarAtalhos();
-}
+// ═══════════════════════════════════════════════════════════════════════════
+// EXPORTAÇÃO GLOBAL
+// ═══════════════════════════════════════════════════════════════════════════
 
-// Exportar para uso global
-if (typeof window !== 'undefined') {
-    window.registrarAtalhos = registrarAtalhos;
-    window.anunciarAtalhosPagina = anunciarAtalhosPagina;
-    window.inicializarAtalhos = inicializarAtalhos;
-    window.salvarUltimoAnuncio = salvarUltimoAnuncio;
-    window.listarAtalhos = listarAtalhos;
-}
+window.registrarAtalhos = registrarAtalhos;
+window.salvarUltimoAnuncio = salvarUltimoAnuncio;
+window.inicializarAtalhos = inicializarAtalhos;
+
+console.log('✅ keyboard.js carregado com sucesso');
+

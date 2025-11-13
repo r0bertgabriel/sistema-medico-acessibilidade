@@ -30,6 +30,12 @@ def analise_imagem():
     return render_template('analise_imagem.html')
 
 
+@main_bp.route('/teste-mute')
+def teste_mute():
+    """Página de teste do botão mute"""
+    return render_template('teste_mute.html')
+
+
 @main_bp.route('/resultados')
 def resultados():
     """Página com fila de resultados de pacientes"""
