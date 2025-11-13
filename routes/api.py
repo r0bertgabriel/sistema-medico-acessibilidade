@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 
 import config
 from data import obter_todos_exemplos
-from services import AudioService, ECGService
+from services import AudioService, ECGImageGenerator, ECGService
 from services.hemograma_service import HemogramaService
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
@@ -14,6 +14,7 @@ api_bp = Blueprint('api', __name__, url_prefix='/api')
 ecg_service = ECGService()
 hemograma_service = HemogramaService()
 audio_service = AudioService()
+ecg_image_generator = ECGImageGenerator()
 vision_service = None  # Será inicializado sob demanda
 
 # Criar diretório de uploads se não existir
@@ -71,7 +72,7 @@ def anunciar_texto():
 def analisar_ecg():
     """
     Endpoint para análise de ECG
-    Recebe dados em JSON e retorna laudo completo
+    Recebe dados em JSON e retorna laudo completo + imagem
     """
     try:
         dados_json = request.get_json()
@@ -82,14 +83,19 @@ def analisar_ecg():
         # Gerar áudio do laudo
         audio_path = audio_service.gerar_audio(resultado['laudo_audio_texto'])
         
-        # Limpar áudios antigos
+        # Gerar imagem do ECG
+        imagem_path = ecg_image_generator.gerar_imagem_ecg(dados_json)
+        
+        # Limpar arquivos antigos
         audio_service.limpar_audios_antigos()
+        ecg_image_generator.limpar_imagens_antigas()
         
         return jsonify({
             'success': True,
             'laudo_texto': resultado['laudo_texto'],
             'laudo_audio_texto': resultado['laudo_audio_texto'],
             'audio_url': f'/static/{audio_path}',
+            'imagem_url': f'/static/{imagem_path}',
             'achados': resultado['achados'],
             'diagnosticos': resultado['diagnosticos']
         })
@@ -113,7 +119,7 @@ def obter_resultados():
 @api_bp.route('/resultado/<tipo>', methods=['POST'])
 def processar_resultado(tipo):
     """
-    Processa um resultado específico e retorna o laudo
+    Processa um resultado específico e retorna o laudo + imagem
     """
     resultados = obter_todos_exemplos()
     
@@ -131,8 +137,12 @@ def processar_resultado(tipo):
     # Gerar áudio
     audio_path = audio_service.gerar_audio(resultado['laudo_audio_texto'])
     
-    # Limpar áudios antigos
+    # Gerar imagem do ECG
+    imagem_path = ecg_image_generator.gerar_imagem_ecg(dados_dict)
+    
+    # Limpar arquivos antigos
     audio_service.limpar_audios_antigos()
+    ecg_image_generator.limpar_imagens_antigas()
     
     return jsonify({
         'success': True,
@@ -140,6 +150,7 @@ def processar_resultado(tipo):
         'laudo_texto': resultado['laudo_texto'],
         'laudo_audio_texto': resultado['laudo_audio_texto'],
         'audio_url': f'/static/{audio_path}',
+        'imagem_url': f'/static/{imagem_path}',
         'achados': resultado['achados'],
         'diagnosticos': resultado['diagnosticos']
     })

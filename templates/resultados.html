@@ -175,6 +175,18 @@
 <div id="resultado-resultado" role="region" aria-live="polite" aria-label="Resultado da análise do resultado">
     <h3 style="color: #dc2626; margin-bottom: 20px;">📋 Laudo Gerado</h3>
     
+    <!-- Imagem do ECG -->
+    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        <h4 style="color: #495057; margin-bottom: 15px;">📊 Traçado do Eletrocardiograma</h4>
+        <img id="imagem-ecg-resultado" 
+             src="" 
+             alt="Traçado do ECG" 
+             style="max-width: 100%; height: auto; border: 2px solid #dee2e6; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
+            Representação sintética do ECG baseada nos dados fornecidos
+        </p>
+    </div>
+    
     <div class="audio-player">
         <h4 style="color: #495057; margin-bottom: 15px;">🔊 Laudo em Áudio</h4>
         <audio id="audio-laudo-resultado" controls style="width: 100%; max-width: 500px;" 
@@ -232,6 +244,11 @@ async function processarResultado(tipo) {
             // Mostrar resultado
             document.getElementById('resultado-resultado').style.display = 'block';
             document.getElementById('laudo-texto-resultado').textContent = resultado.laudo_texto;
+            
+            // Configurar imagem do ECG
+            const imagemEcg = document.getElementById('imagem-ecg-resultado');
+            imagemEcg.src = resultado.imagem_url;
+            imagemEcg.alt = `Traçado do ECG - ${resultado.paciente}`;
             
             // Configurar áudio
             const audioPlayer = document.getElementById('audio-laudo-resultado');
