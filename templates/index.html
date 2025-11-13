@@ -181,29 +181,28 @@
 </style>
 
 <script>
-// Anunciar página ao carregar
+// Anunciar página ao carregar e registrar atalhos
 document.addEventListener('DOMContentLoaded', function() {
+    // Registrar atalhos contextuais da página
+    registrarAtalhos({
+        '1': {
+            descricao: 'Ir para módulo E C G',
+            acao: function() {
+                window.location.href = '/ecg';
+            }
+        },
+        '2': {
+            descricao: 'Ir para módulo Hemograma',
+            acao: function() {
+                window.location.href = '/hemograma';
+            }
+        }
+    });
+    
+    // Anúncio inicial
     setTimeout(() => {
-        anunciar('Sistema de Análise de Exames Médicos. Dois módulos disponíveis: ECG e Hemograma. Use teclas 2 ou 3 para acessar.');
+        anunciar('Bem-vindo ao Sistema de Análise de Exames Médicos. Dois módulos disponíveis: ECG e Hemograma. Pressione 1 para E C G ou 2 para Hemograma. Pressione barra para ajuda completa.');
     }, 500);
 });
-
-function anunciar(texto) {
-    fetch('/api/anunciar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ texto: texto })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.audio_url) {
-            const audio = new Audio(data.audio_url);
-            audio.play();
-        }
-    })
-    .catch(error => console.error('Erro ao anunciar:', error));
-}
 </script>
 {% endblock %}

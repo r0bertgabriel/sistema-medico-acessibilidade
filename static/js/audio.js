@@ -154,6 +154,11 @@ function anunciar(texto, prioridade = false) {
     
     console.log('🔊 Anunciando:', texto, prioridade ? '(PRIORIDADE)' : '');
     
+    // Salva último anúncio para repetir com * (se a função existir)
+    if (typeof window.salvarUltimoAnuncio !== 'undefined') {
+        window.salvarUltimoAnuncio(texto);
+    }
+    
     // Pausa áudios de laudo
     pausarAudiosLaudo();
     

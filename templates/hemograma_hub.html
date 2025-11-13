@@ -195,10 +195,33 @@
 </div>
 
 <script>
-// Anunciar página ao carregar
+// Anunciar página ao carregar e registrar atalhos
 document.addEventListener('DOMContentLoaded', function() {
+    // Registrar atalhos contextuais
+    registrarAtalhos({
+        '1': {
+            descricao: 'Nova análise de hemograma',
+            acao: function() {
+                window.location.href = '/hemograma/analise';
+            }
+        },
+        '2': {
+            descricao: 'Ver exemplos de hemogramas',
+            acao: function() {
+                window.location.href = '/hemograma-resultados';
+            }
+        },
+        '0': {
+            descricao: 'Voltar ao início',
+            acao: function() {
+                window.location.href = '/';
+            }
+        }
+    });
+    
+    // Anúncio inicial
     setTimeout(() => {
-        anunciar('Módulo Hemograma Completo. Duas opções disponíveis: nova análise e exemplos clínicos.');
+        anunciar('Módulo Hemograma Completo. Duas opções: Pressione 1 para nova análise ou 2 para ver exemplos clínicos. Pressione barra para ajuda completa.');
     }, 500);
 });
 
