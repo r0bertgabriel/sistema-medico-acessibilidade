@@ -192,7 +192,7 @@ document.getElementById('formImagemECG').addEventListener('submit', async functi
                 if (data.conclusao_ia.principais_achados && data.conclusao_ia.principais_achados.length > 0) {
                     conclusaoHTML += `
                         <div style="margin-bottom: 15px;">
-                            <strong>🔍 Principais Achados:</strong>
+                            <strong>🔍 Hallazgos Principales:</strong>
                             <ul style="margin-top: 10px; text-align: left;">
                                 ${data.conclusao_ia.principais_achados.map(achado => `<li>${achado}</li>`).join('')}
                             </ul>

@@ -9,10 +9,10 @@
     </h2>
     
     <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
-        Preencha os dados do hemograma para gerar laudo automático com áudio acelerado
+        Complete los datos del hemograma para generar informe automático con audio acelerado
     </p>
 
-    <!-- Botões de Exemplo -->
+    <!-- Botones de Ejemplo -->
     <div style="margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap;">
         <button onclick="carregarExemplo('normal')" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
             Cargar Ejemplo Normal
@@ -30,9 +30,9 @@
 
     <form id="formHemograma" style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
         
-        <!-- Dados do Paciente -->
+        <!-- Datos del Paciente -->
         <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #2563eb;">
-            <h3 style="color: #1e40af; margin-bottom: 20px;">👤 Dados do Paciente</h3>
+            <h3 style="color: #1e40af; margin-bottom: 20px;">👤 Datos del Paciente</h3>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                 <div>
@@ -239,10 +239,10 @@
                                       font-size: 0.95em; line-height: 1.6; max-height: 600px; overflow-y: auto;">
             </div>
             
-            <!-- Botão para copiar laudo -->
+            <!-- Botón para copiar informe -->
             <div style="margin-top: 20px; text-align: center;">
                 <button onclick="copiarLaudo()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    📋 Copiar Laudo
+                    📋 Copiar Informe
                 </button>
             </div>
         </div>
@@ -275,7 +275,7 @@ async function carregarExemplo(tipo) {
         if (data.success) {
             const exemplo = data.exemplo;
             
-            // Preencher dados do paciente
+            // Rellenar datos del paciente
             document.getElementById('nome').value = exemplo.paciente.nome;
             document.getElementById('idade').value = exemplo.paciente.idade;
             document.getElementById('sexo').value = exemplo.paciente.sexo;
@@ -320,7 +320,7 @@ function limparFormulario() {
     anunciar('Formulário limpo');
 }
 
-// Copiar laudo para área de transferência
+// Copiar informe al portapapeles
 function copiarLaudo() {
     const texto = document.getElementById('textoLaudo').textContent;
     navigator.clipboard.writeText(texto).then(() => {

@@ -99,7 +99,7 @@
 <h2 style="color: #1e40af; margin-bottom: 20px;">📋 Cola de Resultados de ECG</h2>
 
 <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
-    Selecione um dos pacientes na fila abaixo para gerar um laudo automático com áudio acelerado.
+    Seleccione uno de los pacientes en la cola a continuación para generar un informe automático con audio acelerado.
     Estes casos demonstram diferentes cenários clínicos para análise.
 </p>
 
@@ -109,15 +109,15 @@
     <p><strong>Paciente:</strong> Masculino, 45 anos</p>
     <p><strong>Descripción:</strong> ECG de 12 derivaciones en reposo, ritmo sinusal estable, sin alteraciones significativas.</p>
     
-    <p><strong>Achados principais:</strong></p>
+    <p><strong>Hallazgos principales:</strong></p>
     <ul>
         <li><strong>Ritmo:</strong> Sinusal, frecuencia ventricular media 72 lpm</li>
         <li><strong>Onda P:</strong> Precede cada complejo QRS, morfología normal</li>
         <li><strong>Intervalo PR:</strong> ~160 ms (rango normal: 120-200 ms)</li>
         <li><strong>Duración del QRS:</strong> ~90 ms (normal < 100-110 ms)</li>
-        <li><strong>Eixo elétrico frontal:</strong> Normal (~+60°)</li>
+        <li><strong>Eje eléctrico frontal:</strong> Normal (~+60°)</li>
         <li><strong>Segmento ST:</strong> Isoeléctrico, sin alteraciones sugestivas de isquemia</li>
-        <li><strong>Ondas T:</strong> Morfologia e polaridade esperadas</li>
+        <li><strong>Ondas T:</strong> Morfología y polaridad esperadas</li>
     </ul>
     
     <p><strong>Conclusión:</strong> Electrocardiograma dentro de los límites de normalidad para adulto con ritmo sinusal. No se evidencian signos de sobrecarga auricular o ventricular, bloqueos de rama, isquemia o arritmia persistente.</p>
@@ -164,13 +164,13 @@
     <p><strong>Paciente:</strong> Masculino, 52 anos, assintomático</p>
     <p><strong>Descripción:</strong> ECG con bloqueo de rama derecha incompleto y alteraciones secundarias de la repolarización.</p>
     
-    <p><strong>Achados principais:</strong></p>
+    <p><strong>Hallazgos principales:</strong></p>
     <ul>
         <li><strong>Ritmo:</strong> Sinusal, frecuencia ~68 lpm</li>
         <li><strong>Intervalo PR:</strong> ~160 ms</li>
         <li><strong>Duración del QRS:</strong> ~110 ms (ainda < 120 ms)</li>
-        <li><strong>Morfologia em V1/V2:</strong> Padrão <strong>RSR'</strong> ou rSR' típico de Bloqueio de Ramo Direito Incompleto</li>
-        <li><strong>Onda R':</strong> Em V1/V2 com alargamento da onda S em derivações laterais (I, V6)</li>
+        <li><strong>Morfología en V1/V2:</strong> Patrón <strong>RSR'</strong> o rSR' típico de Bloqueo de Rama Derecha Incompleto</li>
+        <li><strong>Onda R':</strong> En V1/V2 con ensanchamiento de la onda S en derivaciones laterales (I, V6)</li>
         <li><strong>Eixo frontal:</strong> Normal</li>
         <li><strong>Sobrecarga:</strong> Sinais de sobrecarga atrial ou ventricular não detectados</li>
         <li><strong>ST/T:</strong> Estáveis</li>
@@ -222,7 +222,7 @@
     
     <div style="text-align: center; margin-top: 20px;">
         <button class="btn" onclick="copiarLaudoResultado()" aria-label="Copiar texto do laudo">
-            📋 Copiar Laudo
+            📋 Copiar Informe
         </button>
         <button class="btn" onclick="voltarResultados()" 
                 style="background: #6c757d; margin-left: 10px;"
@@ -305,7 +305,7 @@ function copiarLaudoResultado() {
     navigator.clipboard.writeText(texto).then(() => {
         alert('Laudo copiado para a área de transferência!');
     }).catch(err => {
-        alert('Erro ao copiar laudo: ' + err);
+        alert('Error al copiar informe: ' + err);
     });
 }
 
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         'c': {
-            descricao: 'Copiar laudo',
+            descricao: 'Copiar informe',
             acao: function() {
                 const resultado = document.getElementById('resultado-resultado');
                 if (resultado && resultado.style.display !== 'none') {

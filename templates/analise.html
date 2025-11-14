@@ -95,7 +95,7 @@
 <h2 style="color: #1e40af; margin-bottom: 20px;">📊 Análisis de Electrocardiograma</h2>
 
 <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
-    Preencha os campos abaixo com os dados do ECG. Todos os campos marcados com (*) são obrigatórios.
+    Complete los campos a continuación con los datos del ECG. Todos los campos marcados con (*) son obligatorios.
 </p>
 
 <form id="form-ecg" aria-label="Formulario de análisis de ECG">
@@ -164,10 +164,10 @@
             </div>
             
             <div class="form-group">
-                <label for="eixo_qrs">Eixo Elétrico (graus) *</label>
+                <label for="eixo_qrs">Eje Eléctrico (grados) *</label>
                 <input type="number" id="eixo_qrs" name="eixo_qrs" 
                        value="60" min="-180" max="180" required 
-                       aria-label="Eixo elétrico do QRS em graus">
+                       aria-label="Eje eléctrico del QRS en grados">
             </div>
         </div>
     </fieldset>
@@ -232,7 +232,7 @@
     </fieldset>
 
     <div style="text-align: center; margin-top: 30px;">
-        <button type="submit" class="btn" aria-label="Gerar laudo do ECG">
+        <button type="submit" class="btn" aria-label="Generar informe del ECG">
             🔬 Gerar Laudo
         </button>
     </div>
@@ -240,11 +240,11 @@
 
 <div class="loading" id="loading" role="status" aria-live="polite">
     <div class="loading-spinner"></div>
-    <p style="margin-top: 15px; color: #dc2626; font-weight: 600;">Analisando ECG e gerando laudo em áudio...</p>
+    <p style="margin-top: 15px; color: #dc2626; font-weight: 600;">Analizando ECG y generando informe en audio...</p>
 </div>
 
 <div id="resultado" role="region" aria-live="polite" aria-label="Resultado del análisis">
-    <h3 style="color: #dc2626; margin-bottom: 20px;">📋 Laudo Gerado</h3>
+    <h3 style="color: #dc2626; margin-bottom: 20px;">📋 Informe Generado</h3>
     
     <!-- Imagem do ECG -->
     <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
@@ -259,9 +259,9 @@
     </div>
     
     <div class="audio-player">
-        <h4 style="color: #495057; margin-bottom: 15px;">🔊 Laudo em Áudio</h4>
+        <h4 style="color: #495057; margin-bottom: 15px;">🔊 Informe en Audio</h4>
         <audio id="audio-laudo" controls style="width: 100%; max-width: 500px;" 
-               aria-label="Player de áudio do laudo">
+               aria-label="Reproductor de audio del informe">
             Seu navegador não suporta o elemento de áudio.
         </audio>
         <p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
@@ -270,13 +270,13 @@
     </div>
     
     <div style="margin-top: 20px;">
-        <h4 style="color: #495057; margin-bottom: 15px;">📄 Laudo em Texto</h4>
-        <div id="laudo-texto" aria-label="Texto completo do laudo"></div>
+        <h4 style="color: #495057; margin-bottom: 15px;">📄 Informe en Texto</h4>
+        <div id="laudo-texto" aria-label="Texto completo del informe"></div>
     </div>
     
     <div style="text-align: center; margin-top: 20px;">
-        <button class="btn" onclick="copiarLaudo()" aria-label="Copiar texto do laudo">
-            📋 Copiar Laudo
+        <button class="btn" onclick="copiarLaudo()" aria-label="Copiar texto del informe">
+            📋 Copiar Informe
         </button>
     </div>
 </div>
@@ -381,7 +381,7 @@ function copiarLaudo() {
     navigator.clipboard.writeText(texto).then(() => {
         alert('Laudo copiado para a área de transferência!');
     }).catch(err => {
-        alert('Erro ao copiar laudo: ' + err);
+        alert('Error al copiar informe: ' + err);
     });
 }
 
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         'c': {
-            descricao: 'Copiar laudo',
+            descricao: 'Copiar informe',
             acao: function() {
                 const resultado = document.getElementById('resultado');
                 if (resultado && resultado.style.display !== 'none') {
