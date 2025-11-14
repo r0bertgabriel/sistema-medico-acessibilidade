@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Fila de Resultados{% endblock %}
+{% block title %}Cola de Resultados{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -96,7 +96,7 @@
 {% endblock %}
 
 {% block content %}
-<h2 style="color: #1e40af; margin-bottom: 20px;">📋 Fila de Resultados de ECG</h2>
+<h2 style="color: #1e40af; margin-bottom: 20px;">📋 Cola de Resultados de ECG</h2>
 
 <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
     Selecione um dos pacientes na fila abaixo para gerar um laudo automático com áudio acelerado.
@@ -107,23 +107,23 @@
 <div class="resultado-card">
     <h3>✅ ECG Normal</h3>
     <p><strong>Paciente:</strong> Masculino, 45 anos</p>
-    <p><strong>Descrição:</strong> ECG de 12 derivações em repouso, ritmo sinusal estável, sem alterações significativas.</p>
+    <p><strong>Descripción:</strong> ECG de 12 derivaciones en reposo, ritmo sinusal estable, sin alteraciones significativas.</p>
     
     <p><strong>Achados principais:</strong></p>
     <ul>
-        <li><strong>Ritmo:</strong> Sinusal, frequência ventricular média 72 bpm</li>
-        <li><strong>Onda P:</strong> Precede cada complexo QRS, morfologia normal</li>
-        <li><strong>Intervalo PR:</strong> ~160 ms (faixa normal: 120-200 ms)</li>
-        <li><strong>Duração do QRS:</strong> ~90 ms (normal < 100-110 ms)</li>
+        <li><strong>Ritmo:</strong> Sinusal, frecuencia ventricular media 72 lpm</li>
+        <li><strong>Onda P:</strong> Precede cada complejo QRS, morfología normal</li>
+        <li><strong>Intervalo PR:</strong> ~160 ms (rango normal: 120-200 ms)</li>
+        <li><strong>Duración del QRS:</strong> ~90 ms (normal < 100-110 ms)</li>
         <li><strong>Eixo elétrico frontal:</strong> Normal (~+60°)</li>
-        <li><strong>Segmento ST:</strong> Isoelétrico, sem alterações sugestivas de isquemia</li>
+        <li><strong>Segmento ST:</strong> Isoeléctrico, sin alteraciones sugestivas de isquemia</li>
         <li><strong>Ondas T:</strong> Morfologia e polaridade esperadas</li>
     </ul>
     
-    <p><strong>Conclusão:</strong> Eletrocardiograma dentro dos limites de normalidade para adulto com ritmo sinusal. Não evidenciados sinais de sobrecarga atrial ou ventricular, bloqueios de ramo, isquemia ou arritmia persistente.</p>
+    <p><strong>Conclusión:</strong> Electrocardiograma dentro de los límites de normalidad para adulto con ritmo sinusal. No se evidencian signos de sobrecarga auricular o ventricular, bloqueos de rama, isquemia o arritmia persistente.</p>
     
     <button class="btn" onclick="processarResultado('normal')" 
-            aria-label="Gerar laudo do ECG normal">
+            aria-label="Generar informe del ECG normal">
         🔬 Gerar Laudo deste Resultado
     </button>
 </div>
@@ -132,7 +132,7 @@
 <div class="resultado-card">
     <h3>⚠️ Arritmia Sinusal com Sobrecarga Atrial</h3>
     <p><strong>Paciente:</strong> Feminino, 38 anos, referindo episódios de palpitações ao esforço leve</p>
-    <p><strong>Descrição:</strong> ECG de 12 derivações em repouso, ritmo sinusal com irregularidade respiratória.</p>
+    <p><strong>Descripción:</strong> ECG de 12 derivações em repouso, ritmo sinusal com irregularidade respiratória.</p>
     
     <p><strong>Achados principais:</strong></p>
     <ul>
@@ -147,10 +147,10 @@
         <li><strong>Sobrecarga atrial direita:</strong> Onda P aumentada em amplitude em DII > 2,5 mm</li>
         <li><strong>Intervalos:</strong> PR ~150 ms, QRS ~100 ms</li>
         <li><strong>Eixo frontal:</strong> Dentro dos limites</li>
-        <li><strong>Segmentos ST/T:</strong> Sem alterações significativas</li>
+        <li><strong>Segmentos ST/T:</strong> Sin alteraciones significativas</li>
     </ul>
     
-    <p><strong>Conclusão:</strong> ECG com ritmo sinusal com arritmia sinusal (variação respiratória) e sinais de sobrecarga atrial. Sugere avaliação adicional com ecocardiograma para dimensionamento atrial e investigação de causas (valvopatias, hipertensão, doença pulmonar).</p>
+    <p><strong>Conclusión:</strong> ECG com ritmo sinusal com arritmia sinusal (variação respiratória) e sinais de sobrecarga atrial. Sugere avaliação adicional com ecocardiograma para dimensionamento atrial e investigação de causas (valvopatias, hipertensão, doença pulmonar).</p>
     
     <button class="btn" onclick="processarResultado('arritmia_sinusal')" 
             aria-label="Gerar laudo do ECG com arritmia sinusal">
@@ -162,13 +162,13 @@
 <div class="resultado-card">
     <h3>🔴 Bloqueio Incompleto do Ramo Direito</h3>
     <p><strong>Paciente:</strong> Masculino, 52 anos, assintomático</p>
-    <p><strong>Descrição:</strong> ECG com bloqueio de ramo direito incompleto e alterações secundárias da repolarização.</p>
+    <p><strong>Descripción:</strong> ECG con bloqueo de rama derecha incompleto y alteraciones secundarias de la repolarización.</p>
     
     <p><strong>Achados principais:</strong></p>
     <ul>
-        <li><strong>Ritmo:</strong> Sinusal, frequência ~68 bpm</li>
+        <li><strong>Ritmo:</strong> Sinusal, frecuencia ~68 lpm</li>
         <li><strong>Intervalo PR:</strong> ~160 ms</li>
-        <li><strong>Duração do QRS:</strong> ~110 ms (ainda < 120 ms)</li>
+        <li><strong>Duración del QRS:</strong> ~110 ms (ainda < 120 ms)</li>
         <li><strong>Morfologia em V1/V2:</strong> Padrão <strong>RSR'</strong> ou rSR' típico de Bloqueio de Ramo Direito Incompleto</li>
         <li><strong>Onda R':</strong> Em V1/V2 com alargamento da onda S em derivações laterais (I, V6)</li>
         <li><strong>Eixo frontal:</strong> Normal</li>
@@ -176,7 +176,7 @@
         <li><strong>ST/T:</strong> Estáveis</li>
     </ul>
     
-    <p><strong>Conclusão:</strong> ECG compatível com bloqueio de ramo direito <strong>incompleto</strong>. Em paciente sem sintomas e sem achados estruturais relevantes, costuma ter bom prognóstico. Sugere-se correlação clínica e, se indicado (sopro, história pulmonar ou cardíaca), exame de eco ou investigação adicional.</p>
+    <p><strong>Conclusión:</strong> ECG compatible con bloqueo de rama derecha <strong>incompleto</strong>. En paciente sin síntomas y sin hallazgos estructurales relevantes, suele tener buen pronóstico. Se sugiere correlación clínica y, si indicado (soplo, historia pulmonar o cardíaca), examen de eco o investigación adicional.</p>
     
     <button class="btn" onclick="processarResultado('bloqueio_ramo')" 
             aria-label="Gerar laudo do ECG com bloqueio de ramo">
@@ -189,7 +189,7 @@
     <p style="margin-top: 15px; color: #dc2626; font-weight: 600;">Analisando ECG e gerando laudo em áudio...</p>
 </div>
 
-<div id="resultado-resultado" role="region" aria-live="polite" aria-label="Resultado da análise do resultado">
+<div id="resultado-resultado" role="region" aria-live="polite" aria-label="Resultado del análisis do resultado">
     <h3 style="color: #dc2626; margin-bottom: 20px;">📋 Laudo Gerado</h3>
     
     <!-- Imagem do ECG -->
@@ -226,8 +226,8 @@
         </button>
         <button class="btn" onclick="voltarResultados()" 
                 style="background: #6c757d; margin-left: 10px;"
-                aria-label="Voltar para lista de resultados">
-            ⬅️ Voltar aos Resultados
+                aria-label="Volver para lista de resultados">
+            ⬅️ Volver aos Resultados
         </button>
     </div>
 </div>
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         'v': {
-            descricao: 'Voltar à lista de resultados',
+            descricao: 'Volver à lista de resultados',
             acao: function() {
                 const resultado = document.getElementById('resultado-resultado');
                 if (resultado && resultado.style.display !== 'none') {
@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Anuncia os atalhos ao carregar a página
     setTimeout(() => {
-        anunciar('Página de resultados carregada. Três exemplos disponíveis: Pressione 1 para E C G normal, 2 para arritmia sinusal, 3 para bloqueio de ramo. Pressione barra para ajuda completa.');
+        anunciar('Página de resultados cargada. Três exemplos disponibles: Pressione 1 para E C G normal, 2 para arritmia sinusal, 3 para bloqueio de ramo. Presione barra espaciadora para ayuda completa.');
     }, 1000);
 });
 </script>

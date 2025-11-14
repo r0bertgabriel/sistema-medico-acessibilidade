@@ -12,11 +12,11 @@
         Acesse hemogramas salvos ou exemplos para análise rápida
     </p>
 
-    <!-- Botão para Nova Análise -->
+    <!-- Botão para Nuevo Análisis -->
     <div style="margin-bottom: 30px;">
         <a href="/hemograma" style="text-decoration: none;">
             <button class="btn" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
-                ➕ Nova Análise de Hemograma
+                ➕ Nuevo Análisis de Hemograma
             </button>
         </a>
     </div>
@@ -33,7 +33,7 @@
                 <h4 style="color: #059669; margin-bottom: 10px;">✅ Hemograma Normal</h4>
                 <p style="color: #475569; margin-bottom: 15px; font-size: 0.95em;">
                     <strong>Paciente:</strong> João Silva, 35 anos, M<br>
-                    <strong>Resultado:</strong> Todos os parâmetros normais<br>
+                    <strong>Resultado:</strong> Todos los parámetros normales<br>
                     <strong>Status:</strong> NORMAL
                 </p>
                 <button onclick="carregarExemplo('normal')" class="btn" 
@@ -61,7 +61,7 @@
                 <h4 style="color: #dc2626; margin-bottom: 10px;">🔴 Leucocitose</h4>
                 <p style="color: #475569; margin-bottom: 15px; font-size: 0.95em;">
                     <strong>Paciente:</strong> Pedro Oliveira, 28 anos, M<br>
-                    <strong>Achados:</strong> Leucócitos ↑, Neutrófilos ↑<br>
+                    <strong>Achados:</strong> Leucocitos ↑, Neutrófilos ↑<br>
                     <strong>Suspeita:</strong> Infecção bacteriana
                 </p>
                 <button onclick="carregarExemplo('leucocitose')" class="btn" 
@@ -92,9 +92,9 @@
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
             <div>
-                <h4 style="color: #2563eb; margin-bottom: 10px;">🔴 Série Vermelha</h4>
+                <h4 style="color: #2563eb; margin-bottom: 10px;">🔴 Serie Roja</h4>
                 <ul style="color: #1e40af; line-height: 1.8;">
-                    <li>Hemácias (glóbulos vermelhos)</li>
+                    <li>Eritrocitos (glóbulos vermelhos)</li>
                     <li>Hemoglobina (transporte de O₂)</li>
                     <li>Hematócrito (% volume sangue)</li>
                     <li>VCM, HCM, CHCM, RDW</li>
@@ -102,9 +102,9 @@
             </div>
             
             <div>
-                <h4 style="color: #2563eb; margin-bottom: 10px;">⚪ Série Branca</h4>
+                <h4 style="color: #2563eb; margin-bottom: 10px;">⚪ Serie Blanca</h4>
                 <ul style="color: #1e40af; line-height: 1.8;">
-                    <li>Leucócitos (defesa)</li>
+                    <li>Leucocitos (defesa)</li>
                     <li>Neutrófilos (bactérias)</li>
                     <li>Linfócitos (vírus)</li>
                     <li>Monócitos, Eosinófilos, Basófilos</li>
@@ -127,7 +127,7 @@
     <div id="resultadoArea" style="margin-top: 40px; display: none;">
         <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <h3 style="color: #dc2626; margin-bottom: 20px; font-size: 1.8em;">
-                📋 Resultado da Análise
+                📋 Resultado del Análisis
             </h3>
             
             <!-- Player de Áudio -->
@@ -177,7 +177,7 @@
 </style>
 
 <script>
-// Carregar e analisar exemplo
+// Cargar e analisar exemplo
 async function carregarExemplo(tipo) {
     try {
         // Mostrar loading

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Análise de ECG{% endblock %}
+{% block title %}Análisis de ECG{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -92,13 +92,13 @@
 {% endblock %}
 
 {% block content %}
-<h2 style="color: #1e40af; margin-bottom: 20px;">📊 Análise de Eletrocardiograma</h2>
+<h2 style="color: #1e40af; margin-bottom: 20px;">📊 Análisis de Electrocardiograma</h2>
 
 <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
     Preencha os campos abaixo com os dados do ECG. Todos os campos marcados com (*) são obrigatórios.
 </p>
 
-<form id="form-ecg" aria-label="Formulário de análise de ECG">
+<form id="form-ecg" aria-label="Formulario de análisis de ECG">
     <!-- Dados do Paciente -->
     <fieldset style="border: 2px solid #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
         <legend style="color: #dc2626; font-weight: 600; font-size: 1.2em;">Identificação do Paciente</legend>
@@ -149,10 +149,10 @@
             </div>
             
             <div class="form-group">
-                <label for="frequencia_cardiaca">Frequência Cardíaca (bpm) *</label>
+                <label for="frequencia_cardiaca">Frecuencia Cardíaca (lpm) *</label>
                 <input type="number" id="frequencia_cardiaca" name="frequencia_cardiaca" 
                        value="70" min="30" max="250" required 
-                       aria-label="Frequência cardíaca em batimentos por minuto">
+                       aria-label="Frecuencia cardíaca en latidos por minuto">
             </div>
             
             <div class="form-group">
@@ -174,31 +174,31 @@
 
     <!-- Intervalos -->
     <fieldset style="border: 2px solid #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-        <legend style="color: #dc2626; font-weight: 600; font-size: 1.2em;">Intervalos (em segundos) *</legend>
+        <legend style="color: #dc2626; font-weight: 600; font-size: 1.2em;">Intervalos (en segundos) *</legend>
         
         <div class="form-grid">
             <div class="form-group">
                 <label for="pr">Intervalo PR *</label>
                 <input type="number" id="pr" name="pr" step="0.01" value="0.16" 
-                       min="0.08" max="0.40" required aria-label="Intervalo PR em segundos">
+                       min="0.08" max="0.40" required aria-label="Intervalo PR en segundos">
             </div>
             
             <div class="form-group">
                 <label for="qrs">Duração QRS *</label>
                 <input type="number" id="qrs" name="qrs" step="0.01" value="0.08" 
-                       min="0.04" max="0.20" required aria-label="Duração do QRS em segundos">
+                       min="0.04" max="0.20" required aria-label="Duración del QRS en segundos">
             </div>
             
             <div class="form-group">
                 <label for="qt">Intervalo QT *</label>
                 <input type="number" id="qt" name="qt" step="0.01" value="0.40" 
-                       min="0.20" max="0.60" required aria-label="Intervalo QT em segundos">
+                       min="0.20" max="0.60" required aria-label="Intervalo QT en segundos">
             </div>
             
             <div class="form-group">
                 <label for="qtc">QT Corrigido *</label>
                 <input type="number" id="qtc" name="qtc" step="0.01" value="0.42" 
-                       min="0.20" max="0.60" required aria-label="QT corrigido em segundos">
+                       min="0.20" max="0.60" required aria-label="QT corrigido en segundos">
             </div>
         </div>
     </fieldset>
@@ -243,7 +243,7 @@
     <p style="margin-top: 15px; color: #dc2626; font-weight: 600;">Analisando ECG e gerando laudo em áudio...</p>
 </div>
 
-<div id="resultado" role="region" aria-live="polite" aria-label="Resultado da análise">
+<div id="resultado" role="region" aria-live="polite" aria-label="Resultado del análisis">
     <h3 style="color: #dc2626; margin-bottom: 20px;">📋 Laudo Gerado</h3>
     
     <!-- Imagem do ECG -->
@@ -315,7 +315,7 @@ document.getElementById('form-ecg').addEventListener('submit', async function(e)
             positiva_dII: true,
             positiva_dIII: true,
             positiva_aVF: true,
-            morfologia: "normal"
+            morfología: "normal"
         }
     };
     
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         '1': {
-            descricao: 'Focar no primeiro campo (Frequência Cardíaca)',
+            descricao: 'Enfocar en el primer campo (Frecuencia Cardíaca)',
             acao: function() {
                 document.getElementById('frequencia_cardiaca').focus();
             }

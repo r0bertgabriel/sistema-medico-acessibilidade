@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Análise por Imagem - Sistema de Laudos ECG{% endblock %}
+{% block title %}Análisis por Imagen - Sistema de Informes ECG{% endblock %}
 
 {% block content %}
 <div style="max-width: 1000px; margin: 0 auto; padding: 40px 20px;">
     <h2 style="font-size: 2.5em; color: #dc2626; margin-bottom: 20px; text-align: center;">
-        📸 Análise de ECG por Imagem
+        📸 Análisis de ECG por Imagem
     </h2>
     
     <p style="font-size: 1.2em; color: #6c757d; text-align: center; margin-bottom: 30px;">
@@ -16,16 +16,16 @@
     <div style="background: #fee2e2; border-radius: 12px; padding: 25px; margin-bottom: 30px; border: 2px solid #fca5a5;">
         <h3 style="color: #dc2626; margin-bottom: 15px; font-size: 1.5em;">ℹ️ Como funciona?</h3>
         <ol style="line-height: 2; color: #334155; font-size: 1.1em;">
-            <li>Visualize o exemplo de ECG de Arritmia Sinusal abaixo</li>
+            <li>Visualice el ejemplo de ECG de Arritmia Sinusal a continuación</li>
             <li>Você pode enviar a mesma imagem ou outra similar</li>
             <li>O sistema identifica o caso e retorna o laudo correspondente</li>
-            <li>O laudo é convertido em áudio otimizado (sem caracteres especiais)</li>
+            <li>El informe se convierte en audio optimizado (sin caracteres especiales)</li>
         </ol>
     </div>
 
     <!-- Exemplo de imagem -->
     <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15); border: 1px solid #fca5a5; margin-bottom: 30px;">
-        <h3 style="color: #dc2626; margin-bottom: 20px; text-align: center; font-size: 1.8em;">📋 Exemplo: Arritmia Sinusal</h3>
+        <h3 style="color: #dc2626; margin-bottom: 20px; text-align: center; font-size: 1.8em;">📋 Ejemplo: Arritmia Sinusal</h3>
         <div style="text-align: center;">
             <img src="{{ url_for('static', filename='ecg_images/ecg_448158e83eba.png') }}" 
                  alt="Exemplo de ECG - Arritmia Sinusal" 
@@ -88,7 +88,7 @@
     <div id="resultadosArea" style="display: none; margin-top: 30px;">
         <!-- Card de conclusão IA -->
         <div id="conclusaoIA" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border-radius: 12px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);">
-            <h3 style="font-size: 1.8em; margin-bottom: 20px;">🤖 Análise da Inteligência Artificial</h3>
+            <h3 style="font-size: 1.8em; margin-bottom: 20px;">🤖 Análisis de la Inteligencia Artificial</h3>
             <div id="conclusaoIAContent"></div>
         </div>
 
@@ -106,14 +106,14 @@
                 Seu navegador não suporta o elemento de áudio.
             </audio>
             <p style="margin-top: 15px; color: #475569; font-size: 0.95em;">
-                ⚡ Áudio otimizado sem caracteres especiais
+                ⚡ Áudio otimizado sin caracteres especiales
             </p>
         </div>
 
         <!-- Botão para nova análise -->
         <div style="text-align: center; margin-top: 30px;">
             <button onclick="novaAnalise()" class="btn" style="font-size: 1.2em;">
-                🔄 Nova Análise
+                🔄 Nuevo Análisis
             </button>
         </div>
     </div>
@@ -238,7 +238,7 @@ document.getElementById('formImagemECG').addEventListener('submit', async functi
             
             // Anunciar sucesso
             if (window.anunciarTexto) {
-                window.anunciarTexto('Análise concluída com sucesso. Resultados disponíveis.');
+                window.anunciarTexto('Análisis completado con éxito. Resultados disponibles.');
             }
             
         } else {

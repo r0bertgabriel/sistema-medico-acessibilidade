@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema de Análise de Exames Médicos - Acessibilidade{% endblock %}</title>
+    <title>{% block title %}Sistema de Análisis de Exámenes Médicos - Accesibilidad{% endblock %}</title>
     
     <!-- CSS externo -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Botão de Mute Discreto -->
+    <!-- Botón de Silencio Discreto -->
     <button id="mute-btn" class="mute-btn" 
-            aria-label="Mutar/Desmutar áudio"
-            title="Clique para mutar/desmutar áudio (Atalho: M)">
+            aria-label="Silenciar/Activar audio"
+            title="Clic para silenciar/activar audio (Atajo: M)">
         🔊
     </button>
 
@@ -21,28 +21,28 @@
     <div class="container">
         <!-- Header -->
         <header>
-            <h1>Sistema de Análise de Exames Médicos</h1>
-            <p>Sistema Acessível com Feedback Auditivo</p>
+            <h1>Sistema de Análisis de Exámenes Médicos</h1>
+            <p>Sistema Accesible con Retroalimentación Auditiva</p>
         </header>
 
-        <!-- Navegação -->
+        <!-- Navegación -->
         <nav>
             <ul>
-                <li><a href="/" aria-label="Ir para página inicial">Início <span class="atalho">Menu: 1</span></a></li>
-                <li><a href="/ecg" aria-label="Ir para módulo de ECG">ECG <span class="atalho">Menu: 2</span></a></li>
-                <li><a href="/hemograma" aria-label="Ir para módulo de Hemograma">Hemograma <span class="atalho">Menu: 3</span></a></li>
+                <li><a href="/" aria-label="Ir a página inicial">Inicio <span class="atalho">Menú: 1</span></a></li>
+                <li><a href="/ecg" aria-label="Ir a módulo de ECG">ECG <span class="atalho">Menú: 2</span></a></li>
+                <li><a href="/hemograma" aria-label="Ir a módulo de Hemograma">Hemograma <span class="atalho">Menú: 3</span></a></li>
             </ul>
         </nav>
 
-        <!-- Conteúdo da página -->
+        <!-- Contenido de la página -->
         <div class="content">
             {% block content %}{% endblock %}
         </div>
 
         <!-- Footer -->
         <footer>
-            <p>&copy; 2024 Sistema de Análise de Exames Médicos - Desenvolvido com acessibilidade em foco</p>
-            <p>Atalhos: <kbd>/</kbd> Ajuda | <kbd>-</kbd> Menu | <kbd>*</kbd> Repetir | <kbd>+</kbd> Mutar/Desmutar</p>
+            <p>&copy; 2024 Sistema de Análisis de Exámenes Médicos - Desarrollado con accesibilidad en foco</p>
+            <p>Atajos: <kbd>/</kbd> Ayuda | <kbd>-</kbd> Menú | <kbd>*</kbd> Repetir | <kbd>+</kbd> Silenciar/Activar</p>
         </footer>
     </div>
 
