@@ -7,7 +7,7 @@ CASOS_PRONTOS = {
     'arritmia_sinusal': {
         'nome': 'Arritmia Sinusal',
         'imagem_exemplo': 'arritmia_sinusal.png',
-        'laudo_completo': """
+        'laudo_completo': """\
 LAUDO DE ELETROCARDIOGRAMA
 
 1. RITMO E FREQUÊNCIA
