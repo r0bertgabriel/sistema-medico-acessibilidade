@@ -30,23 +30,23 @@ const Estado = {
 // ═══════════════════════════════════════════════════════════════════════════
 const UTILITARIOS = {
     '-': { 
-        nome: 'Menu de Navegação',
-        descricao: 'Ativa menu com opções 1, 2, 3 para navegar entre módulos',
+        nome: 'Menú de Navegación',
+        descricao: 'Activa menú con opciones 1, 2, 3 para navegar entre módulos',
         acao: () => ativarMenu()
     },
     '/': { 
-        nome: 'Ajuda',
-        descricao: 'Lista todos os atalhos disponíveis',
+        nome: 'Ayuda',
+        descricao: 'Lista todos los atajos disponibles',
         acao: () => listarAjuda()
     },
     '*': { 
         nome: 'Repetir',
-        descricao: 'Repete o último anúncio de áudio',
+        descricao: 'Repite el último anuncio de audio',
         acao: () => repetirAnuncio()
     },
     '+': { 
-        nome: 'Mute/Unmute',
-        descricao: 'Alterna entre mutar e desmutar o áudio',
+        nome: 'Silenciar/Activar',
+        descricao: 'Alterna entre silenciar y activar el audio',
         acao: () => alternarMute()
     }
 };
@@ -68,7 +68,7 @@ const MENU_NAVEGACAO = {
         acao: () => navegar('/hemograma')
     },
     '0': { 
-        nome: 'Cancelar Menu',
+        nome: 'Cancelar Menú',
         acao: () => desativarMenu()
     }
 };
@@ -128,21 +128,21 @@ function ativarMenu() {
         .map(([tecla, config]) => `${tecla}: ${config.nome}`)
         .join('. ');
     
-    anunciarSeDisponivel(`Menu de navegação ativado. ${opcoes}`);
-    console.log('📂 Menu de navegação ATIVADO');
+    anunciarSeDisponivel(`Menú de navegación activado. ${opcoes}`);
+    console.log('📂 Menu de navegación ACTIVADO');
 }
 
 function desativarMenu() {
     Estado.modoMenuAtivo = false;
-    anunciarSeDisponivel('Menu cancelado');
-    console.log('📂 Menu de navegação DESATIVADO');
+    anunciarSeDisponivel('Menú cancelado');
+    console.log('📂 Menu de navegación DESACTIVADO');
 }
 
 function listarAjuda() {
-    let ajuda = 'Atalhos disponíveis. ';
+    let ajuda = 'Atajos disponibles. ';
     
     // Utilitários
-    ajuda += 'Utilitários: ';
+    ajuda += 'Utilitarios: ';
     for (const [tecla, config] of Object.entries(UTILITARIOS)) {
         ajuda += `${tecla} para ${config.nome}. `;
     }
@@ -150,7 +150,7 @@ function listarAjuda() {
     // Contextuais (se houver)
     const contextuais = Object.keys(Estado.atalhosContextuais);
     if (contextuais.length > 0) {
-        ajuda += 'Nesta página: ';
+        ajuda += 'En esta página: ';
         for (const [tecla, config] of Object.entries(Estado.atalhosContextuais)) {
             ajuda += `${tecla} para ${config.nome}. `;
         }
@@ -163,7 +163,7 @@ function repetirAnuncio() {
     if (Estado.ultimoAnuncio) {
         anunciarSeDisponivel(Estado.ultimoAnuncio);
     } else {
-        anunciarSeDisponivel('Nenhum anúncio anterior para repetir');
+        anunciarSeDisponivel('Ningún anuncio anterior para repetir');
     }
 }
 

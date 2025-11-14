@@ -247,76 +247,76 @@ class AnalisadorHemograma:
             # Classificar tipo de anemia baseado no VCM
             if self.dados.vcm and self.dados.vcm < self.referencias["vcm"]["min"]:
                 interpretacao["sugestoes_diagnosticas"].append(
-                    "Anemia microcítica (VCM baixo). Sugestivo de deficiência de ferro ou talassemia"
+                    "Anemia microcítica (VCM bajo). Sugestivo de deficiencia de hierro o talasemia"
                 )
             elif self.dados.vcm and self.dados.vcm > self.referencias["vcm"]["max"]:
                 interpretacao["sugestoes_diagnosticas"].append(
-                    "Anemia macrocítica (VCM alto). Sugestivo de deficiência de B12 ou folato"
+                    "Anemia macrocítica (VCM alto). Sugestivo de deficiencia de B12 o folato"
                 )
             else:
                 interpretacao["sugestoes_diagnosticas"].append(
-                    "Anemia normocítica. Investigar causas crônicas ou hemólise"
+                    "Anemia normocítica. Investigar causas crónicas o hemólisis"
                 )
         
         # Análise de policitemia
         if self.flags.get("hemoglobina") == "H" and self.flags.get("hematocrito") == "H":
             interpretacao["achados_principais"].append("Policitemia detectada")
             interpretacao["sugestoes_diagnosticas"].append(
-                "Hemoglobina e hematócrito elevados. Investigar policitemia vera ou causas secundárias"
+                "Hemoglobina y hematocrito elevados. Investigar policitemia vera o causas secundarias"
             )
         
         # Análise de leucocitose
         if self.flags.get("leucocitos") == "H":
-            interpretacao["achados_principais"].append("Leucocitose")
+            interpretacao["achados_principais"].append("Leucocitosis")
             
             if self.flags.get("neutrofilos") == "H":
                 interpretacao["sugestoes_diagnosticas"].append(
-                    "Neutrofilia. Sugestivo de infecção bacteriana aguda ou processo inflamatório"
+                    "Neutrofilia. Sugestivo de infección bacteriana aguda o proceso inflamatorio"
                 )
             if self.flags.get("linfocitos") == "H":
                 interpretacao["sugestoes_diagnosticas"].append(
-                    "Linfocitose. Sugestivo de infecção viral ou processo linfoproliferativo"
+                    "Linfocitosis. Sugestivo de infección viral o proceso linfoproliferativo"
                 )
             if self.flags.get("eosinofilos") == "H":
                 interpretacao["sugestoes_diagnosticas"].append(
-                    "Eosinofilia. Sugestivo de alergia, parasitose ou reação medicamentosa"
+                    "Eosinofilia. Sugestivo de alergia, parasitosis o reacción medicamentosa"
                 )
         
         # Análise de leucopenia
         if self.flags.get("leucocitos") == "L":
             interpretacao["achados_principais"].append("Leucopenia")
             interpretacao["sugestoes_diagnosticas"].append(
-                "Leucócitos baixos. Investigar causas virais, medicamentosas ou imunossupressão"
+                "Leucocitos bajos. Investigar causas virales, medicamentosas o inmunosupresión"
             )
         
         # Análise de plaquetopenia
         if self.flags.get("plaquetas") == "L":
-            interpretacao["achados_principais"].append("Plaquetopenia")
+            interpretacao["achados_principais"].append("Trombocitopenia")
             if self.dados.plaquetas and self.dados.plaquetas < 50000:
                 interpretacao["observacoes"].append(
-                    "ATENÇÃO: Plaquetopenia severa (menor que 50.000). Risco aumentado de sangramento"
+                    "¡ATENCIÓN! Trombocitopenia severa (menor que 50.000). Riesgo aumentado de sangrado"
                 )
             interpretacao["sugestoes_diagnosticas"].append(
-                "Plaquetas baixas. Investigar causas (destruição periférica, produção diminuída, etc)"
+                "Plaquetas bajas. Investigar causas (destrucción periférica, producción disminuida, etc)"
             )
         
         # Análise de plaquetose
         if self.flags.get("plaquetas") == "H":
-            interpretacao["achados_principais"].append("Plaquetose")
+            interpretacao["achados_principais"].append("Trombocitosis")
             interpretacao["sugestoes_diagnosticas"].append(
-                "Plaquetas elevadas. Investigar trombocitose reativa ou essencial"
+                "Plaquetas elevadas. Investigar trombocitosis reactiva o esencial"
             )
         
         # RDW elevado
         if self.flags.get("rdw") == "H":
             interpretacao["observacoes"].append(
-                "RDW elevado indica anisocitose (variação no tamanho das hemácias)"
+                "RDW elevado indica anisocitosis (variación en el tamaño de los eritrocitos)"
             )
         
         # Se tudo normal
         if not interpretacao["achados_principais"]:
             interpretacao["achados_principais"].append(
-                "Todos os parâmetros dentro dos valores de referência"
+                "Todos los parámetros dentro de los valores de referencia"
             )
         
         return interpretacao
@@ -331,27 +331,27 @@ class AnalisadorHemograma:
         
         # Cabeçalho
         linhas.append("=" * 80)
-        linhas.append("LAUDO DE HEMOGRAMA COMPLETO")
+        linhas.append("INFORME DE HEMOGRAMA COMPLETO")
         linhas.append("=" * 80)
         linhas.append("")
         
         # Dados do paciente
         linhas.append(f"Paciente: {self.dados.nome_paciente}")
-        linhas.append(f"Idade: {self.dados.idade} anos")
-        linhas.append(f"Sexo: {'Masculino' if self.dados.sexo == 'M' else 'Feminino'}")
+        linhas.append(f"Edad: {self.dados.idade} años")
+        linhas.append(f"Sexo: {'Masculino' if self.dados.sexo == 'M' else 'Femenino'}")
         if self.dados.data_coleta:
-            linhas.append(f"Data da coleta: {self.dados.data_coleta}")
+            linhas.append(f"Fecha de la recolección: {self.dados.data_coleta}")
         linhas.append("")
         linhas.append("-" * 80)
         
         # Série Vermelha
-        linhas.append("ERITROGRAMA (SÉRIE VERMELHA)")
+        linhas.append("ERITROGRAMA (SERIE ROJA)")
         linhas.append("-" * 80)
         
         if self.dados.hemacias:
             ref = self.referencias["hemacias"]
             flag = self.flags.get("hemacias", "?")
-            linhas.append(f"Hemácias: {self.dados.hemacias} {ref['unidade']} "
+            linhas.append(f"Eritrocitos: {self.dados.hemacias} {ref['unidade']} "
                          f"(ref: {ref['min']}-{ref['max']}) [{flag}]")
         
         if self.dados.hemoglobina:
@@ -363,7 +363,7 @@ class AnalisadorHemograma:
         if self.dados.hematocrito:
             ref = self.referencias["hematocrito"]
             flag = self.flags.get("hematocrito", "?")
-            linhas.append(f"Hematócrito: {self.dados.hematocrito} {ref['unidade']} "
+            linhas.append(f"Hematocrito: {self.dados.hematocrito} {ref['unidade']} "
                          f"(ref: {ref['min']}-{ref['max']}) [{flag}]")
         
         if self.dados.vcm:
@@ -394,13 +394,13 @@ class AnalisadorHemograma:
         
         # Série Branca
         linhas.append("-" * 80)
-        linhas.append("LEUCOGRAMA (SÉRIE BRANCA)")
+        linhas.append("LEUCOGRAMA (SERIE BLANCA)")
         linhas.append("-" * 80)
         
         if self.dados.leucocitos:
             ref = self.referencias["leucocitos"]
             flag = self.flags.get("leucocitos", "?")
-            linhas.append(f"Leucócitos totais: {self.dados.leucocitos} {ref['unidade']} "
+            linhas.append(f"Leucocitos totales: {self.dados.leucocitos} {ref['unidade']} "
                          f"(ref: {ref['min']}-{ref['max']}) [{flag}]")
         
         if self.dados.neutrofilos:
@@ -410,20 +410,20 @@ class AnalisadorHemograma:
                          f"(ref: {ref['min']}-{ref['max']}) [{flag}]")
             
             if self.dados.bastonetes:
-                linhas.append(f"    - Bastonetes: {self.dados.bastonetes} /µL")
+                linhas.append(f"    - Cayados: {self.dados.bastonetes} /µL")
             if self.dados.segmentados:
                 linhas.append(f"    - Segmentados: {self.dados.segmentados} /µL")
         
         if self.dados.linfocitos:
             ref = self.referencias["linfocitos"]
             flag = self.flags.get("linfocitos", "?")
-            linhas.append(f"  Linfócitos: {self.dados.linfocitos} {ref['unidade']} "
+            linhas.append(f"  Linfocitos: {self.dados.linfocitos} {ref['unidade']} "
                          f"(ref: {ref['min']}-{ref['max']}) [{flag}]")
         
         if self.dados.monocitos:
             ref = self.referencias["monocitos"]
             flag = self.flags.get("monocitos", "?")
-            linhas.append(f"  Monócitos: {self.dados.monocitos} {ref['unidade']} "
+            linhas.append(f"  Monocitos: {self.dados.monocitos} {ref['unidade']} "
                          f"(ref: {ref['min']}-{ref['max']}) [{flag}]")
         
         if self.dados.eosinofilos:
@@ -457,39 +457,39 @@ class AnalisadorHemograma:
         interpretacao = self._gerar_interpretacao()
         
         linhas.append("=" * 80)
-        linhas.append("INTERPRETAÇÃO")
+        linhas.append("INTERPRETACIÓN")
         linhas.append("=" * 80)
         linhas.append("")
-        linhas.append(f"Status Geral: {interpretacao['status_geral']}")
+        linhas.append(f"Estado General: {interpretacao['status_geral']}")
         linhas.append("")
         
         if interpretacao["achados_principais"]:
-            linhas.append("Achados Principais:")
+            linhas.append("Hallazgos Principales:")
             for achado in interpretacao["achados_principais"]:
                 linhas.append(f"  • {achado}")
             linhas.append("")
         
         if interpretacao["sugestoes_diagnosticas"]:
-            linhas.append("Sugestões Diagnósticas:")
+            linhas.append("Sugerencias Diagnósticas:")
             for sugestao in interpretacao["sugestoes_diagnosticas"]:
                 linhas.append(f"  • {sugestao}")
             linhas.append("")
         
         if interpretacao["observacoes"]:
-            linhas.append("Observações:")
+            linhas.append("Observaciones:")
             for obs in interpretacao["observacoes"]:
                 linhas.append(f"  ⚠ {obs}")
             linhas.append("")
         
         if self.dados.observacoes:
-            linhas.append("Observações do Exame:")
+            linhas.append("Observaciones del Examen:")
             linhas.append(self.dados.observacoes)
             linhas.append("")
         
         linhas.append("=" * 80)
-        linhas.append("IMPORTANTE: Este laudo é gerado automaticamente e deve ser")
-        linhas.append("avaliado por profissional médico qualificado para interpretação")
-        linhas.append("clínica completa considerando o contexto do paciente.")
+        linhas.append("IMPORTANTE: Este informe es generado automáticamente y debe ser")
+        linhas.append("evaluado por profesional médico calificado para interpretación")
+        linhas.append("clínica completa considerando el contexto del paciente.")
         linhas.append("=" * 80)
         
         return "\n".join(linhas)
@@ -503,66 +503,66 @@ class AnalisadorHemograma:
         linhas = []
         
         # Cabeçalho resumido
-        linhas.append(f"Hemograma de {self.dados.nome_paciente}, {self.dados.idade} anos.")
+        linhas.append(f"Hemograma de {self.dados.nome_paciente}, {self.dados.idade} años.")
         
         # Apenas valores alterados da Série Vermelha
         alterados_vermelho = []
         if self.dados.hemoglobina and self.flags.get("hemoglobina") != "N":
-            status = "baixa" if self.flags.get("hemoglobina") == "L" else "alta"
+            status = "baja" if self.flags.get("hemoglobina") == "L" else "alta"
             alterados_vermelho.append(f"Hemoglobina {status}: {self.dados.hemoglobina}")
         
         if self.dados.hemacias and self.flags.get("hemacias") != "N":
-            status = "baixas" if self.flags.get("hemacias") == "L" else "altas"
-            alterados_vermelho.append(f"Hemácias {status}: {self.dados.hemacias}")
+            status = "bajos" if self.flags.get("hemacias") == "L" else "altos"
+            alterados_vermelho.append(f"Eritrocitos {status}: {self.dados.hemacias}")
         
         if self.dados.vcm and self.flags.get("vcm") != "N":
-            status = "baixo" if self.flags.get("vcm") == "L" else "alto"
+            status = "bajo" if self.flags.get("vcm") == "L" else "alto"
             alterados_vermelho.append(f"VCM {status}: {self.dados.vcm}")
         
         if alterados_vermelho:
-            linhas.append("Série vermelha: " + ", ".join(alterados_vermelho) + ".")
+            linhas.append("Serie roja: " + ", ".join(alterados_vermelho) + ".")
         else:
-            linhas.append("Série vermelha: sem alterações.")
+            linhas.append("Serie roja: sin alteraciones.")
         
         # Apenas valores alterados da Série Branca
         alterados_branco = []
         if self.dados.leucocitos and self.flags.get("leucocitos") != "N":
-            status = "baixos" if self.flags.get("leucocitos") == "L" else "altos"
-            alterados_branco.append(f"Leucócitos {status}: {self.dados.leucocitos}")
+            status = "bajos" if self.flags.get("leucocitos") == "L" else "altos"
+            alterados_branco.append(f"Leucocitos {status}: {self.dados.leucocitos}")
         
         if self.dados.neutrofilos and self.flags.get("neutrofilos") != "N":
-            status = "baixos" if self.flags.get("neutrofilos") == "L" else "altos"
+            status = "bajos" if self.flags.get("neutrofilos") == "L" else "altos"
             alterados_branco.append(f"Neutrófilos {status}: {self.dados.neutrofilos}")
         
         if self.dados.linfocitos and self.flags.get("linfocitos") != "N":
-            status = "baixos" if self.flags.get("linfocitos") == "L" else "altos"
-            alterados_branco.append(f"Linfócitos {status}: {self.dados.linfocitos}")
+            status = "bajos" if self.flags.get("linfocitos") == "L" else "altos"
+            alterados_branco.append(f"Linfocitos {status}: {self.dados.linfocitos}")
         
         if alterados_branco:
-            linhas.append("Série branca: " + ", ".join(alterados_branco) + ".")
+            linhas.append("Serie blanca: " + ", ".join(alterados_branco) + ".")
         else:
-            linhas.append("Série branca: sem alterações.")
+            linhas.append("Serie blanca: sin alteraciones.")
         
         # Plaquetas
         if self.dados.plaquetas:
             flag = self.flags.get("plaquetas", "N")
             if flag != "N":
-                status = "baixas" if flag == "L" else "altas"
+                status = "bajas" if flag == "L" else "altas"
                 linhas.append(f"Plaquetas {status}: {self.dados.plaquetas}.")
             else:
-                linhas.append("Plaquetas normais.")
+                linhas.append("Plaquetas normales.")
         
         # Interpretação resumida
         interpretacao = self._gerar_interpretacao()
-        linhas.append(f"Status: {interpretacao['status_geral']}.")
+        linhas.append(f"Estado: {interpretacao['status_geral']}.")
         
         if interpretacao["achados_principais"]:
             # Apenas os 3 primeiros achados mais importantes
             achados_resumidos = interpretacao["achados_principais"][:3]
-            linhas.append("Principais achados: " + ". ".join(achados_resumidos) + ".")
+            linhas.append("Principales hallazgos: " + ". ".join(achados_resumidos) + ".")
         
         if interpretacao["sugestoes_diagnosticas"]:
             # Apenas a primeira sugestão
-            linhas.append(f"Sugestão diagnóstica: {interpretacao['sugestoes_diagnosticas'][0]}.")
+            linhas.append(f"Sugerencia diagnóstica: {interpretacao['sugestoes_diagnosticas'][0]}.")
         
         return " ".join(linhas)

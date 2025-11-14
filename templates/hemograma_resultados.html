@@ -226,16 +226,16 @@ async function carregarExemplo(tipo) {
             // Scroll para resultado
             document.getElementById('resultadoArea').scrollIntoView({ behavior: 'smooth' });
             
-            anunciar(`Análise do caso ${tipo} concluída`);
+            anunciar(`Análisis del caso ${tipo} completado`);
         } else {
-            alert('Erro: ' + (resultAnalise.error || 'Erro desconhecido'));
-            anunciar('Erro ao processar hemograma');
+            alert('Error: ' + (resultAnalise.error || 'Error desconocido'));
+            anunciar('Error al procesar hemograma');
         }
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Error:', error);
         document.getElementById('loadingResultado').style.display = 'none';
-        alert('Erro ao processar exemplo: ' + error.message);
-        anunciar('Erro ao processar exemplo');
+        alert('Error al procesar ejemplo: ' + error.message);
+        anunciar('Error al procesar ejemplo');
     }
 }
 
@@ -276,7 +276,7 @@ function anunciar(texto) {
 // Anunciar página ao carregar
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
-        anunciar('Página de resultados de hemogramas. Quatro exemplos clínicos disponíveis.');
+        anunciar('Página de resultados de hemogramas. Cuatro ejemplos clínicos disponibles.');
     }, 500);
 });
 </script>
