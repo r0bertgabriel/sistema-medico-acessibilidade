@@ -51,43 +51,7 @@
             </a>
         </div>
         
-        <!-- Análisis por Imagen -->
-        <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
-                    padding: 30px; border-radius: 12px; border: 2px solid #dc2626; 
-                    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.15);">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="background: white; width: 70px; height: 70px; border-radius: 50%; 
-                            display: inline-flex; align-items: center; justify-content: center;
-                            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);">
-                    <span style="font-size: 2em;">📸</span>
-                </div>
-            </div>
-            
-            <h3 style="color: #dc2626; margin-bottom: 15px; font-size: 1.5em; text-align: center;">
-                Análisis por Imagen
-            </h3>
-            
-            <p style="color: #475569; margin-bottom: 20px; line-height: 1.6; text-align: center;">
-                Envíe foto/PDF del trazado de ECG para análisis con inteligencia artificial
-            </p>
-            
-            <ul style="color: #475569; line-height: 2; margin-bottom: 25px; padding-left: 20px;">
-                <li>✅ Carga de imagen/PDF</li>
-                <li>✅ Extracción automática (IA)</li>
-                <li>✅ Soporta varios formatos</li>
-                <li>✅ Análisis completo</li>
-            </ul>
-            
-            <a href="/analise-imagem" style="text-decoration: none;">
-                <button class="btn" aria-label="Ir a análisis por imagen" 
-                        style="width: 100%; font-size: 1.1em; padding: 15px; font-weight: bold;
-                               background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
-                    📸 Analizar Imagen
-                </button>
-            </a>
-        </div>
-        
-        <!-- Fila de Resultados -->
+        <!-- Cola de Resultados -->
         <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); 
                     padding: 30px; border-radius: 12px; border: 2px solid #10b981; 
                     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.15);">
@@ -184,11 +148,6 @@
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
                 <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">2</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Análisis por Imagen</span>
-            </div>
-            
-            <div style="background: white; padding: 12px; border-radius: 6px;">
-                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">3</kbd>
                 <span style="color: #92400e; margin-left: 8px;">Ver Resultados</span>
             </div>
             
@@ -212,12 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         '2': {
-            descricao: 'Análisis de E C G por imagen',
-            acao: function() {
-                window.location.href = '/analise-imagem';
-            }
-        },
-        '3': {
             descricao: 'Ver cola de resultados de E C G',
             acao: function() {
                 window.location.href = '/resultados';
@@ -233,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Anúncio inicial
     setTimeout(() => {
-        anunciar('Módulo E C G. Tres opciones: Presione 1 para análisis por datos, 2 para análisis por imagen, 3 para cola de resultados. Presione barra espaciadora para ayuda completa.');
+        anunciar('Módulo E C G. Dos opciones: Presione 1 para análisis por datos, 2 para cola de resultados. Presione barra espaciadora para ayuda completa.');
     }, 500);
 });
 

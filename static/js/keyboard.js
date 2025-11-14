@@ -1,17 +1,30 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * SISTEMA DE ATALHOS DE TECLADO - Hierarquia Clara e Organizada
+ * SISTEMA DE ATALHOS DE TECLADO - Mapeamento Direto (Sem Hierarquia)
  * ═══════════════════════════════════════════════════════════════════════════
  * 
  * REGRAS:
- * - Apenas caracteres numéricos e matemáticos: 0-9, /, *, -, +, .
- * - Suporte total ao teclado numérico (numpad)
+ * - Teclas do numpad: 0-9, Num Lock, /, *, -, +, ., Enter
+ * - Cada tecla tem uma função direta, sem necessidade de combinações
  * - Não funciona dentro de campos de texto (INPUT, TEXTAREA)
  * 
- * HIERARQUIA DE PRIORIDADE (maior → menor):
- * 1. MODO MENU (ativado por '-')      → Teclas 0-9 viram navegação
- * 2. ATALHOS UTILITÁRIOS (/, *, +)    → Sempre disponíveis
- * 3. ATALHOS CONTEXTUAIS (0-9)        → Dependem da página atual
+ * MAPEAMENTO GLOBAL (funciona em todas as páginas):
+ * 
+ * NAVEGAÇÃO PRINCIPAL:
+ * - 0: Página Inicial
+ * - 1: Análise ECG (dados)
+ * - 2: Resultados ECG
+ * - 3: Hub Hemograma
+ * - 4: Análise Hemograma
+ * - 5: Resultados Hemograma
+ * 
+ * UTILITÁRIOS:
+ * - /: Ajuda (lista todos os atalhos)
+ * - *: Repetir último anúncio
+ * - -: (reservado)
+ * - +: Silenciar/Ativar áudio
+ * - .: (reservado)
+ * - Enter: (reservado)
  * 
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -20,20 +33,46 @@
 // ESTADO GLOBAL
 // ═══════════════════════════════════════════════════════════════════════════
 const Estado = {
-    modoMenuAtivo: false,           // Se true, teclas 0-9 viram navegação
-    atalhosContextuais: {},         // Atalhos da página atual
     ultimoAnuncio: ''               // Último texto anunciado (para *)
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CAMADA 1: ATALHOS UTILITÁRIOS (Sempre disponíveis, exceto em text fields)
+// MAPEAMENTO DIRETO DE ATALHOS (Sempre disponíveis)
 // ═══════════════════════════════════════════════════════════════════════════
-const UTILITARIOS = {
-    '-': { 
-        nome: 'Menú de Navegación',
-        descricao: 'Activa menú con opciones 1, 2, 3 para navegar entre módulos',
-        acao: () => ativarMenu()
+const ATALHOS_GLOBAIS = {
+    // NAVEGAÇÃO PRINCIPAL
+    '0': { 
+        nome: 'Página Inicial',
+        descricao: 'Ir a la página inicial',
+        acao: () => navegar('/')
     },
+    '1': { 
+        nome: 'Análisis ECG',
+        descricao: 'Ir a análisis de ECG por datos',
+        acao: () => navegar('/analise')
+    },
+    '2': { 
+        nome: 'Resultados ECG',
+        descricao: 'Ver cola de resultados de ECG',
+        acao: () => navegar('/resultados')
+    },
+    '3': { 
+        nome: 'Hub Hemograma',
+        descricao: 'Ir al hub del módulo Hemograma',
+        acao: () => navegar('/hemograma')
+    },
+    '4': { 
+        nome: 'Análisis Hemograma',
+        descricao: 'Ir a análisis de hemograma',
+        acao: () => navegar('/hemograma/analise')
+    },
+    '5': { 
+        nome: 'Resultados Hemograma',
+        descricao: 'Ver ejemplos de hemogramas',
+        acao: () => navegar('/hemograma-resultados')
+    },
+    
+    // UTILITÁRIOS
     '/': { 
         nome: 'Ayuda',
         descricao: 'Lista todos los atajos disponibles',
@@ -50,37 +89,6 @@ const UTILITARIOS = {
         acao: () => alternarMute()
     }
 };
-
-// ═══════════════════════════════════════════════════════════════════════════
-// CAMADA 2: MENU DE NAVEGAÇÃO (Ativado por '-', usa teclas 0-9)
-// ═══════════════════════════════════════════════════════════════════════════
-const MENU_NAVEGACAO = {
-    '1': { 
-        nome: 'Página Inicial',
-        acao: () => navegar('/')
-    },
-    '2': { 
-        nome: 'Módulo ECG',
-        acao: () => navegar('/ecg')
-    },
-    '3': { 
-        nome: 'Módulo Hemograma',
-        acao: () => navegar('/hemograma')
-    },
-    '0': { 
-        nome: 'Cancelar Menú',
-        acao: () => desativarMenu()
-    }
-};
-
-// ═══════════════════════════════════════════════════════════════════════════
-// CAMADA 3: ATALHOS CONTEXTUAIS (Definidos por cada página, usam 0-9)
-// ═══════════════════════════════════════════════════════════════════════════
-// Exemplo de uso em uma página:
-// registrarAtalhos({
-//     '1': { nome: 'Análise por Dados', acao: () => irPara('/analise') },
-//     '2': { nome: 'Análise por Imagem', acao: () => irPara('/analise-imagem') }
-// });
 
 // ═══════════════════════════════════════════════════════════════════════════
 // UTILITÁRIOS: Tradução de Teclas
@@ -118,42 +126,15 @@ function ehCampoDeTexto(element) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// AÇÕES: Camada 1 (Utilitários)
+// AÇÕES
 // ═══════════════════════════════════════════════════════════════════════════
 
-function ativarMenu() {
-    Estado.modoMenuAtivo = true;
-    
-    const opcoes = Object.entries(MENU_NAVEGACAO)
-        .map(([tecla, config]) => `${tecla}: ${config.nome}`)
-        .join('. ');
-    
-    anunciarSeDisponivel(`Menú de navegación activado. ${opcoes}`);
-    console.log('📂 Menu de navegación ACTIVADO');
-}
-
-function desativarMenu() {
-    Estado.modoMenuAtivo = false;
-    anunciarSeDisponivel('Menú cancelado');
-    console.log('📂 Menu de navegación DESACTIVADO');
-}
-
 function listarAjuda() {
-    let ajuda = 'Atajos disponibles. ';
+    let ajuda = 'Atajos disponibles: ';
     
-    // Utilitários
-    ajuda += 'Utilitarios: ';
-    for (const [tecla, config] of Object.entries(UTILITARIOS)) {
+    // Listar todos os atalhos globais
+    for (const [tecla, config] of Object.entries(ATALHOS_GLOBAIS)) {
         ajuda += `${tecla} para ${config.nome}. `;
-    }
-    
-    // Contextuais (se houver)
-    const contextuais = Object.keys(Estado.atalhosContextuais);
-    if (contextuais.length > 0) {
-        ajuda += 'En esta página: ';
-        for (const [tecla, config] of Object.entries(Estado.atalhosContextuais)) {
-            ajuda += `${tecla} para ${config.nome}. `;
-        }
     }
     
     anunciarSeDisponivel(ajuda, true);
@@ -175,25 +156,9 @@ function alternarMute() {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// AÇÕES: Camada 2 (Menu de Navegação)
-// ═══════════════════════════════════════════════════════════════════════════
-
 function navegar(url) {
     console.log('🔗 Navegando para:', url);
     window.location.href = url;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// AÇÕES: Camada 3 (Contextuais)
-// ═══════════════════════════════════════════════════════════════════════════
-
-function executarContextual(tecla) {
-    const config = Estado.atalhosContextuais[tecla];
-    if (config) {
-        anunciarSeDisponivel(config.nome);
-        config.acao();
-    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -219,11 +184,11 @@ function anunciarSeDisponivel(texto, prioridade = false) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Processa cada tecla pressionada seguindo a hierarquia:
+ * Processa cada tecla pressionada de forma direta:
  * 1º) Normaliza tecla (numpad → normal)
- * 2º) Valida se é permitida (0-9, /, *, -, +, .)
+ * 2º) Valida se é permitida (0-9, /, *, -, +, ., Enter)
  * 3º) Ignora se está em campo de texto (exceto utilitários)
- * 4º) Aplica hierarquia: Menu > Utilitários > Contextuais
+ * 4º) Executa ação direta do mapeamento global
  */
 function processarTecla(evento) {
     // ─────────────────────────────────────────────────────────────────────
@@ -248,64 +213,32 @@ function processarTecla(evento) {
     // ─────────────────────────────────────────────────────────────────────
     const emCampoTexto = ehCampoDeTexto(evento.target);
     
-    // Em campos de texto, só processa utilitários
-    if (emCampoTexto && !UTILITARIOS[tecla]) {
+    // Em campos de texto, só permite utilitários (/, *, +)
+    const ehUtilitario = ['/', '*', '+'].includes(tecla);
+    if (emCampoTexto && !ehUtilitario) {
         return; // Permite digitação normal
     }
     
     // ─────────────────────────────────────────────────────────────────────
-    // PASSO 4: Aplicar HIERARQUIA de processamento
+    // PASSO 4: Executar ação direta
     // ─────────────────────────────────────────────────────────────────────
     
-    console.log(`🔑 Tecla: "${tecla}" | Menu: ${Estado.modoMenuAtivo} | Contexto: ${emCampoTexto ? 'TEXTO' : 'NORMAL'}`);
+    console.log(`🔑 Tecla: "${tecla}" | Contexto: ${emCampoTexto ? 'TEXTO' : 'NORMAL'}`);
     
-    // ╔═══════════════════════════════════════════════════════════════════╗
-    // ║ PRIORIDADE 1: MODO MENU ATIVO (teclas 0-9 viram navegação)       ║
-    // ╚═══════════════════════════════════════════════════════════════════╝
-    if (Estado.modoMenuAtivo) {
+    const atalho = ATALHOS_GLOBAIS[tecla];
+    if (atalho) {
         evento.preventDefault();
+        console.log(`⚡ Executando: ${atalho.nome}`);
         
-        const opcaoMenu = MENU_NAVEGACAO[tecla];
-        if (opcaoMenu) {
-            console.log(`📂 Executando menu: ${opcaoMenu.nome}`);
-            opcaoMenu.acao();
-            
-            // Desativa menu automaticamente (exceto na opção '0' que já desativa)
-            if (tecla !== '0') {
-                Estado.modoMenuAtivo = false;
-            }
-        } else {
-            anunciarSeDisponivel(`Opção ${tecla} não existe no menu`);
-        }
-        return;
-    }
-    
-    // ╔═══════════════════════════════════════════════════════════════════╗
-    // ║ PRIORIDADE 2: ATALHOS UTILITÁRIOS (-, /, *, +)                   ║
-    // ╚═══════════════════════════════════════════════════════════════════╝
-    if (UTILITARIOS[tecla]) {
-        evento.preventDefault();
+        // Anunciar nome do atalho antes de executar
+        anunciarSeDisponivel(atalho.nome);
         
-        const utilitario = UTILITARIOS[tecla];
-        console.log(`🛠️ Executando utilitário: ${utilitario.nome}`);
-        utilitario.acao();
-        return;
+        // Executar ação
+        atalho.acao();
+    } else {
+        // Tecla válida mas sem atalho definido
+        console.log(`⚠️ Tecla "${tecla}" sem atalho definido`);
     }
-    
-    // ╔═══════════════════════════════════════════════════════════════════╗
-    // ║ PRIORIDADE 3: ATALHOS CONTEXTUAIS (0-9 definidos pela página)    ║
-    // ╚═══════════════════════════════════════════════════════════════════╝
-    if (Estado.atalhosContextuais[tecla]) {
-        evento.preventDefault();
-        
-        const contextual = Estado.atalhosContextuais[tecla];
-        console.log(`📄 Executando contextual: ${contextual.nome}`);
-        executarContextual(tecla);
-        return;
-    }
-    
-    // Se chegou aqui, tecla é válida mas não tem ação associada
-    console.log(`⚠️ Tecla "${tecla}" sem ação definida neste contexto`);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -313,19 +246,12 @@ function processarTecla(evento) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Registra atalhos contextuais para a página atual
- * @param {Object} atalhos - Objeto com tecla: {nome, acao}
- * 
- * Exemplo:
- * registrarAtalhos({
- *     '1': { nome: 'Análise por Dados', acao: () => location.href = '/analise' },
- *     '2': { nome: 'Ver Exemplos', acao: () => location.href = '/exemplos' }
- * });
+ * Função mantida para retrocompatibilidade - não faz nada
+ * Atalhos agora são mapeamentos globais diretos (ATALHOS_GLOBAIS)
+ * @deprecated Use ATALHOS_GLOBAIS diretamente
  */
 function registrarAtalhos(atalhos) {
-    Estado.atalhosContextuais = atalhos;
-    const teclas = Object.keys(atalhos).join(', ');
-    console.log(`📋 Atalhos contextuais registrados: ${teclas}`);
+    console.log('⚠️ registrarAtalhos() obsoleto - atalhos agora são globais e diretos');
 }
 
 /**
@@ -343,10 +269,10 @@ function salvarUltimoAnuncio(texto) {
 function inicializarAtalhos() {
     console.log('');
     console.log('═══════════════════════════════════════════════════════════');
-    console.log('⌨️  SISTEMA DE ATALHOS INICIALIZADO');
+    console.log('⌨️  SISTEMA DE ATALHOS DIRETOS INICIALIZADO');
     console.log('═══════════════════════════════════════════════════════════');
-    console.log('Utilitários disponíveis:');
-    for (const [tecla, config] of Object.entries(UTILITARIOS)) {
+    console.log('Atalhos globais disponíveis:');
+    for (const [tecla, config] of Object.entries(ATALHOS_GLOBAIS)) {
         console.log(`  ${tecla} → ${config.nome}`);
     }
     console.log('═══════════════════════════════════════════════════════════');
@@ -360,7 +286,7 @@ function inicializarAtalhos() {
 // EXPORTAÇÃO GLOBAL
 // ═══════════════════════════════════════════════════════════════════════════
 
-window.registrarAtalhos = registrarAtalhos;
+window.registrarAtalhos = registrarAtalhos; // Mantido para compatibilidade
 window.salvarUltimoAnuncio = salvarUltimoAnuncio;
 window.inicializarAtalhos = inicializarAtalhos;
 
