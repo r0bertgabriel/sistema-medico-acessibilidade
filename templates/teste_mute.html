@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Mute</title>
+    <style>
+        .mute-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(124, 58, 237, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 9999;
+            transition: all 0.3s;
+        }
+
+        .mute-btn.mutado {
+            background: rgba(239, 68, 68, 0.9);
+        }
+        
+        #status {
+            margin: 100px;
+            font-size: 20px;
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+    <button id="mute-btn" class="mute-btn">🔊</button>
+    
+    <div id="status">
+        <p>Estado: <span id="estado">Ativo</span></p>
+        <p>LocalStorage: <span id="storage">-</span></p>
+        <p>Classe: <span id="classe">-</span></p>
+    </div>
+
+    <script>
+        let audioMutado = localStorage.getItem('audioMutado') === 'true';
+        const muteBtn = document.getElementById('mute-btn');
+        
+        function atualizarStatus() {
+            document.getElementById('estado').textContent = audioMutado ? 'MUTADO' : 'ATIVO';
+            document.getElementById('storage').textContent = localStorage.getItem('audioMutado');
+            document.getElementById('classe').textContent = muteBtn.className;
+        }
+        
+        function toggleMute() {
+            audioMutado = !audioMutado;
+            localStorage.setItem('audioMutado', audioMutado);
+            
+            console.log('Toggle mute:', audioMutado);
+            
+            if (audioMutado) {
+                muteBtn.textContent = '🔇';
+                muteBtn.classList.add('mutado');
+                console.log('Classe adicionada:', muteBtn.className);
+            } else {
+                muteBtn.textContent = '🔊';
+                muteBtn.classList.remove('mutado');
+                console.log('Classe removida:', muteBtn.className);
+            }
+            
+            atualizarStatus();
+        }
+        
+        // Inicializar
+        if (audioMutado) {
+            muteBtn.textContent = '🔇';
+            muteBtn.classList.add('mutado');
+        }
+        
+        muteBtn.addEventListener('click', toggleMute);
+        atualizarStatus();
+        
+        console.log('Estado inicial:', audioMutado);
+        console.log('LocalStorage:', localStorage.getItem('audioMutado'));
+    </script>
+</body>
+</html>
