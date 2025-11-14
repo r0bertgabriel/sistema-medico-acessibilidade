@@ -1,10 +1,10 @@
-# 🩺 Sistema de Laudos de ECG com Acessibilidade
+# 🩺 Sistema de Análise de Exames Médicos com Acessibilidade
 
 ## 📋 Descrição
 
-Sistema web desenvolvido em Python para análise automatizada de eletrocardiogramas (ECG) com foco em **acessibilidade para médicos com deficiência visual**.
+Sistema web desenvolvido em Python para análise automatizada de **Eletrocardiogramas (ECG)** e **Hemogramas Completos** com foco em **acessibilidade para médicos com deficiência visual**.
 
-O sistema gera laudos completos em formato de **texto e áudio**, permitindo total autonomia na interpretação de ECGs.
+O sistema gera laudos completos em formato de **texto e áudio**, permitindo total autonomia na interpretação de exames médicos.
 
 ## ✨ Funcionalidades
 
@@ -17,27 +17,39 @@ O sistema gera laudos completos em formato de **texto e áudio**, permitindo tot
 - Diagnóstico de isquemia e infarto
 - Detecção de sobrecargas atriais e ventriculares
 
-### 📸 **NOVO: Análise por Imagem com IA**
+### 🩸 **Análise de Hemograma Completo**
+- Análise automatizada de série vermelha (eritrograma)
+- Avaliação de série branca (leucograma)
+- Contagem e análise de plaquetas
+- Detecção de anemia (microcítica, macrocítica, normocítica)
+- Identificação de alterações leucocitárias
+- Interpretação de resultados com sugestões diagnósticas
+- Laudos otimizados para áudio (rápidos e concisos)
+
+### 📸 **Análise por Imagem - ECG**
 - Upload de imagens de ECG (PNG, JPG, JPEG, GIF, BMP, TIFF)
-- Processamento automático com GPT-4o Vision da OpenAI
-- Extração inteligente de todos os parâmetros do ECG
-- Mesma geração de laudo em texto e áudio
+- Sistema com casos prontos (sem uso de API OpenAI)
+- Exemplo: Arritmia Sinusal com Bloqueio Incompleto de Ramo Direito
 - Drag-and-drop para facilitar o upload
-- ⚠️ **IMPORTANTE**: [Limitações da API OpenAI para imagens médicas](LIMITACOES_API_OPENAI.md)
-- 📖 [Ver documentação completa](ANALISE_POR_IMAGEM.md)
+- Laudo completo em texto e áudio otimizado
 
-### �🔊 Geração de Áudio
+### 🔊 Geração de Áudio Otimizada
 - Conversão automática de laudos para áudio em português brasileiro
-- Narração natural e clara usando Google Text-to-Speech
+- Narração natural e clara usando Google Text-to-Speech (gTTS)
+- Velocidade acelerada (1.35x) com pydub para maior eficiência
+- Laudos de áudio concisos (apenas informações essenciais)
 - Player de áudio integrado com controles acessíveis
-- Auto-reprodução para facilitar a acessibilidade
+- Sistema otimizado para geração rápida (especialmente hemogramas)
 
-### ⌨️ Acessibilidade
-- Navegação completa por teclado
-- Atalhos de teclado (Alt+1, Alt+2, Alt+3)
-- Alto contraste e fontes legíveis
+### ⌨️ Acessibilidade Completa
+- Navegação completa por teclado com hierarquia clara
+- Atalhos de teclado intuitivos (números de 1-6 para menus)
+- Botão de mute/unmute (M) para controlar feedback auditivo
+- Alto contraste com tema vermelho (#dc2626)
+- Fontes legíveis e elementos bem espaçados
 - Compatibilidade com leitores de tela
 - Elementos ARIA para melhor experiência
+- Feedback auditivo em todas as ações principais
 
 ## 🏗️ Arquitetura do Sistema
 
@@ -66,14 +78,32 @@ Gerador de laudos formatados:
 
 #### 4. **audio_generator.py**
 Sistema de Text-to-Speech:
-- Geração de arquivos MP3
+- Geração de arquivos MP3 com gTTS
+- Aceleração de áudio (1.35x) com pydub
 - Gerenciamento de arquivos de áudio
-- Reprodução e controle
 - Limpeza automática de arquivos antigos
 
-#### 5. **app.py**
+#### 5. **models/hemograma_analyzer.py**
+Analisador de hemograma completo:
+- Análise de série vermelha, branca e plaquetas
+- Cálculo de flags (baixo/normal/alto)
+- Detecção de padrões patológicos
+- Geração de laudos otimizados para áudio (concisos e rápidos)
+
+#### 6. **services/**
+Camada de serviços:
+- `audio_service.py`: Geração e gerenciamento de áudio
+- `ecg_service.py`: Processamento de ECG
+- `hemograma_service.py`: Processamento de hemogramas
+
+#### 7. **routes/**
+Rotas da aplicação:
+- `main.py`: Páginas principais (index, ECG, hemograma, etc.)
+- `api.py`: Endpoints REST para análise
+
+#### 8. **app.py**
 Aplicação Flask principal:
-- Rotas e endpoints da API
+- Inicialização e configuração
 - Integração dos módulos
 - Exemplos pré-configurados
 - Interface web
@@ -116,21 +146,37 @@ http://localhost:5000
 
 ## 📖 Como Usar
 
-### 1. Página Inicial
+### 1. Página Inicial (Alt+1)
 - Apresentação do sistema
 - Informações sobre funcionalidades
-- Atalhos de teclado
+- Atalhos de teclado disponíveis
+- Navegação rápida para todas as seções
 
-### 2. Análise de ECG
+### 2. Análise de ECG (Alt+2)
 - Preencha os dados do ECG no formulário
 - Campos obrigatórios: ritmo, frequência, intervalos, eixo
 - Clique em "Gerar Laudo"
-- O laudo será exibido em texto e reproduzido em áudio
+- O laudo será exibido em texto e reproduzido em áudio acelerado
 
-### 3. Exemplos Pré-configurados
+### 3. Análise de Hemograma (Alt+3)
+- Preencha os valores do hemograma completo
+- Série vermelha: hemácias, hemoglobina, hematócrito, VCM, HCM, CHCM, RDW
+- Série branca: leucócitos, neutrófilos, linfócitos, monócitos, eosinófilos, basófilos
+- Plaquetas: contagem total
+- Clique em "Gerar Laudo"
+- Laudo otimizado: áudio conciso com apenas valores alterados
+
+### 4. Análise por Imagem (Alt+4)
+- Visualize o exemplo de ECG de Arritmia Sinusal
+- Faça upload da imagem (arraste e solte ou clique)
+- Sistema identifica o caso automaticamente
+- Laudo completo em texto e áudio TTS otimizado
+
+### 5. Exemplos Pré-configurados
 - ECG Normal
 - Arritmia Sinusal com Sobrecarga Atrial
 - Bloqueio Incompleto do Ramo Direito
+- Hemogramas com diversos padrões
 - Clique no botão para gerar o laudo do exemplo
 
 ## ⌨️ Atalhos de Teclado
@@ -225,21 +271,42 @@ Retorna todos os exemplos disponíveis
 3. Copie o texto para prontuário
 4. Salve o áudio para referência
 
+## ⚡ Otimizações Implementadas
+
+### Geração de Áudio Rápida
+- **Laudos concisos para hemogramas**: Apenas valores alterados são narrados
+- **Áudio acelerado**: 1.35x mais rápido com pydub (mantém qualidade)
+- **Processamento otimizado**: Redução de ~80% no tempo de geração de áudio para hemogramas
+- **Cache inteligente**: Limpeza automática de arquivos antigos
+
+### Interface Responsiva
+- **Tema vermelho**: Cor principal #dc2626 para melhor contraste
+- **Feedback auditivo**: Anúncios em todas as ações principais
+- **Botão de mute**: Tecla M para silenciar/ativar áudio
+- **Navegação otimizada**: Atalhos numéricos para acesso rápido
+
+### Análise por Imagem
+- **Casos prontos**: Sem necessidade de API OpenAI
+- **Exemplo incluído**: Arritmia Sinusal pronto para teste
+- **Laudo otimizado**: Texto limpo para TTS (sem emojis/símbolos)
+
 ## ⚠️ Avisos Importantes
 
-- **Este sistema é uma ferramenta auxiliar**: Os laudos devem ser revisados por um médico cardiologista qualificado
+- **Este sistema é uma ferramenta auxiliar**: Os laudos devem ser revisados por um médico qualificado
 - **Não substitui avaliação médica**: Use como suporte à decisão clínica
 - **Validação necessária**: Sempre correlacione com quadro clínico do paciente
-- **Casos críticos**: Isquemia e infarto requerem atenção médica imediata
+- **Casos críticos**: Isquemia, infarto e alterações graves requerem atenção médica imediata
+- **Hemogramas**: Interpretação automática deve ser confirmada por hematologista
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Flask**: Framework web Python
-- **gTTS**: Google Text-to-Speech
+- **gTTS**: Google Text-to-Speech para narração
+- **pydub**: Aceleração de áudio (1.35x)
 - **Pygame**: Reprodução de áudio
-- **Python Dataclasses**: Estruturas de dados
-- **HTML5/CSS3**: Interface responsiva
-- **JavaScript**: Interatividade
+- **Python Dataclasses**: Estruturas de dados tipadas
+- **HTML5/CSS3**: Interface responsiva e acessível
+- **JavaScript**: Interatividade e feedback auditivo
 
 ## 📁 Estrutura de Diretórios
 

@@ -495,175 +495,74 @@ class AnalisadorHemograma:
         return "\n".join(linhas)
     
     def _gerar_laudo_audio(self) -> str:
-        """Gera versão do laudo otimizada para áudio (sem caracteres especiais)
+        """Gera versão do laudo otimizada para áudio (concisa, sem caracteres especiais)
         
         Returns:
-            String com laudo formatado para narração em áudio
+            String com laudo formatado para narração em áudio de forma rápida
         """
         linhas = []
         
-        # Cabeçalho
-        linhas.append("Laudo de Hemograma Completo.")
-        linhas.append("")
+        # Cabeçalho resumido
+        linhas.append(f"Hemograma de {self.dados.nome_paciente}, {self.dados.idade} anos.")
         
-        # Dados do paciente
-        linhas.append(f"Paciente: {self.dados.nome_paciente}.")
-        linhas.append(f"Idade: {self.dados.idade} anos.")
-        linhas.append(f"Sexo: {'Masculino' if self.dados.sexo == 'M' else 'Feminino'}.")
-        if self.dados.data_coleta:
-            linhas.append(f"Data da coleta: {self.dados.data_coleta}.")
-        linhas.append("")
+        # Apenas valores alterados da Série Vermelha
+        alterados_vermelho = []
+        if self.dados.hemoglobina and self.flags.get("hemoglobina") != "N":
+            status = "baixa" if self.flags.get("hemoglobina") == "L" else "alta"
+            alterados_vermelho.append(f"Hemoglobina {status}: {self.dados.hemoglobina}")
         
-        # Série Vermelha
-        linhas.append("Eritrograma, ou Série Vermelha.")
+        if self.dados.hemacias and self.flags.get("hemacias") != "N":
+            status = "baixas" if self.flags.get("hemacias") == "L" else "altas"
+            alterados_vermelho.append(f"Hemácias {status}: {self.dados.hemacias}")
         
-        if self.dados.hemacias:
-            ref = self.referencias["hemacias"]
-            flag = self.flags.get("hemacias", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Hemácias: {self.dados.hemacias} milhões por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
+        if self.dados.vcm and self.flags.get("vcm") != "N":
+            status = "baixo" if self.flags.get("vcm") == "L" else "alto"
+            alterados_vermelho.append(f"VCM {status}: {self.dados.vcm}")
         
-        if self.dados.hemoglobina:
-            ref = self.referencias["hemoglobina"]
-            flag = self.flags.get("hemoglobina", "?")
-            status = "normal" if flag == "N" else ("baixa" if flag == "L" else "alta")
-            linhas.append(f"Hemoglobina: {self.dados.hemoglobina} gramas por decilitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
+        if alterados_vermelho:
+            linhas.append("Série vermelha: " + ", ".join(alterados_vermelho) + ".")
+        else:
+            linhas.append("Série vermelha: sem alterações.")
         
-        if self.dados.hematocrito:
-            ref = self.referencias["hematocrito"]
-            flag = self.flags.get("hematocrito", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Hematócrito: {self.dados.hematocrito} por cento. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
+        # Apenas valores alterados da Série Branca
+        alterados_branco = []
+        if self.dados.leucocitos and self.flags.get("leucocitos") != "N":
+            status = "baixos" if self.flags.get("leucocitos") == "L" else "altos"
+            alterados_branco.append(f"Leucócitos {status}: {self.dados.leucocitos}")
         
-        if self.dados.vcm:
-            ref = self.referencias["vcm"]
-            flag = self.flags.get("vcm", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"V C M: {self.dados.vcm} femtolitros. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
+        if self.dados.neutrofilos and self.flags.get("neutrofilos") != "N":
+            status = "baixos" if self.flags.get("neutrofilos") == "L" else "altos"
+            alterados_branco.append(f"Neutrófilos {status}: {self.dados.neutrofilos}")
         
-        if self.dados.hcm:
-            ref = self.referencias["hcm"]
-            flag = self.flags.get("hcm", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"H C M: {self.dados.hcm} picogramas. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
+        if self.dados.linfocitos and self.flags.get("linfocitos") != "N":
+            status = "baixos" if self.flags.get("linfocitos") == "L" else "altos"
+            alterados_branco.append(f"Linfócitos {status}: {self.dados.linfocitos}")
         
-        if self.dados.chcm:
-            ref = self.referencias["chcm"]
-            flag = self.flags.get("chcm", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"C H C M: {self.dados.chcm} gramas por decilitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-        
-        if self.dados.rdw:
-            ref = self.referencias["rdw"]
-            flag = self.flags.get("rdw", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"R D W: {self.dados.rdw} por cento. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-        
-        linhas.append("")
-        
-        # Série Branca
-        linhas.append("Leucograma, ou Série Branca.")
-        
-        if self.dados.leucocitos:
-            ref = self.referencias["leucocitos"]
-            flag = self.flags.get("leucocitos", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Leucócitos totais: {self.dados.leucocitos} células por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-        
-        if self.dados.neutrofilos:
-            ref = self.referencias["neutrofilos"]
-            flag = self.flags.get("neutrofilos", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Neutrófilos: {self.dados.neutrofilos} células por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-            
-            if self.dados.bastonetes:
-                linhas.append(f"Bastonetes: {self.dados.bastonetes} por microlitro.")
-            if self.dados.segmentados:
-                linhas.append(f"Segmentados: {self.dados.segmentados} por microlitro.")
-        
-        if self.dados.linfocitos:
-            ref = self.referencias["linfocitos"]
-            flag = self.flags.get("linfocitos", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Linfócitos: {self.dados.linfocitos} células por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-        
-        if self.dados.monocitos:
-            ref = self.referencias["monocitos"]
-            flag = self.flags.get("monocitos", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Monócitos: {self.dados.monocitos} células por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-        
-        if self.dados.eosinofilos:
-            ref = self.referencias["eosinofilos"]
-            flag = self.flags.get("eosinofilos", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Eosinófilos: {self.dados.eosinofilos} células por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-        
-        if self.dados.basofilos:
-            ref = self.referencias["basofilos"]
-            flag = self.flags.get("basofilos", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Basófilos: {self.dados.basofilos} células por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
-        
-        linhas.append("")
+        if alterados_branco:
+            linhas.append("Série branca: " + ", ".join(alterados_branco) + ".")
+        else:
+            linhas.append("Série branca: sem alterações.")
         
         # Plaquetas
-        linhas.append("Plaquetas.")
-        
         if self.dados.plaquetas:
-            ref = self.referencias["plaquetas"]
-            flag = self.flags.get("plaquetas", "?")
-            status = "normal" if flag == "N" else ("baixo" if flag == "L" else "alto")
-            linhas.append(f"Contagem de plaquetas: {self.dados.plaquetas} por microlitro. "
-                         f"Valor de referência: {ref['min']} a {ref['max']}. Status: {status}.")
+            flag = self.flags.get("plaquetas", "N")
+            if flag != "N":
+                status = "baixas" if flag == "L" else "altas"
+                linhas.append(f"Plaquetas {status}: {self.dados.plaquetas}.")
+            else:
+                linhas.append("Plaquetas normais.")
         
-        linhas.append("")
-        
-        # Interpretação
+        # Interpretação resumida
         interpretacao = self._gerar_interpretacao()
-        
-        linhas.append("Interpretação do Hemograma.")
-        linhas.append(f"Status Geral: {interpretacao['status_geral']}.")
-        linhas.append("")
+        linhas.append(f"Status: {interpretacao['status_geral']}.")
         
         if interpretacao["achados_principais"]:
-            linhas.append("Achados Principais:")
-            for achado in interpretacao["achados_principais"]:
-                linhas.append(f"{achado}.")
-            linhas.append("")
+            # Apenas os 3 primeiros achados mais importantes
+            achados_resumidos = interpretacao["achados_principais"][:3]
+            linhas.append("Principais achados: " + ". ".join(achados_resumidos) + ".")
         
         if interpretacao["sugestoes_diagnosticas"]:
-            linhas.append("Sugestões Diagnósticas:")
-            for sugestao in interpretacao["sugestoes_diagnosticas"]:
-                linhas.append(f"{sugestao}.")
-            linhas.append("")
-        
-        if interpretacao["observacoes"]:
-            linhas.append("Observações Importantes:")
-            for obs in interpretacao["observacoes"]:
-                linhas.append(f"{obs}.")
-            linhas.append("")
-        
-        if self.dados.observacoes:
-            linhas.append("Observações do Exame:")
-            linhas.append(f"{self.dados.observacoes}.")
-            linhas.append("")
-        
-        linhas.append("Importante: Este laudo é gerado automaticamente e deve ser "
-                     "avaliado por profissional médico qualificado para interpretação "
-                     "clínica completa considerando o contexto do paciente.")
+            # Apenas a primeira sugestão
+            linhas.append(f"Sugestão diagnóstica: {interpretacao['sugestoes_diagnosticas'][0]}.")
         
         return " ".join(linhas)
