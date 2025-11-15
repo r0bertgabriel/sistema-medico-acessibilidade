@@ -2,6 +2,7 @@
 REM ============================================================================
 REM Script de Verificación del Sistema
 REM Verifica todas las dependencias antes de la instalación
+REM Incluye verificación de FFmpeg (opcional)
 REM ============================================================================
 
 title Verificacion de Sistema
@@ -123,9 +124,32 @@ if errorlevel 1 (
 echo.
 
 REM ======================================
+REM Verificar FFmpeg (opcional)
+REM ======================================
+echo [5/6] Verificando FFmpeg (OPCIONAL - para aceleracion de audio)...
+
+ffmpeg -version >nul 2>&1
+if errorlevel 1 (
+    echo [!] FFmpeg no encontrado
+    echo     Sistema funcionara sin aceleracion de audio
+    echo.
+    echo     Para instalar FFmpeg:
+    echo     1. Via Chocolatey: choco install ffmpeg
+    echo     2. Manual: Ver INSTALACAO_FFMPEG_WINDOWS.md
+    echo     3. Download: https://www.gyan.dev/ffmpeg/builds/
+    set FFMPEG_OK=0
+) else (
+    for /f "tokens=3" %%i in ('ffmpeg -version 2^>^&1 ^| findstr /C:"ffmpeg version"') do set FFMPEG_VERSION=%%i
+    echo [✓] FFmpeg %FFMPEG_VERSION% encontrado
+    set FFMPEG_OK=1
+)
+
+echo.
+
+REM ======================================
 REM Verificar estructura del proyecto
 REM ======================================
-echo [5/5] Verificando estructura del proyecto...
+echo [6/6] Verificando estructura del proyecto...
 
 set STRUCT_OK=1
 
@@ -198,6 +222,13 @@ if %STRUCT_OK%==0 (
     set ALL_OK=0
 ) else (
     echo [✓] Estructura del proyecto: OK
+)
+
+if %FFMPEG_OK%==0 (
+    echo [!] FFmpeg: NO INSTALADO (OPCIONAL)
+    echo     Audio sin aceleracion
+) else (
+    echo [✓] FFmpeg: OK (audio acelerado)
 )
 
 echo.

@@ -2,7 +2,10 @@
 Módulo de Text-to-Speech para geração de áudio dos laudos
 Adaptado do test-tts.py para integração web com aceleração de áudio
 """
+import os
+import sys
 import uuid
+import warnings
 from pathlib import Path
 
 import gtts
@@ -16,6 +19,9 @@ except (ImportError, ModuleNotFoundError):
     PYDUB_AVAILABLE = False
     print("⚠️  Aviso: pydub não disponível. Aceleração de áudio desabilitada.")
     print("   Para habilitar aceleração, use Python 3.8-3.12 ou instale dependências.")
+
+# Suprimir avisos do pydub sobre FFmpeg no Windows
+warnings.filterwarnings("ignore", category=RuntimeWarning, module="pydub")
 
 
 class AudioLaudoGenerator:
@@ -59,6 +65,13 @@ class AudioLaudoGenerator:
         temp_filepath = self.audio_dir / temp_filename
         final_filepath = self.audio_dir / filename
         
+        # Remover arquivo final se já existir (evita erro no Windows)
+        if final_filepath.exists():
+            try:
+                final_filepath.unlink()
+            except Exception as e:
+                print(f"⚠️  Aviso: não foi possível remover arquivo existente: {e}")
+        
         # Gerar áudio com gTTS
         tts = gtts.gTTS(texto, lang=self.lang, slow=False)
         tts.save(str(temp_filepath))
@@ -66,6 +79,7 @@ class AudioLaudoGenerator:
         # Acelerar o áudio se solicitado e pydub estiver disponível
         if acelerar and self.pydub_available:
             try:
+                # Verificar se FFmpeg está disponível
                 audio = AudioSegment.from_mp3(str(temp_filepath))
                 
                 # Acelerar mantendo o pitch (tom) original
@@ -75,20 +89,59 @@ class AudioLaudoGenerator:
                 # Salvar áudio acelerado
                 sped_up_audio.export(str(final_filepath), format="mp3")
                 
-                # Remover arquivo temporário
-                temp_filepath.unlink()
+                # Remover arquivo temporário (compatível com Windows e Linux)
+                try:
+                    temp_filepath.unlink()
+                except Exception as e:
+                    print(f"⚠️  Aviso: não foi possível remover arquivo temporário: {e}")
+                
+            except FileNotFoundError as e:
+                # FFmpeg não encontrado - usar áudio sem aceleração
+                print(f"⚠️  FFmpeg não encontrado. Usando áudio sem aceleração.")
+                print("   Para habilitar aceleração no Windows, instale FFmpeg:")
+                print("   1. Baixe: https://www.gyan.dev/ffmpeg/builds/")
+                print("   2. Extraia e adicione o caminho ao PATH do sistema")
+                self._mover_arquivo_seguro(temp_filepath, final_filepath)
             except Exception as e:
                 print(f"⚠️  Erro ao acelerar áudio: {e}. Usando áudio sem aceleração.")
-                if temp_filepath.exists():
-                    temp_filepath.rename(final_filepath)
+                self._mover_arquivo_seguro(temp_filepath, final_filepath)
         else:
-            # Se não acelerar ou pydub não disponível, apenas renomear
+            # Se não acelerar ou pydub não disponível, apenas mover arquivo
             if acelerar and not self.pydub_available:
                 print("ℹ️  Aceleração de áudio não disponível (pydub não instalado)")
-            temp_filepath.rename(final_filepath)
+            self._mover_arquivo_seguro(temp_filepath, final_filepath)
         
         # Retornar caminho relativo para uso no HTML
         return f"audio/{filename}"
+    
+    def _mover_arquivo_seguro(self, origem: Path, destino: Path):
+        """
+        Move arquivo de forma segura, compatível com Windows e Linux
+        
+        Args:
+            origem: Caminho do arquivo de origem
+            destino: Caminho do arquivo de destino
+        """
+        if not origem.exists():
+            return
+        
+        try:
+            # No Windows, rename pode falhar se o arquivo estiver em uso
+            # Tentamos primeiro o método padrão
+            origem.rename(destino)
+        except PermissionError:
+            # Se falhar, tentamos copiar e depois deletar
+            try:
+                import shutil
+                shutil.copy2(str(origem), str(destino))
+                # Aguardar um pouco antes de tentar deletar
+                import time
+                time.sleep(0.1)
+                origem.unlink()
+            except Exception as e:
+                print(f"⚠️  Erro ao mover arquivo: {e}")
+                # Como último recurso, deixar o arquivo temporário
+                pass
     
     def reproduzir_audio(self, filepath: str):
         """
