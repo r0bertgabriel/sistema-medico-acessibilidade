@@ -1,38 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Análise de Hemograma - Sistema de Laudos{% endblock %}
+{% block title %}Análisis de Hemograma - Sistema de Informes{% endblock %}
 
 {% block content %}
 <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
     <h2 style="font-size: 2.2em; color: #1e40af; margin-bottom: 10px;">
-        🩸 Análise de Hemograma Completo
+        🩸 Análisis de Hemograma Completo
     </h2>
     
     <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
-        Preencha os dados do hemograma para gerar laudo automático com áudio acelerado
+        Complete los datos del hemograma para generar informe automático con audio acelerado
     </p>
 
-    <!-- Botões de Exemplo -->
+    <!-- Botones de Ejemplo -->
     <div style="margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap;">
         <button onclick="carregarExemplo('normal')" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-            Carregar Exemplo Normal
+            Cargar Ejemplo Normal
         </button>
         <button onclick="carregarExemplo('anemia')" class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-            Carregar Exemplo Anemia
+            Cargar Ejemplo Anemia
         </button>
         <button onclick="carregarExemplo('leucocitose')" class="btn" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
-            Carregar Exemplo Leucocitose
+            Cargar Ejemplo Leucocitose
         </button>
         <button onclick="carregarExemplo('plaquetopenia')" class="btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-            Carregar Exemplo Plaquetopenia
+            Cargar Ejemplo Plaquetopenia
         </button>
     </div>
 
     <form id="formHemograma" style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
         
-        <!-- Dados do Paciente -->
+        <!-- Datos del Paciente -->
         <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #2563eb;">
-            <h3 style="color: #1e40af; margin-bottom: 20px;">👤 Dados do Paciente</h3>
+            <h3 style="color: #1e40af; margin-bottom: 20px;">👤 Datos del Paciente</h3>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                 <div>
@@ -64,14 +64,14 @@
             </div>
         </div>
 
-        <!-- Série Vermelha (Eritrograma) -->
+        <!-- Serie Roja (Eritrograma) -->
         <div style="background: #fef2f2; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #dc2626;">
-            <h3 style="color: #dc2626; margin-bottom: 20px;">🔴 Série Vermelha (Eritrograma)</h3>
+            <h3 style="color: #dc2626; margin-bottom: 20px;">🔴 Serie Roja (Eritrograma)</h3>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
                 <div>
                     <label for="hemacias" style="display: block; font-weight: bold; margin-bottom: 5px;">
-                        Hemácias: <span style="font-size: 0.85em; color: #666;">(milhões/µL)</span>
+                        Eritrocitos: <span style="font-size: 0.85em; color: #666;">(milhões/µL)</span>
                     </label>
                     <input type="number" id="hemacias" name="hemacias" step="0.01" required
                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
@@ -127,14 +127,14 @@
             </div>
         </div>
 
-        <!-- Série Branca (Leucograma) -->
+        <!-- Serie Blanca (Leucograma) -->
         <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #10b981;">
-            <h3 style="color: #059669; margin-bottom: 20px;">⚪ Série Branca (Leucograma)</h3>
+            <h3 style="color: #059669; margin-bottom: 20px;">⚪ Serie Blanca (Leucograma)</h3>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
                 <div>
                     <label for="leucocitos" style="display: block; font-weight: bold; margin-bottom: 5px;">
-                        Leucócitos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
+                        Leucocitos: <span style="font-size: 0.85em; color: #666;">(/µL)</span>
                     </label>
                     <input type="number" id="leucocitos" name="leucocitos" step="1" required
                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
@@ -213,7 +213,7 @@
             
             <button type="button" onclick="limparFormulario()" class="btn" 
                     style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);">
-                🗑️ Limpar Formulário
+                🗑️ Limpiar Formulário
             </button>
         </div>
     </form>
@@ -239,10 +239,10 @@
                                       font-size: 0.95em; line-height: 1.6; max-height: 600px; overflow-y: auto;">
             </div>
             
-            <!-- Botão para copiar laudo -->
+            <!-- Botón para copiar informe -->
             <div style="margin-top: 20px; text-align: center;">
                 <button onclick="copiarLaudo()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    📋 Copiar Laudo
+                    📋 Copiar Informe
                 </button>
             </div>
         </div>
@@ -266,7 +266,7 @@
 </style>
 
 <script>
-// Carregar exemplo de hemograma
+// Cargar exemplo de hemograma
 async function carregarExemplo(tipo) {
     try {
         const response = await fetch(`/api/hemograma/exemplo/${tipo}`);
@@ -275,7 +275,7 @@ async function carregarExemplo(tipo) {
         if (data.success) {
             const exemplo = data.exemplo;
             
-            // Preencher dados do paciente
+            // Rellenar datos del paciente
             document.getElementById('nome').value = exemplo.paciente.nome;
             document.getElementById('idade').value = exemplo.paciente.idade;
             document.getElementById('sexo').value = exemplo.paciente.sexo;
@@ -313,14 +313,14 @@ async function carregarExemplo(tipo) {
     }
 }
 
-// Limpar formulário
+// Limpiar formulário
 function limparFormulario() {
     document.getElementById('formHemograma').reset();
     document.getElementById('resultado').style.display = 'none';
     anunciar('Formulário limpo');
 }
 
-// Copiar laudo para área de transferência
+// Copiar informe al portapapeles
 function copiarLaudo() {
     const texto = document.getElementById('textoLaudo').textContent;
     navigator.clipboard.writeText(texto).then(() => {
@@ -421,7 +421,7 @@ document.getElementById('formHemograma').addEventListener('submit', async functi
             // Scroll para resultado
             document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
             
-            anunciar('Análise concluída. Laudo disponível.');
+            anunciar('Análisis completado. Informe disponible.');
         } else {
             alert('Erro: ' + (result.error || 'Erro desconhecido'));
             anunciar('Erro ao processar hemograma');

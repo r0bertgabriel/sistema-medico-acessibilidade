@@ -36,7 +36,7 @@ function obterLabel(elemento) {
     }
     
     // name ou title
-    return elemento.name || elemento.title || 'sem rótulo';
+    return elemento.name || elemento.title || 'sin etiqueta';
 }
 
 /**
@@ -51,14 +51,14 @@ function gerarAnuncioFoco(elemento) {
     if (elemento.tagName === 'A') {
         const ariaLabel = elemento.getAttribute('aria-label');
         const texto = elemento.textContent.trim();
-        anuncio = 'Link: ' + (ariaLabel || texto);
+        anuncio = 'Enlace: ' + (ariaLabel || texto);
     }
     
     // Botões
     else if (elemento.tagName === 'BUTTON') {
         const ariaLabel = elemento.getAttribute('aria-label');
         const texto = elemento.textContent.trim();
-        const tipo = elemento.type === 'submit' ? 'Botão de envio' : 'Botão';
+        const tipo = elemento.type === 'submit' ? 'Botón de envío' : 'Botón';
         anuncio = tipo + ': ' + (ariaLabel || texto);
     }
     
@@ -69,17 +69,17 @@ function gerarAnuncioFoco(elemento) {
         
         if (tipo === 'text' || tipo === 'number' || tipo === 'email' || tipo === 'tel') {
             anuncio = `Campo: ${labelTexto}`;
-            if (elemento.required) anuncio += ' - obrigatório';
+            if (elemento.required) anuncio += ' - obligatorio';
             const valor = elemento.value;
-            if (valor) anuncio += ` - valor atual: ${valor}`;
+            if (valor) anuncio += ` - valor actual: ${valor}`;
         } else if (tipo === 'checkbox') {
             const estado = elemento.checked ? 'marcado' : 'desmarcado';
-            anuncio = `Caixa de seleção: ${labelTexto} - ${estado}`;
+            anuncio = `Casilla de verificación: ${labelTexto} - ${estado}`;
         } else if (tipo === 'radio') {
-            const estado = elemento.checked ? 'selecionado' : 'não selecionado';
-            anuncio = `Opção: ${labelTexto} - ${estado}`;
+            const estado = elemento.checked ? 'seleccionado' : 'no seleccionado';
+            anuncio = `Opción: ${labelTexto} - ${estado}`;
         } else if (tipo === 'submit') {
-            anuncio = `Botão de envio: ${elemento.value || labelTexto}`;
+            anuncio = `Botón de envío: ${elemento.value || labelTexto}`;
         }
     }
     
@@ -87,16 +87,16 @@ function gerarAnuncioFoco(elemento) {
     else if (elemento.tagName === 'TEXTAREA') {
         const labelTexto = obterLabel(elemento);
         anuncio = `Área de texto: ${labelTexto}`;
-        if (elemento.required) anuncio += ' - obrigatório';
+        if (elemento.required) anuncio += ' - obligatorio';
     }
     
     // Select
     else if (elemento.tagName === 'SELECT') {
         const labelTexto = obterLabel(elemento);
         const opcaoSelecionada = elemento.options[elemento.selectedIndex];
-        anuncio = `Lista de seleção: ${labelTexto}`;
+        anuncio = `Lista de selección: ${labelTexto}`;
         if (opcaoSelecionada) {
-            anuncio += ` - selecionado: ${opcaoSelecionada.text}`;
+            anuncio += ` - seleccionado: ${opcaoSelecionada.text}`;
         }
     }
     

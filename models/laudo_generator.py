@@ -40,48 +40,48 @@ class GeradorLaudo:
         
         linhas = []
         linhas.append("=" * 80)
-        linhas.append("LAUDO DE ELETROCARDIOGRAMA")
+        linhas.append("INFORME DE ELECTROCARDIOGRAMA")
         linhas.append("=" * 80)
         linhas.append("")
         
         # Dados do paciente
         if dados.paciente_id or dados.nome_paciente:
-            linhas.append("IDENTIFICAÇÃO DO PACIENTE")
+            linhas.append("IDENTIFICACIÓN DEL PACIENTE")
             linhas.append("-" * 80)
             if dados.nome_paciente:
-                linhas.append(f"Nome: {dados.nome_paciente}")
+                linhas.append(f"Nombre: {dados.nome_paciente}")
             if dados.paciente_id:
                 linhas.append(f"ID: {dados.paciente_id}")
             if dados.data_exame:
-                linhas.append(f"Data do Exame: {dados.data_exame}")
+                linhas.append(f"Fecha del Examen: {dados.data_exame}")
             else:
-                linhas.append(f"Data do Exame: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+                linhas.append(f"Fecha del Examen: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
             linhas.append("")
         
         # Dados técnicos
-        linhas.append("DADOS TÉCNICOS DO ECG")
+        linhas.append("DATOS TÉCNICOS DEL ECG")
         linhas.append("-" * 80)
         linhas.append(f"Ritmo: {self._formatar_ritmo(dados.ritmo)}")
-        linhas.append(f"Frequência Cardíaca: {dados.frequencia_cardiaca} bpm")
-        linhas.append(f"Regularidade: {dados.regularidade.capitalize()}")
-        linhas.append(f"Eixo Elétrico do QRS: {dados.eixo_qrs}°")
+        linhas.append(f"Frecuencia Cardíaca: {dados.frequencia_cardiaca} lpm")
+        linhas.append(f"Regularidad: {dados.regularidade.capitalize()}")
+        linhas.append(f"Eje Eléctrico del QRS: {dados.eixo_qrs}°")
         
         if dados.intervalos:
             linhas.append(f"Intervalo PR: {dados.intervalos.pr:.3f} s")
-            linhas.append(f"Duração do QRS: {dados.intervalos.qrs:.3f} s")
+            linhas.append(f"Duración del QRS: {dados.intervalos.qrs:.3f} s")
             linhas.append(f"Intervalo QT: {dados.intervalos.qt:.3f} s")
-            linhas.append(f"QTc (corrigido): {dados.intervalos.qtc:.3f} s")
+            linhas.append(f"QTc (corregido): {dados.intervalos.qtc:.3f} s")
         
         linhas.append("")
         
         # Achados
-        linhas.append("ACHADOS ELETROCARDIOGRÁFICOS")
+        linhas.append("HALLAZGOS ELECTROCARDIOGRÁFICOS")
         linhas.append("-" * 80)
         if resultado["achados"]:
             for achado in resultado["achados"]:
                 linhas.append(f"• {achado}")
         else:
-            linhas.append("• Sem alterações significativas")
+            linhas.append("• Sin alteraciones significativas")
         linhas.append("")
         
         # Diagnósticos
@@ -91,11 +91,11 @@ class GeradorLaudo:
             for i, diag in enumerate(resultado["diagnosticos"], 1):
                 linhas.append(f"{i}. {diag}")
         else:
-            linhas.append("• ECG dentro dos padrões de normalidade")
+            linhas.append("• ECG dentro de los parámetros de normalidad")
         linhas.append("")
         
         # Conclusão
-        linhas.append("CONCLUSÃO")
+        linhas.append("CONCLUSIÓN")
         linhas.append("-" * 80)
         linhas.append(resultado["conclusao"])
         linhas.append("")
@@ -104,86 +104,94 @@ class GeradorLaudo:
         if dados.infarto or dados.isquemia:
             linhas.append("")
             linhas.append("!" * 80)
-            linhas.append("ATENÇÃO: ACHADOS QUE NECESSITAM AVALIAÇÃO MÉDICA IMEDIATA")
+            linhas.append("ATENCIÓN: HALLAZGOS QUE REQUIEREN EVALUACIÓN MÉDICA INMEDIATA")
             linhas.append("!" * 80)
         
         linhas.append("")
         linhas.append("=" * 80)
-        linhas.append("Laudo gerado automaticamente pelo Sistema de Acessibilidade Médica")
-        linhas.append("Este laudo deve ser revisado por um médico cardiologista")
+        linhas.append("Informe generado automáticamente por el Sistema de Accesibilidad Médica")
+        linhas.append("Este informe debe ser revisado por un médico cardiólogo")
         linhas.append("=" * 80)
         
         return "\n".join(linhas)
     
     def _formatar_laudo_audio(self, dados: DadosECG, resultado: Dict) -> str:
-        """Formata o laudo para narração em áudio (mais natural e conciso)"""
+        """Formata o laudo para narração em áudio (conciso e otimizado)"""
         
         partes = []
         
-        # Introdução
-        partes.append("Laudo de eletrocardiograma.")
-        
-        # Identificação
+        # Introdução com identificação
         if dados.nome_paciente:
-            partes.append(f"Paciente: {dados.nome_paciente}.")
-        
-        if dados.data_exame:
-            partes.append(f"Exame realizado em {dados.data_exame}.")
-        
-        # Dados principais
-        partes.append(f"Ritmo {self._formatar_ritmo(dados.ritmo)}, {dados.regularidade}.")
-        partes.append(f"Frequência cardíaca de {dados.frequencia_cardiaca} batimentos por minuto.")
-        
-        # Eixo
-        if -30 <= dados.eixo_qrs <= 90:
-            partes.append(f"Eixo elétrico normal, {dados.eixo_qrs} graus.")
+            partes.append(f"E C G de {dados.nome_paciente}.")
         else:
-            partes.append(f"Eixo elétrico desviado, {dados.eixo_qrs} graus.")
+            partes.append("Informe de electrocardiograma.")
         
-        # Intervalos
+        # Dados principais compactos
+        partes.append(f"Ritmo {self._formatar_ritmo(dados.ritmo)}, {dados.regularidade}, {dados.frequencia_cardiaca} latidos por minuto.")
+        
+        # Intervalos - mencionar valores específicos importantes
+        intervalos_info = []
         if dados.intervalos:
-            intervalos_texto = []
-            
-            if 0.12 <= dados.intervalos.pr <= 0.20:
-                intervalos_texto.append(f"PR normal")
+            # PR sempre mencionado
+            pr_ms = int(dados.intervalos.pr * 1000)
+            if dados.intervalos.pr < 0.12:
+                intervalos_info.append(f"P R corto, {pr_ms} milisegundos")
+            elif dados.intervalos.pr > 0.20:
+                intervalos_info.append(f"P R prolongado, {pr_ms} milisegundos")
             else:
-                intervalos_texto.append(f"PR de {int(dados.intervalos.pr * 1000)} milissegundos")
+                intervalos_info.append(f"P R {pr_ms} milisegundos")
             
-            if dados.intervalos.qrs <= 0.10:
-                intervalos_texto.append(f"QRS estreito")
+            # QRS sempre mencionado
+            qrs_ms = int(dados.intervalos.qrs * 1000)
+            if dados.intervalos.qrs > 0.12:
+                intervalos_info.append(f"Q R S ensanchado, {qrs_ms} milisegundos")
+            elif dados.intervalos.qrs > 0.10:
+                intervalos_info.append(f"Q R S {qrs_ms} milisegundos, limítrofe")
             else:
-                intervalos_texto.append(f"QRS alargado, {int(dados.intervalos.qrs * 1000)} milissegundos")
+                intervalos_info.append(f"Q R S {qrs_ms} milisegundos")
             
-            if dados.intervalos.qtc <= 0.44:
-                intervalos_texto.append(f"QT corrigido normal")
-            else:
-                intervalos_texto.append(f"QT corrigido prolongado")
-            
-            partes.append("Intervalos: " + ", ".join(intervalos_texto) + ".")
+            # QTc apenas se alterado
+            if dados.intervalos.qtc > 0.44:
+                intervalos_info.append(f"Q T c prolongado")
         
-        # Diagnósticos principais
+        if intervalos_info:
+            partes.append(". ".join(intervalos_info) + ".")
+        
+        # Eixo elétrico sempre mencionado
+        eixo = dados.eixo_qrs
+        if eixo < -30:
+            partes.append(f"Eje desviado a la izquierda, {eixo} grados.")
+        elif eixo > 90:
+            partes.append(f"Eje desviado a la derecha, {eixo} grados.")
+        else:
+            partes.append(f"Eje normal, {eixo} grados.")
+        
+        # Diagnósticos com contexto
         if resultado["diagnosticos"]:
+            # Adicionar morfologia se relevante
+            if dados.complexo_qrs and dados.complexo_qrs.morfologia != 'normal':
+                morfologia = dados.complexo_qrs.morfologia
+                if morfologia == "RSR'":
+                    partes.append("Morfología Q R S: patrón R S R prima en V1 y V2.")
+            
+            # Adicionar morfologia de onda P se alterada
+            if dados.onda_p and dados.onda_p.morfologia != 'normal':
+                if 'aumentada' in dados.onda_p.morfologia.lower():
+                    partes.append("Onda P: aumentada, sugiriendo sobrecarga atrial.")
+            
             if len(resultado["diagnosticos"]) == 1:
                 partes.append(f"Diagnóstico: {resultado['diagnosticos'][0]}.")
             else:
-                partes.append("Diagnósticos encontrados:")
-                for diag in resultado["diagnosticos"]:
-                    partes.append(f"{diag}.")
+                # Até 3 diagnósticos
+                partes.append("Diagnósticos: " + ". ".join(resultado["diagnosticos"][:3]) + ".")
         else:
-            partes.append("Eletrocardiograma dentro dos padrões de normalidade.")
+            partes.append("E C G dentro de los límites normales.")
         
         # Alertas críticos
         if dados.infarto:
-            partes.append("ATENÇÃO! Sinais compatíveis com infarto agudo do miocárdio. Necessita avaliação médica imediata!")
+            partes.append("¡ATENCIÓN! Infarto agudo. ¡Evaluación médica inmediata!")
         elif dados.isquemia:
-            partes.append("Atenção: presença de sinais de isquemia miocárdica. Recomenda-se avaliação cardiológica urgente.")
-        
-        # Conclusão
-        if not dados.infarto and not dados.isquemia:
-            if resultado["diagnosticos"]:
-                partes.append("Recomenda-se correlação clínica e acompanhamento médico.")
-            else:
-                partes.append("Fim do laudo.")
+            partes.append("Atención: isquemia miocárdica. Evaluación cardiológica urgente.")
         
         return " ".join(partes)
     
@@ -191,8 +199,8 @@ class GeradorLaudo:
         """Converte o código do ritmo para descrição legível"""
         ritmos = {
             "sinusal": "sinusal",
-            "fibrilacao_atrial": "fibrilação atrial",
-            "flutter_atrial": "flutter atrial",
+            "fibrilacao_atrial": "fibrilación auricular",
+            "flutter_atrial": "flutter auricular",
             "taquicardia_supraventricular": "taquicardia supraventricular",
             "taquicardia_ventricular": "taquicardia ventricular",
             "bradicardia": "bradicardia",
@@ -209,4 +217,4 @@ class GeradorLaudo:
         if len(resultado["diagnosticos"]) == 1:
             return resultado["diagnosticos"][0]
         
-        return f"{len(resultado['diagnosticos'])} alterações encontradas"
+        return f"{len(resultado['diagnosticos'])} alteraciones encontradas"

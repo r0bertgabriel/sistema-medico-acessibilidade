@@ -24,12 +24,6 @@ def analise():
     return render_template('analise.html')
 
 
-@main_bp.route('/analise-imagem')
-def analise_imagem():
-    """Página de análise de ECG por imagem"""
-    return render_template('analise_imagem.html')
-
-
 @main_bp.route('/teste-mute')
 def teste_mute():
     """Página de teste do botão mute"""

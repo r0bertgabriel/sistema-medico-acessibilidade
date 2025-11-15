@@ -17,8 +17,8 @@ MAX_AUDIO_FILES = 50  # Número máximo de arquivos de áudio a manter
 AUDIO_SPEED = 1.35  # Velocidade de reprodução do áudio
 
 # Configurações de TTS
-TTS_LANGUAGE = 'pt'
-TTS_TLD = 'com.br'  # Top-level domain para sotaque brasileiro
+TTS_LANGUAGE = 'es'
+TTS_TLD = 'com'  # Top-level domain para espanhol
 
 # Configurações de acessibilidade
 KEYBOARD_SHORTCUTS_ENABLED = True

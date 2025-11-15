@@ -2,7 +2,9 @@
 Aplicação Flask para o Sistema de Laudos de ECG com Acessibilidade
 Versão refatorada com arquitetura modular
 """
-from flask import Flask
+import os
+
+from flask import Flask, send_from_directory
 
 import config
 from routes import api_bp, main_bp
@@ -21,6 +23,12 @@ def create_app():
     # Registrar blueprints
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp)
+    
+    # Rota para favicon
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(os.path.join(app.root_path, 'static'),
+                                  'favicon.ico', mimetype='image/vnd.microsoft.icon')
     
     return app
 

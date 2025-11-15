@@ -12,14 +12,14 @@ from models.ecg_data import (
 
 
 def criar_exemplo_normal() -> DadosECG:
-    """Cria exemplo de ECG normal"""
+    """Cria exemplo de ECG normal - Masculino, 45 anos"""
     return DadosECG(
-        nome_paciente="Exemplo - Paciente Normal",
+        nome_paciente="Masculino, 45 anos",
         ritmo="sinusal",
         frequencia_cardiaca=72,
         regularidade="regular",
-        eixo_qrs=50,
-        intervalos=IntervalosECG(pr=0.16, qrs=0.08, qt=0.38, qtc=0.40),
+        eixo_qrs=60,
+        intervalos=IntervalosECG(pr=0.16, qrs=0.09, qt=0.38, qtc=0.40),
         onda_p=OndaP(
             presente=True,
             positiva_dII=True,
@@ -38,25 +38,25 @@ def criar_exemplo_normal() -> DadosECG:
         segmento_st=SegmentoST(
             supradesnivelamento=[],
             infradesnivelamento=[],
-            normal=["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V1-V6"]
+            normal=["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
         ),
         onda_t=OndaT(
             invertida=[],
             apiculada=[],
-            normal=["DI", "DII", "DIII", "aVL", "aVF", "V1-V6"]
+            normal=["DI", "DII", "DIII", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
         )
     )
 
 
 def criar_exemplo_arritmia() -> DadosECG:
-    """Cria exemplo de arritmia sinusal"""
+    """Cria exemplo de arritmia sinusal com sobrecarga atrial - Feminino, 38 anos"""
     return DadosECG(
-        nome_paciente="Exemplo - Arritmia Sinusal",
+        nome_paciente="Feminino, 38 anos - Episódios de palpitações ao esforço leve",
         ritmo="sinusal",
         frequencia_cardiaca=72,
         regularidade="irregular",
-        eixo_qrs=-18,
-        intervalos=IntervalosECG(pr=0.16, qrs=0.08, qt=0.40, qtc=0.42),
+        eixo_qrs=0,
+        intervalos=IntervalosECG(pr=0.15, qrs=0.10, qt=0.40, qtc=0.42),
         onda_p=OndaP(
             presente=True,
             positiva_dII=True,
@@ -75,25 +75,25 @@ def criar_exemplo_arritmia() -> DadosECG:
         segmento_st=SegmentoST(
             supradesnivelamento=[],
             infradesnivelamento=[],
-            normal=["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V1-V6"]
+            normal=["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
         ),
         onda_t=OndaT(
             invertida=[],
             apiculada=[],
-            normal=["DI", "DII", "DIII", "aVL", "aVF", "V1-V6"]
+            normal=["DI", "DII", "DIII", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
         )
     )
 
 
 def criar_exemplo_bloqueio() -> DadosECG:
-    """Cria exemplo de bloqueio incompleto de ramo direito"""
+    """Cria exemplo de bloqueio incompleto de ramo direito - Masculino, 52 anos"""
     return DadosECG(
-        nome_paciente="Exemplo - Bloqueio Incompleto Ramo Direito",
+        nome_paciente="Masculino, 52 anos - Assintomático",
         ritmo="sinusal",
-        frequencia_cardiaca=85,
+        frequencia_cardiaca=68,
         regularidade="regular",
-        eixo_qrs=-18,
-        intervalos=IntervalosECG(pr=0.16, qrs=0.09, qt=0.40, qtc=0.42),
+        eixo_qrs=0,
+        intervalos=IntervalosECG(pr=0.16, qrs=0.11, qt=0.40, qtc=0.42),
         onda_p=OndaP(
             presente=True,
             positiva_dII=True,
@@ -111,13 +111,13 @@ def criar_exemplo_bloqueio() -> DadosECG:
         ),
         segmento_st=SegmentoST(
             supradesnivelamento=[],
-            infradesnivelamento=["V2", "V3"],
-            normal=["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V4-V6"]
+            infradesnivelamento=[],
+            normal=["DI", "DII", "DIII", "aVR", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
         ),
         onda_t=OndaT(
-            invertida=["V1", "V2", "V3"],
+            invertida=[],
             apiculada=[],
-            normal=["DI", "DII", "DIII", "aVL", "aVF", "V4-V6"]
+            normal=["DI", "DII", "DIII", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
         ),
         bloqueio_ramo="incompleto_direito"
     )

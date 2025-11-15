@@ -31,7 +31,7 @@ class AudioLaudoGenerator:
         """
         self.audio_dir = Path(audio_dir)
         self.audio_dir.mkdir(parents=True, exist_ok=True)
-        self.lang = "pt-br"
+        self.lang = "es"
         self.speed = speed
         self.pydub_available = PYDUB_AVAILABLE
     
