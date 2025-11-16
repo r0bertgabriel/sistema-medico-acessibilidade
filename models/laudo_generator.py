@@ -116,7 +116,19 @@ class GeradorLaudo:
         return "\n".join(linhas)
     
     def _formatar_laudo_audio(self, dados: DadosECG, resultado: Dict) -> str:
-        """Formata o laudo para narração em áudio (conciso e otimizado)"""
+        """Formata o laudo para narração em áudio usando texto completo (sem caracteres especiais)
+        
+        Usa o laudo completo mas remove caracteres de formatação especiais
+        """
+        # Gerar laudo completo formatado
+        laudo_completo = self._formatar_laudo_texto(dados, resultado)
+        
+        # Este texto será limpo pelo AudioCacheService antes de gerar o áudio
+        # Aqui apenas retornamos o texto completo
+        return laudo_completo
+    
+    def _formatar_laudo_audio_OLD(self, dados: DadosECG, resultado: Dict) -> str:
+        """VERSÃO ANTIGA - Formata o laudo para narração em áudio (conciso e otimizado)"""
         
         partes = []
         

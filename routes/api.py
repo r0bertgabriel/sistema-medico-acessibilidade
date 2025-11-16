@@ -80,8 +80,15 @@ def analisar_ecg():
         # Analisar ECG
         resultado = ecg_service.analisar_ecg(dados_json)
         
-        # Gerar áudio do laudo
-        audio_path = audio_service.gerar_audio(resultado['laudo_audio_texto'])
+        # Identificador para cache (baseado no paciente ou tipo)
+        nome_paciente = dados_json.get('nome_paciente', '').replace(' ', '_').lower()
+        identificador = f"ecg_{nome_paciente}" if nome_paciente else "ecg"
+        
+        # Gerar áudio do laudo (com cache)
+        audio_path = audio_service.gerar_audio(
+            resultado['laudo_audio_texto'], 
+            identificador=identificador
+        )
         
         # Gerar imagem do ECG
         imagem_path = ecg_image_generator.gerar_imagem_ecg(dados_json)
@@ -260,8 +267,12 @@ def analisar_hemograma():
                 'avisos': validacao['avisos']
             }), 400
         
-        # Analisar hemograma
-        resultado = hemograma_service.processar_hemograma(dados_json)
+        # Identificador para cache
+        nome_paciente = dados_json.get('paciente', {}).get('nome', '').replace(' ', '_').lower()
+        identificador = f"hemograma_{nome_paciente}" if nome_paciente else "hemograma"
+        
+        # Analisar hemograma (passa identificador para cache)
+        resultado = hemograma_service.processar_hemograma(dados_json, identificador=identificador)
         
         if not resultado.get('sucesso'):
             return jsonify({

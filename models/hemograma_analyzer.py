@@ -495,7 +495,15 @@ class AnalisadorHemograma:
         return "\n".join(linhas)
     
     def _gerar_laudo_audio(self) -> str:
-        """Gera versão do laudo otimizada para áudio (concisa, sem caracteres especiais)
+        """Gera versão do laudo para áudio usando texto completo (sem caracteres especiais)
+        
+        Returns o laudo completo que será limpo pelo AudioCacheService
+        """
+        # Retorna o laudo completo - o AudioCacheService removerá caracteres especiais
+        return self._gerar_laudo()
+    
+    def _gerar_laudo_audio_OLD(self) -> str:
+        """VERSÃO ANTIGA - Gera versão do laudo otimizada para áudio (concisa, sem caracteres especiais)
         
         Returns:
             String com laudo formatado para narração em áudio de forma rápida
