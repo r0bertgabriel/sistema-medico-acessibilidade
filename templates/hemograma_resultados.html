@@ -177,12 +177,25 @@
 </style>
 
 <script>
+// Variável para controlar processamento em andamento
+let processandoExemplo = false;
+
 // Cargar e analisar exemplo
 async function carregarExemplo(tipo) {
+    // Previne múltiplos cliques
+    if (processandoExemplo) {
+        console.log('⏳ Já existe um processamento em andamento...');
+        return;
+    }
+    
+    processandoExemplo = true;
+    
     try {
         // Mostrar loading
         document.getElementById('loadingResultado').style.display = 'block';
         document.getElementById('resultadoArea').style.display = 'none';
+        
+        console.log('📊 Carregando exemplo:', tipo);
         
         // Buscar exemplo
         const responseExemplo = await fetch(`/api/hemograma/exemplo/${tipo}`);
@@ -191,6 +204,8 @@ async function carregarExemplo(tipo) {
         if (!dataExemplo.success) {
             throw new Error('Erro ao carregar exemplo');
         }
+        
+        console.log('✅ Exemplo carregado, analisando...');
         
         // Analisar
         const responseAnalise = await fetch('/api/analisar_hemograma', {
@@ -207,20 +222,32 @@ async function carregarExemplo(tipo) {
         document.getElementById('loadingResultado').style.display = 'none';
         
         if (resultAnalise.success) {
+            console.log('✅ Análise concluída');
+            
             // Mostrar resultado
             document.getElementById('resultadoArea').style.display = 'block';
             document.getElementById('textoLaudoResultado').textContent = resultAnalise.laudo;
             
-            // Configurar áudio
+            // Configurar áudio do laudo
             if (resultAnalise.audio_url) {
                 const audioPlayer = document.getElementById('audioPlayerArea');
                 const audioElement = document.getElementById('audioLaudoResultado');
+                
+                // Para qualquer áudio anterior
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                
+                // Define novo áudio
                 audioElement.src = resultAnalise.audio_url;
                 audioElement.playbackRate = 1.35;
                 audioPlayer.style.display = 'block';
                 
-                // Tocar automaticamente
-                audioElement.play();
+                // Tocar automaticamente após pequeno delay
+                setTimeout(() => {
+                    audioElement.play().catch(e => {
+                        console.warn('⚠️ Não foi possível reproduzir áudio automaticamente:', e);
+                    });
+                }, 300);
             }
             
             // Scroll para o FINAL da página para visualizar o áudio
@@ -228,16 +255,31 @@ async function carregarExemplo(tipo) {
                 window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }, 100);
             
-            anunciar(`Análisis del caso ${tipo} completado`);
+            // Usa a função global do audio.js se existir
+            if (typeof window.anunciar === 'function') {
+                window.anunciar(`Análisis del caso ${tipo} completado`);
+            }
         } else {
+            console.error('❌ Erro na análise:', resultAnalise.error);
             alert('Error: ' + (resultAnalise.error || 'Error desconocido'));
-            anunciar('Error al procesar hemograma');
+            
+            if (typeof window.anunciar === 'function') {
+                window.anunciar('Error al procesar hemograma');
+            }
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('❌ Error:', error);
         document.getElementById('loadingResultado').style.display = 'none';
         alert('Error al procesar ejemplo: ' + error.message);
-        anunciar('Error al procesar ejemplo');
+        
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Error al procesar ejemplo');
+        }
+    } finally {
+        // Libera processamento após 1 segundo
+        setTimeout(() => {
+            processandoExemplo = false;
+        }, 1000);
     }
 }
 
@@ -245,40 +287,38 @@ async function carregarExemplo(tipo) {
 function copiarLaudoResultado() {
     const texto = document.getElementById('textoLaudoResultado').textContent;
     navigator.clipboard.writeText(texto).then(() => {
-        anunciar('Informe copiado al portapapeles');
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Informe copiado al portapapeles');
+        }
         alert('¡Informe copiado!');
+    }).catch(err => {
+        console.error('❌ Erro ao copiar:', err);
+        alert('Error al copiar');
     });
 }
 
 // Fechar resultado
 function fecharResultado() {
+    // Para o áudio antes de fechar
+    const audioElement = document.getElementById('audioLaudoResultado');
+    if (audioElement) {
+        audioElement.pause();
+        audioElement.currentTime = 0;
+    }
+    
     document.getElementById('resultadoArea').style.display = 'none';
-    anunciar('Resultado cerrado');
+    
+    if (typeof window.anunciar === 'function') {
+        window.anunciar('Resultado cerrado');
+    }
 }
 
-// Função para anunciar texto via áudio
-function anunciar(texto) {
-    fetch('/api/anunciar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ texto: texto })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.audio_url) {
-            const audio = new Audio(data.audio_url);
-            audio.play();
-        }
-    })
-    .catch(error => console.error('Erro ao anunciar:', error));
-}
-
-// Anunciar página ao carregar
+// Anunciar página ao carregar (usa a função global do audio.js)
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
-        anunciar('Página de resultados de hemogramas. Cuatro ejemplos clínicos disponibles.');
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Página de resultados de hemogramas. Cuatro ejemplos clínicos disponibles.');
+        }
     }, 500);
 });
 </script>

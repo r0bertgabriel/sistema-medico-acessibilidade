@@ -96,13 +96,21 @@ async function reproduzirProximo() {
     const texto = filaAnuncios.shift();
     
     try {
-        // Para e limpa áudio anterior se existir (previne memory leak)
+        // Para e limpa áudio anterior se existir (previne memory leak e AbortError)
         if (audioAtual) {
-            audioAtual.pause();
-            audioAtual.onended = null;
-            audioAtual.onerror = null;
-            audioAtual = null;
+            try {
+                audioAtual.pause();
+                audioAtual.onended = null;
+                audioAtual.onerror = null;
+                audioAtual.src = ''; // Limpa source para prevenir AbortError
+                audioAtual = null;
+            } catch (e) {
+                console.warn('⚠️ Erro ao limpar áudio anterior:', e);
+            }
         }
+        
+        // Pequeno delay para prevenir conflitos de áudio
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         // Chama o backend para gerar áudio
         const response = await fetch('/api/anunciar', {
@@ -125,20 +133,28 @@ async function reproduzirProximo() {
                 reproduzirProximo();
             };
             
-            audioAtual.onerror = function() {
-                console.error('❌ Erro ao reproduzir áudio');
+            audioAtual.onerror = function(e) {
+                console.error('❌ Erro ao reproduzir áudio:', e);
                 audioAtual = null;
                 reproduzirProximo();
             };
             
-            await audioAtual.play();
-            console.log('▶️ Reproduzindo áudio...');
+            // Tenta reproduzir com tratamento de erro
+            try {
+                await audioAtual.play();
+                console.log('▶️ Reproduzindo áudio...');
+            } catch (playError) {
+                console.warn('⚠️ Não foi possível reproduzir áudio:', playError.message);
+                audioAtual = null;
+                reproduzirProximo();
+            }
         } else {
             console.error('❌ Erro ao gerar áudio:', data.error);
             reproduzirProximo();
         }
     } catch (error) {
         console.error('❌ Erro na requisição:', error);
+        audioAtual = null;
         reproduzirProximo();
     }
 }

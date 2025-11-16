@@ -12,11 +12,12 @@ class HemogramaService:
     """Serviço para processar exames de hemograma completo"""
     
     @staticmethod
-    def processar_hemograma(dados_dict: Dict[str, Any]) -> Dict[str, Any]:
+    def processar_hemograma(dados_dict: Dict[str, Any], identificador: str = None) -> Dict[str, Any]:
         """Processa dados de hemograma e gera análise completa
         
         Args:
             dados_dict: Dicionário com dados do hemograma
+            identificador: Identificador opcional para cache de áudio
             
         Returns:
             Dicionário com análise completa e laudo
@@ -29,9 +30,12 @@ class HemogramaService:
             analisador = AnalisadorHemograma(dados)
             resultado = analisador.analisar()
             
-            # Gerar áudio do laudo (usando versão otimizada para áudio)
+            # Gerar áudio do laudo (usando versão completa com cache)
             audio_service = AudioService()
-            audio_path = audio_service.gerar_audio(resultado["laudo_audio"])
+            audio_path = audio_service.gerar_audio(
+                resultado["laudo_audio"],
+                identificador=identificador
+            )
             resultado["audio_filename"] = audio_path.split('/')[-1] if audio_path else None
             
             resultado["sucesso"] = True

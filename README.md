@@ -116,6 +116,8 @@ Aplicação Flask principal:
 
 ### Instalação
 
+#### Linux/Mac
+
 1. **Clone ou baixe o projeto**
 ```bash
 cd ecg_laudo_system
@@ -124,9 +126,7 @@ cd ecg_laudo_system
 2. **Crie um ambiente virtual (recomendado)**
 ```bash
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# ou
-venv\Scripts\activate  # Windows
+source venv/bin/activate
 ```
 
 3. **Instale as dependências**
@@ -134,15 +134,71 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-4. **Execute a aplicação**
+4. **Instale o FFmpeg (para aceleração de áudio)**
+```bash
+# Ubuntu/Debian
+sudo apt update && sudo apt install ffmpeg
+
+# Fedora
+sudo dnf install ffmpeg
+
+# Arch Linux
+sudo pacman -S ffmpeg
+```
+
+5. **Execute a aplicação**
 ```bash
 python app.py
 ```
 
-5. **Acesse no navegador**
+6. **Acesse no navegador**
 ```
 http://localhost:5000
 ```
+
+#### Windows
+
+1. **Clone ou baixe o projeto**
+```bash
+cd ecg_laudo_system
+```
+
+2. **Crie um ambiente virtual (recomendado)**
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
+
+3. **Instale as dependências**
+```powershell
+pip install -r requirements.txt
+```
+
+4. **Instale o FFmpeg (OPCIONAL - para aceleração de áudio)**
+
+O sistema funcionará sem FFmpeg, mas os áudios não serão acelerados.
+
+**Opção A: Via Chocolatey (mais fácil)**
+```powershell
+choco install ffmpeg
+```
+
+**Opção B: Instalação Manual**
+- Veja instruções detalhadas em: `INSTALACAO_FFMPEG_WINDOWS.md`
+- Download: https://www.gyan.dev/ffmpeg/builds/
+- Extraia e adicione ao PATH do sistema
+
+5. **Execute a aplicação**
+```powershell
+python app.py
+```
+
+6. **Acesse no navegador**
+```
+http://localhost:5000
+```
+
+**Nota:** Sem FFmpeg, você verá avisos mas o sistema funcionará normalmente com áudio em velocidade normal.
 
 ## 📖 Como Usar
 

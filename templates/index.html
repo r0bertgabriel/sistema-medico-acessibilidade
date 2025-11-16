@@ -200,7 +200,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Anúncio inicial
     setTimeout(() => {
-        anunciar('Bienvenido al Sistema de Análisis de Exámenes Médicos. Dos módulos disponibles: ECG y Hemograma. Presione 1 para E C G o 2 para Hemograma. Presione barra para ayuda completa.');
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Bienvenido al Sistema de Análisis de Exámenes Médicos. Dos módulos disponibles: ECG y Hemograma. Presione 1 para E C G o 2 para Hemograma. Presione barra para ayuda completa.');
+        }
     }, 500);
 });
 </script>

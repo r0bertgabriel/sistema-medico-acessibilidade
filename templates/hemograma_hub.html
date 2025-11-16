@@ -221,26 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Anúncio inicial
     setTimeout(() => {
-        anunciar('Módulo Hemograma Completo. Dos opciones: Presione 1 para nuevo análisis o 2 para ver ejemplos clínicos. Presione barra espaciadora para ayuda completa.');
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Módulo Hemograma Completo. Dos opciones: Presione 1 para nuevo análisis o 2 para ver ejemplos clínicos. Presione barra espaciadora para ayuda completa.');
+        }
     }, 500);
 });
-
-function anunciar(texto) {
-    fetch('/api/anunciar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ texto: texto })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.audio_url) {
-            const audio = new Audio(data.audio_url);
-            audio.play();
-        }
-    })
-    .catch(error => console.error('Erro ao anunciar:', error));
-}
 </script>
 {% endblock %}
