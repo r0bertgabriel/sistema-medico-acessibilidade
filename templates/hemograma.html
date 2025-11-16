@@ -305,7 +305,9 @@ async function carregarExemplo(tipo) {
             document.getElementById('observacoes').value = exemplo.observacoes || '';
             
             // Anunciar
-            anunciar(`Exemplo de hemograma tipo ${tipo} carregado com sucesso`);
+            if (typeof window.anunciar === 'function') {
+                window.anunciar(`Exemplo de hemograma tipo ${tipo} carregado com sucesso`);
+            }
         }
     } catch (error) {
         console.error('Erro ao carregar exemplo:', error);
@@ -317,35 +319,20 @@ async function carregarExemplo(tipo) {
 function limparFormulario() {
     document.getElementById('formHemograma').reset();
     document.getElementById('resultado').style.display = 'none';
-    anunciar('Formulário limpo');
+    if (typeof window.anunciar === 'function') {
+        window.anunciar('Formulário limpo');
+    }
 }
 
 // Copiar informe al portapapeles
 function copiarLaudo() {
     const texto = document.getElementById('textoLaudo').textContent;
     navigator.clipboard.writeText(texto).then(() => {
-        anunciar('Laudo copiado para área de transferência');
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Laudo copiado para área de transferência');
+        }
         alert('Laudo copiado!');
     });
-}
-
-// Função para anunciar texto via áudio
-function anunciar(texto) {
-    fetch('/api/anunciar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ texto: texto })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.audio_url) {
-            const audio = new Audio(data.audio_url);
-            audio.play();
-        }
-    })
-    .catch(error => console.error('Erro ao anunciar:', error));
 }
 
 // Submeter formulário
@@ -421,16 +408,22 @@ document.getElementById('formHemograma').addEventListener('submit', async functi
             // Scroll para resultado
             document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
             
-            anunciar('Análisis completado. Informe disponible.');
+            if (typeof window.anunciar === 'function') {
+                window.anunciar('Análisis completado. Informe disponible.');
+            }
         } else {
             alert('Erro: ' + (result.error || 'Erro desconhecido'));
-            anunciar('Erro ao processar hemograma');
+            if (typeof window.anunciar === 'function') {
+                window.anunciar('Erro ao processar hemograma');
+            }
         }
     } catch (error) {
         console.error('Erro:', error);
         document.getElementById('loading').style.display = 'none';
         alert('Erro ao processar hemograma');
-        anunciar('Erro ao processar hemograma');
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Erro ao processar hemograma');
+        }
     }
 });
 </script>
