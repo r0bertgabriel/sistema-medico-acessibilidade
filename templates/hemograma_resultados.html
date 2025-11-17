@@ -241,24 +241,35 @@ async function carregarExemplo(tipo) {
                 audioElement.pause();
                 audioElement.currentTime = 0;
                 
+                // Flag para garantir que só toca uma vez
+                let audioHemogramaJaTocou = false;
+                
+                // Função para tentar reproduzir o áudio
+                const tentarReproducirHemograma = () => {
+                    if (audioHemogramaJaTocou) return;
+                    audioHemogramaJaTocou = true;
+                    
+                    console.log('🎵 Tentando reproduzir áudio do hemograma (ignora mute de anúncios)...');
+                    // IMPORTANTE: Laudos sempre reproduzem, independente do mute de anúncios
+                    audioElement.play().then(() => {
+                        console.log('✅ Áudio do hemograma reproduzido com sucesso');
+                    }).catch(e => {
+                        console.warn('⚠️ Não foi possível reproduzir áudio automaticamente:', e);
+                        audioHemogramaJaTocou = false; // Permite tentar novamente se falhar
+                    });
+                };
+                
                 // Define novo áudio
                 audioElement.src = resultAnalise.audio_url;
                 audioElement.playbackRate = 1.35;
                 audioPlayer.style.display = 'block';
                 
-                // Tocar automaticamente quando o áudio carregar
-                audioElement.onloadeddata = function() {
-                    const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
-                    if (!audioMutadoAtual) {
-                        setTimeout(() => {
-                            audioElement.play().catch(e => {
-                                console.warn('⚠️ Não foi possível reproduzir áudio automaticamente:', e);
-                            });
-                        }, 300);
-                    } else {
-                        console.log('🔇 Áudio do laudo não reproduzido (sistema mutado)');
-                    }
-                };
+                // Usa múltiplos eventos para garantir reprodução
+                audioElement.addEventListener('loadeddata', tentarReproducirHemograma, { once: true });
+                audioElement.addEventListener('canplaythrough', tentarReproducirHemograma, { once: true });
+                
+                // Força o carregamento
+                audioElement.load();
             }
             
             // Scroll para o FINAL da página para visualizar o áudio
@@ -330,15 +341,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const autoplayTipo = sessionStorage.getItem('autoplay_tipo');
     const autoplayExemplo = sessionStorage.getItem('autoplay_exemplo');
     
+    console.log('🔍 Verificando autoplay hemograma:', { autoplayTipo, autoplayExemplo });
+    
     if (autoplayTipo === 'hemograma' && autoplayExemplo) {
+        console.log('✅ Autoplay detectado para Hemograma:', autoplayExemplo);
+        
         // Remove os itens do sessionStorage
         sessionStorage.removeItem('autoplay_tipo');
         sessionStorage.removeItem('autoplay_exemplo');
         
         // Aguarda um pouco e depois reproduz
         setTimeout(() => {
+            console.log('🎬 Executando autoplay de Hemograma...');
             if (typeof carregarExemplo === 'function') {
                 carregarExemplo(autoplayExemplo);
+            } else {
+                console.error('❌ Função carregarExemplo não encontrada!');
             }
         }, 500);
     } else {

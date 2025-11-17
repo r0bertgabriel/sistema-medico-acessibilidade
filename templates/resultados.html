@@ -274,24 +274,34 @@ async function processarResultado(tipo) {
             
             // Configurar áudio
             const audioPlayer = document.getElementById('audio-laudo-resultado');
+            
+            // Flag para garantir que só toca uma vez
+            let audioJaTocou = false;
+            
+            // Função para tentar reproduzir o áudio
+            const tentarReproducir = () => {
+                if (audioJaTocou) return;
+                audioJaTocou = true;
+                
+                console.log('🎵 Tentando reproduzir áudio do laudo (ignora mute de anúncios)...');
+                // IMPORTANTE: Laudos sempre reproduzem, independente do mute de anúncios
+                audioPlayer.play().then(() => {
+                    console.log('✅ Áudio do laudo reproduzido com sucesso');
+                }).catch(e => {
+                    console.log('⚠️ Auto-play bloqueado pelo navegador:', e);
+                    audioJaTocou = false; // Permite tentar novamente se falhar
+                });
+            };
+            
+            // Define o src e aguarda o load
             audioPlayer.src = resultado.audio_url;
             
-            // Aguarda o áudio carregar e reproduz automaticamente
-            // IMPORTANTE: Respeita o estado de mute global
-            audioPlayer.onloadeddata = function() {
-                // Verifica se áudio NÃO está mutado antes de reproduzir
-                const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
-                if (!audioMutadoAtual) {
-                    // Auto-reproduzir áudio para acessibilidade
-                    setTimeout(() => {
-                        audioPlayer.play().catch(e => {
-                            console.log('Auto-play bloqueado pelo navegador:', e);
-                        });
-                    }, 500);
-                } else {
-                    console.log('🔇 Áudio do laudo não reproduzido (sistema mutado)');
-                }
-            };
+            // Usa múltiplos eventos para garantir reprodução
+            audioPlayer.addEventListener('loadeddata', tentarReproducir, { once: true });
+            audioPlayer.addEventListener('canplaythrough', tentarReproducir, { once: true });
+            
+            // Força o carregamento
+            audioPlayer.load();
             
             // Focar no resultado
             document.getElementById('resultado-resultado').focus();
@@ -400,15 +410,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const autoplayTipo = sessionStorage.getItem('autoplay_tipo');
     const autoplayExemplo = sessionStorage.getItem('autoplay_exemplo');
     
+    console.log('🔍 Verificando autoplay:', { autoplayTipo, autoplayExemplo });
+    
     if (autoplayTipo === 'ecg' && autoplayExemplo) {
+        console.log('✅ Autoplay detectado para ECG:', autoplayExemplo);
+        
         // Remove os itens do sessionStorage
         sessionStorage.removeItem('autoplay_tipo');
         sessionStorage.removeItem('autoplay_exemplo');
         
         // Aguarda um pouco e depois reproduz
         setTimeout(() => {
+            console.log('🎬 Executando autoplay de ECG...');
             if (typeof processarResultado === 'function') {
                 processarResultado(autoplayExemplo);
+            } else {
+                console.error('❌ Função processarResultado não encontrada!');
             }
         }, 500);
     } else {
