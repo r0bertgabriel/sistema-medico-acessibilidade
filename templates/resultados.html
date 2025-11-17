@@ -328,29 +328,9 @@ function voltarResultados() {
 
 // ===== ATALHOS CONTEXTUAIS DA PÁGINA DE RESULTADOS =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Registra atalhos específicos desta página
+    // Nota: Atalhos numéricos (0-5) são gerenciados globalmente em keyboard.js
+    // Registramos apenas atalhos de letras para ações específicas desta página
     registrarAtalhos({
-        '1': {
-            descricao: 'Processar resultado Normal',
-            acao: function() {
-                anunciar('Processando resultado Normal');
-                processarResultado('normal');
-            }
-        },
-        '2': {
-            descricao: 'Processar resultado Arritmia Sinusal',
-            acao: function() {
-                anunciar('Processando resultado Arritmia Sinusal');
-                processarResultado('arritmia_sinusal');
-            }
-        },
-        '3': {
-            descricao: 'Processar resultado Bloqueio de Ramo',
-            acao: function() {
-                anunciar('Processando resultado Bloqueio de Ramo');
-                processarResultado('bloqueio_ramo');
-            }
-        },
         'v': {
             descricao: 'Volver à lista de resultados',
             acao: function() {

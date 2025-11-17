@@ -164,7 +164,23 @@ class AudioCacheService:
         Returns:
             Caminho relativo do arquivo de áudio
         """
-        # Verificar cache primeiro
+        # Se tiver identificador, verificar primeiro se arquivo com esse identificador já existe
+        if identificador:
+            identificador_limpo = re.sub(r'[^\w\-]', '_', identificador)
+            # Procurar arquivos que comecem com esse identificador
+            pattern = f"{identificador_limpo}_*.mp3"
+            matching_files = list(self.audio_dir.glob(pattern))
+            
+            if matching_files:
+                # Arquivo já existe, usar o primeiro encontrado
+                existing_file = matching_files[0]
+                filename = existing_file.name
+                file_size = existing_file.stat().st_size
+                if file_size > 0:
+                    print(f"✅ Cache HIT por identificador: {filename} ({file_size} bytes)")
+                    return f"audio/{filename}"
+        
+        # Verificar cache por hash do texto
         cached_audio = self.verificar_cache(texto)
         if cached_audio:
             return cached_audio

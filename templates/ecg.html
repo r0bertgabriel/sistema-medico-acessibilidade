@@ -72,7 +72,7 @@
             </p>
             
             <ul style="color: #475569; line-height: 2; margin-bottom: 25px; padding-left: 20px;">
-                <li>✅ 8 ejemplos clínicos</li>
+                <li>✅ 3 ejemplos clínicos</li>
                 <li>✅ Casos normales y patológicos</li>
                 <li>✅ Análisis instantáneo</li>
                 <li>✅ Historial de análisis</li>
@@ -138,52 +138,40 @@
 
     <!-- Atalhos de Navegação -->
     <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-top: 30px;">
-        <h4 style="color: #92400e; margin-bottom: 15px; font-size: 1.4em;">⌨️ Atajos del Módulo ECG</h4>
+        <h4 style="color: #92400e; margin-bottom: 15px; font-size: 1.4em;">⌨️ Atajos de Navegación (Numpad)</h4>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
             <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">0</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Página Inicial</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
                 <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">1</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Análisis por Datos</span>
+                <span style="color: #92400e; margin-left: 8px;">Análisis ECG</span>
             </div>
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
                 <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">2</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Ver Resultados</span>
+                <span style="color: #92400e; margin-left: 8px;">Resultados ECG</span>
             </div>
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
-                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">0</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Volver al Inicio</span>
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">3</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Hub Hemograma</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">/</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Ayuda Completa</span>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-// Anunciar página ao carregar e registrar atalhos
+// Anunciar página ao carregar (usando atalhos globais definidos em keyboard.js)
 document.addEventListener('DOMContentLoaded', function() {
-    // Registrar atalhos contextuais
-    registrarAtalhos({
-        '1': {
-            descricao: 'Análisis de E C G por datos',
-            acao: function() {
-                window.location.href = '/analise';
-            }
-        },
-        '2': {
-            descricao: 'Ver cola de resultados de E C G',
-            acao: function() {
-                window.location.href = '/resultados';
-            }
-        },
-        '0': {
-            descricao: 'Volver al inicio',
-            acao: function() {
-                window.location.href = '/';
-            }
-        }
-    });
-    
     // Anúncio inicial
     setTimeout(() => {
         if (typeof window.anunciar === 'function') {
