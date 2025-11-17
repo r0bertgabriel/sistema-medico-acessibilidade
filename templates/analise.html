@@ -409,6 +409,13 @@ function copiarLaudo() {
 
 // ===== ATALHOS CONTEXTUAIS DA PÁGINA DE ANÁLISE =====
 document.addEventListener('DOMContentLoaded', function() {
+    // Anúncio inicial da página
+    setTimeout(() => {
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Formulario de análisis de ECG. Complete los campos y presione Enter para generar el informe. Presione barra diagonal para ayuda completa.');
+        }
+    }, 500);
+    
     // Registra atalhos específicos desta página
     registrarAtalhos({
         'Enter': {

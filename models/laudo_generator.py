@@ -45,11 +45,15 @@ class GeradorLaudo:
         linhas.append("")
         
         # Dados do paciente
-        if dados.paciente_id or dados.nome_paciente:
+        if dados.paciente_id or dados.nome_paciente or dados.genero or dados.idade:
             linhas.append("IDENTIFICACIÓN DEL PACIENTE")
             linhas.append("-" * 80)
             if dados.nome_paciente:
                 linhas.append(f"Nombre: {dados.nome_paciente}")
+            if dados.genero:
+                linhas.append(f"Género: {dados.genero}")
+            if dados.idade:
+                linhas.append(f"Edad: {dados.idade} años")
             if dados.paciente_id:
                 linhas.append(f"ID: {dados.paciente_id}")
             if dados.data_exame:
@@ -134,7 +138,11 @@ class GeradorLaudo:
         
         # Introdução com identificação
         if dados.nome_paciente:
+            # Se tiver nome, usar apenas o nome
             partes.append(f"E C G de {dados.nome_paciente}.")
+        elif dados.genero and dados.idade:
+            # Se não tiver nome mas tiver gênero e idade
+            partes.append(f"E C G de paciente {dados.genero.lower()}, {dados.idade} años.")
         else:
             partes.append("Informe de electrocardiograma.")
         

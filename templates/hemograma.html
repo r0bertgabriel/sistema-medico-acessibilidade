@@ -335,6 +335,15 @@ function copiarLaudo() {
     });
 }
 
+// Anúncio inicial da página
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Formulario de análisis de hemograma completo. Complete los datos del paciente y valores hematológicos. Presione barra diagonal para ayuda completa.');
+        }
+    }, 500);
+});
+
 // Submeter formulário
 document.getElementById('formHemograma').addEventListener('submit', async function(e) {
     e.preventDefault();
