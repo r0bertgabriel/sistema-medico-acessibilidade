@@ -61,16 +61,28 @@ class AudioLaudoGenerator:
             filename += '.mp3'
         
         # Caminho para arquivo temporário (sem aceleração)
-        temp_filename = f"temp_{filename}"
+        # Usar UUID adicional para evitar colisões em gerações simultâneas
+        temp_id = uuid.uuid4().hex[:8]
+        temp_filename = f"temp_{temp_id}_{filename}"
         temp_filepath = self.audio_dir / temp_filename
         final_filepath = self.audio_dir / filename
         
         # Remover arquivo final se já existir (evita erro no Windows)
+        # Tentar até 3 vezes com pequeno delay
         if final_filepath.exists():
-            try:
-                final_filepath.unlink()
-            except Exception as e:
-                print(f"⚠️  Aviso: não foi possível remover arquivo existente: {e}")
+            for tentativa in range(3):
+                try:
+                    final_filepath.unlink()
+                    break
+                except PermissionError as e:
+                    if tentativa < 2:
+                        import time
+                        time.sleep(0.1)
+                    else:
+                        print(f"⚠️  Aviso: não foi possível remover arquivo existente: {e}")
+                except Exception as e:
+                    print(f"⚠️  Aviso: erro ao remover arquivo: {e}")
+                    break
         
         # Gerar áudio com gTTS
         tts = gtts.gTTS(texto, lang=self.lang, slow=False)
@@ -164,6 +176,19 @@ class AudioLaudoGenerator:
         Args:
             max_files: Número máximo de arquivos a manter
         """
+        # Primeiro limpar arquivos temporários antigos (mais de 1 hora)
+        import time
+        limite_temp = time.time() - 3600  # 1 hora
+        
+        for temp_file in self.audio_dir.glob("temp_*.mp3"):
+            try:
+                if temp_file.stat().st_mtime < limite_temp:
+                    temp_file.unlink()
+                    print(f"🗑️ Temporário antigo removido: {temp_file.name}")
+            except Exception as e:
+                pass  # Ignorar erros em arquivos temporários
+        
+        # Depois limpar arquivos de laudo antigos
         audio_files = sorted(
             self.audio_dir.glob("laudo_*.mp3"),
             key=lambda f: f.stat().st_mtime,

@@ -6,6 +6,7 @@ Script para traduzir termos em português para espanhol nos arquivos HTML
 
 import os
 import re
+from pathlib import Path
 
 # Dicionário de traduções português -> espanhol
 TRADUCOES = {
@@ -109,9 +110,9 @@ def main():
     
     traduzidos = 0
     for arquivo in arquivos:
-        caminho = os.path.join(base_dir, arquivo)
-        if os.path.exists(caminho):
-            if traduzir_arquivo(caminho):
+        caminho = Path(base_dir) / arquivo
+        if caminho.exists():
+            if traduzir_arquivo(str(caminho)):
                 traduzidos += 1
         else:
             print(f"⚠️  Arquivo não encontrado: {caminho}")

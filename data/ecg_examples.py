@@ -15,6 +15,7 @@ def criar_exemplo_normal() -> DadosECG:
     """Cria exemplo de ECG normal - Masculino, 45 anos"""
     return DadosECG(
         nome_paciente="Masculino, 45 anos",
+        data_exame="17/11/2025 12:00",
         ritmo="sinusal",
         frequencia_cardiaca=72,
         regularidade="regular",
@@ -52,6 +53,7 @@ def criar_exemplo_arritmia() -> DadosECG:
     """Cria exemplo de arritmia sinusal com sobrecarga atrial - Feminino, 38 anos"""
     return DadosECG(
         nome_paciente="Feminino, 38 anos - Episódios de palpitações ao esforço leve",
+        data_exame="17/11/2025 12:00",
         ritmo="sinusal",
         frequencia_cardiaca=72,
         regularidade="irregular",
@@ -89,6 +91,7 @@ def criar_exemplo_bloqueio() -> DadosECG:
     """Cria exemplo de bloqueio incompleto de ramo direito - Masculino, 52 anos"""
     return DadosECG(
         nome_paciente="Masculino, 52 anos - Assintomático",
+        data_exame="17/11/2025 12:00",
         ritmo="sinusal",
         frequencia_cardiaca=68,
         regularidade="regular",
