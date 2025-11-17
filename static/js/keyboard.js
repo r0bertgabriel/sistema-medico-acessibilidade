@@ -13,10 +13,10 @@
  * NAVEGAÇÃO PRINCIPAL:
  * - 0: Página Inicial
  * - 1: Análise ECG (dados)
- * - 2: Resultados ECG
- * - 3: Hub Hemograma
- * - 4: Análise Hemograma
- * - 5: Resultados Hemograma
+ * - 2: Hub Hemograma
+ * - 3: Análise Hemograma
+ * - 4: Resultados Hemograma
+ * - 5: Resultados ECG
  * 
  * UTILITÁRIOS:
  * - /: Ajuda (lista todos os atalhos)
@@ -52,24 +52,24 @@ const ATALHOS_GLOBAIS = {
         acao: () => navegar('/analise')
     },
     '2': { 
-        nome: 'Resultados ECG',
-        descricao: 'Ver cola de resultados de ECG',
-        acao: () => navegar('/resultados')
-    },
-    '3': { 
         nome: 'Hub Hemograma',
         descricao: 'Ir al hub del módulo Hemograma',
         acao: () => navegar('/hemograma')
     },
-    '4': { 
+    '3': { 
         nome: 'Análisis Hemograma',
         descricao: 'Ir a análisis de hemograma',
         acao: () => navegar('/hemograma/analise')
     },
-    '5': { 
+    '4': { 
         nome: 'Resultados Hemograma',
         descricao: 'Ver ejemplos de hemogramas',
         acao: () => navegar('/hemograma-resultados')
+    },
+    '5': { 
+        nome: 'Resultados ECG',
+        descricao: 'Ver cola de resultados de ECG',
+        acao: () => navegar('/resultados')
     },
     
     // UTILITÁRIOS
