@@ -246,12 +246,19 @@ async function carregarExemplo(tipo) {
                 audioElement.playbackRate = 1.35;
                 audioPlayer.style.display = 'block';
                 
-                // Tocar automaticamente após pequeno delay
-                setTimeout(() => {
-                    audioElement.play().catch(e => {
-                        console.warn('⚠️ Não foi possível reproduzir áudio automaticamente:', e);
-                    });
-                }, 300);
+                // Tocar automaticamente quando o áudio carregar
+                audioElement.onloadeddata = function() {
+                    const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
+                    if (!audioMutadoAtual) {
+                        setTimeout(() => {
+                            audioElement.play().catch(e => {
+                                console.warn('⚠️ Não foi possível reproduzir áudio automaticamente:', e);
+                            });
+                        }, 300);
+                    } else {
+                        console.log('🔇 Áudio do laudo não reproduzido (sistema mutado)');
+                    }
+                };
             }
             
             // Scroll para o FINAL da página para visualizar o áudio
@@ -319,11 +326,29 @@ function fecharResultado() {
 
 // Anunciar página ao carregar (usa a função global do audio.js)
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-        if (typeof window.anunciar === 'function') {
-            window.anunciar('Página de resultados de hemogramas. Cuatro ejemplos clínicos disponibles.');
-        }
-    }, 500);
+    // Verifica se deve reproduzir automaticamente um exemplo (vindo de atalho)
+    const autoplayTipo = sessionStorage.getItem('autoplay_tipo');
+    const autoplayExemplo = sessionStorage.getItem('autoplay_exemplo');
+    
+    if (autoplayTipo === 'hemograma' && autoplayExemplo) {
+        // Remove os itens do sessionStorage
+        sessionStorage.removeItem('autoplay_tipo');
+        sessionStorage.removeItem('autoplay_exemplo');
+        
+        // Aguarda um pouco e depois reproduz
+        setTimeout(() => {
+            if (typeof carregarExemplo === 'function') {
+                carregarExemplo(autoplayExemplo);
+            }
+        }, 500);
+    } else {
+        // Anuncia os atalhos ao carregar a página (apenas se não for autoplay)
+        setTimeout(() => {
+            if (typeof window.anunciar === 'function') {
+                window.anunciar('Página de resultados de hemogramas. Cuatro ejemplos clínicos disponibles.');
+            }
+        }, 500);
+    }
 });
 </script>
 {% endblock %}

@@ -148,7 +148,7 @@
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
                 <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">1</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Análisis ECG</span>
+                <span style="color: #92400e; margin-left: 8px;">Hub ECG</span>
             </div>
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
@@ -157,8 +157,18 @@
             </div>
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
-                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">5</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Resultados ECG</span>
+                <kbd style="background: #2563eb; color: white; padding: 4px 8px; border-radius: 3px;">4</kbd>
+                <span style="color: #2563eb; margin-left: 8px; font-weight: bold;">▶ ECG Normal</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #2563eb; color: white; padding: 4px 8px; border-radius: 3px;">5</kbd>
+                <span style="color: #2563eb; margin-left: 8px; font-weight: bold;">▶ ECG Arritmia</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #2563eb; color: white; padding: 4px 8px; border-radius: 3px;">6</kbd>
+                <span style="color: #2563eb; margin-left: 8px; font-weight: bold;">▶ ECG Bloqueo</span>
             </div>
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
@@ -175,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Anúncio inicial
     setTimeout(() => {
         if (typeof window.anunciar === 'function') {
-            window.anunciar('Módulo E C G. Dos opciones: Presione 1 para análisis por datos, o 5 para cola de resultados. Presione barra diagonal para ayuda completa.');
+            window.anunciar('Hub E C G. Módulo de electrocardiograma. Teclas 4, 5 y 6 reproducen ejemplos de ECG. Presione barra diagonal para ayuda completa.');
         }
     }, 500);
 });

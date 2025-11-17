@@ -12,11 +12,17 @@
  * 
  * NAVEGAÇÃO PRINCIPAL:
  * - 0: Página Inicial
- * - 1: Análise ECG (dados)
+ * - 1: Hub ECG
  * - 2: Hub Hemograma
  * - 3: Análise Hemograma
- * - 4: Resultados Hemograma
- * - 5: Resultados ECG
+ * 
+ * EXEMPLOS RÁPIDOS (Reprodução de Laudos):
+ * - 4: ECG Normal
+ * - 5: ECG Arritmia Sinusal
+ * - 6: ECG Bloqueo de Rama
+ * - 7: Hemograma Normal
+ * - 8: Hemograma Anemia
+ * - 9: Hemograma Leucocitose
  * 
  * UTILITÁRIOS:
  * - /: Ajuda (lista todos os atalhos)
@@ -47,9 +53,9 @@ const ATALHOS_GLOBAIS = {
         acao: () => navegar('/')
     },
     '1': { 
-        nome: 'Análisis ECG',
-        descricao: 'Ir a análisis de ECG por datos',
-        acao: () => navegar('/analise')
+        nome: 'Hub ECG',
+        descricao: 'Ir al hub del módulo ECG',
+        acao: () => navegar('/ecg')
     },
     '2': { 
         nome: 'Hub Hemograma',
@@ -62,14 +68,34 @@ const ATALHOS_GLOBAIS = {
         acao: () => navegar('/hemograma/analise')
     },
     '4': { 
-        nome: 'Resultados Hemograma',
-        descricao: 'Ver ejemplos de hemogramas',
-        acao: () => navegar('/hemograma-resultados')
+        nome: 'ECG Normal',
+        descricao: 'Reproducir laudo de ECG normal',
+        acao: () => reproducirLaudo('ecg', 'normal')
     },
     '5': { 
-        nome: 'Resultados ECG',
-        descricao: 'Ver cola de resultados de ECG',
-        acao: () => navegar('/resultados')
+        nome: 'ECG Arritmia',
+        descricao: 'Reproducir laudo de ECG con arritmia sinusal',
+        acao: () => reproducirLaudo('ecg', 'arritmia_sinusal')
+    },
+    '6': { 
+        nome: 'ECG Bloqueo',
+        descricao: 'Reproducir laudo de ECG con bloqueo de rama',
+        acao: () => reproducirLaudo('ecg', 'bloqueio_ramo')
+    },
+    '7': { 
+        nome: 'Hemograma Normal',
+        descricao: 'Reproducir laudo de hemograma normal',
+        acao: () => reproducirLaudo('hemograma', 'normal')
+    },
+    '8': { 
+        nome: 'Hemograma Anemia',
+        descricao: 'Reproducir laudo de hemograma con anemia',
+        acao: () => reproducirLaudo('hemograma', 'anemia')
+    },
+    '9': { 
+        nome: 'Hemograma Leucocitose',
+        descricao: 'Reproducir laudo de hemograma con leucocitosis',
+        acao: () => reproducirLaudo('hemograma', 'leucocitose')
     },
     
     // UTILITÁRIOS
@@ -159,6 +185,37 @@ function alternarMute() {
 function navegar(url) {
     console.log('🔗 Navegando para:', url);
     window.location.href = url;
+}
+
+function reproducirLaudo(tipo, exemplo) {
+    console.log(`🔊 Reproduciendo laudo: ${tipo} - ${exemplo}`);
+    
+    // Se estamos na página correta, simula o clique do botão
+    if (tipo === 'ecg' && window.location.pathname === '/resultados') {
+        // Chama diretamente a função processarResultado se existir
+        if (typeof processarResultado === 'function') {
+            processarResultado(exemplo);
+        } else {
+            anunciarSeDisponivel('Función no disponible en esta página');
+        }
+    } else if (tipo === 'hemograma' && window.location.pathname === '/hemograma-resultados') {
+        // Chama diretamente a função carregarExemplo se existir
+        if (typeof carregarExemplo === 'function') {
+            carregarExemplo(exemplo);
+        } else {
+            anunciarSeDisponivel('Función no disponible en esta página');
+        }
+    } else {
+        // Não estamos na página correta, navega e depois reproduz
+        const paginaDestino = tipo === 'ecg' ? '/resultados' : '/hemograma-resultados';
+        anunciarSeDisponivel(`Navegando a ${tipo === 'ecg' ? 'resultados de ECG' : 'resultados de hemograma'} para reproducir ejemplo`);
+        
+        // Salva o exemplo no sessionStorage para reproduzir após navegação
+        sessionStorage.setItem('autoplay_tipo', tipo);
+        sessionStorage.setItem('autoplay_exemplo', exemplo);
+        
+        window.location.href = paginaDestino;
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

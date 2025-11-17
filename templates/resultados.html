@@ -276,22 +276,22 @@ async function processarResultado(tipo) {
             const audioPlayer = document.getElementById('audio-laudo-resultado');
             audioPlayer.src = resultado.audio_url;
             
-            // Aguarda 2 segundos antes de reproduzir (deixa tempo para anúncios)
+            // Aguarda o áudio carregar e reproduz automaticamente
             // IMPORTANTE: Respeita o estado de mute global
-            setTimeout(() => {
-                if (!audioPlayer.paused) return; // Já está tocando
-                
+            audioPlayer.onloadeddata = function() {
                 // Verifica se áudio NÃO está mutado antes de reproduzir
                 const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
                 if (!audioMutadoAtual) {
                     // Auto-reproduzir áudio para acessibilidade
-                    audioPlayer.play().catch(e => {
-                        console.log('Auto-play bloqueado pelo navegador:', e);
-                    });
+                    setTimeout(() => {
+                        audioPlayer.play().catch(e => {
+                            console.log('Auto-play bloqueado pelo navegador:', e);
+                        });
+                    }, 500);
                 } else {
                     console.log('🔇 Áudio do laudo não reproduzido (sistema mutado)');
                 }
-            }, 2000);
+            };
             
             // Focar no resultado
             document.getElementById('resultado-resultado').focus();
@@ -396,10 +396,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Anuncia os atalhos ao carregar a página
-    setTimeout(() => {
-        anunciar('Página de resultados de ECG cargada. Tres ejemplos disponibles: ECG normal, arritmia sinusal, y bloqueo de rama. Use los botones o presione barra diagonal para ver todos los atajos disponibles.');
-    }, 1000);
+    // Verifica se deve reproduzir automaticamente um exemplo (vindo de atalho)
+    const autoplayTipo = sessionStorage.getItem('autoplay_tipo');
+    const autoplayExemplo = sessionStorage.getItem('autoplay_exemplo');
+    
+    if (autoplayTipo === 'ecg' && autoplayExemplo) {
+        // Remove os itens do sessionStorage
+        sessionStorage.removeItem('autoplay_tipo');
+        sessionStorage.removeItem('autoplay_exemplo');
+        
+        // Aguarda um pouco e depois reproduz
+        setTimeout(() => {
+            if (typeof processarResultado === 'function') {
+                processarResultado(autoplayExemplo);
+            }
+        }, 500);
+    } else {
+        // Anuncia os atalhos ao carregar a página (apenas se não for autoplay)
+        setTimeout(() => {
+            anunciar('Página de resultados de ECG cargada. Tres ejemplos disponibles: ECG normal, arritmia sinusal, y bloqueo de rama. Use los botones o presione barra diagonal para ver todos los atajos disponibles.');
+        }, 1000);
+    }
 });
 </script>
 {% endblock %}
