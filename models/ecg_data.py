@@ -57,6 +57,8 @@ class DadosECG:
     # Identificação do paciente
     paciente_id: Optional[str] = None
     nome_paciente: Optional[str] = None
+    genero: Optional[str] = None  # "Masculino", "Femenino"
+    idade: Optional[int] = None  # idade em anos
     data_exame: Optional[str] = None
     
     # Ritmo e frequência
@@ -107,6 +109,10 @@ class DadosECG:
         # Adicionar campos opcionais se existirem
         if self.paciente_id:
             result['paciente_id'] = self.paciente_id
+        if self.genero:
+            result['genero'] = self.genero
+        if self.idade:
+            result['idade'] = self.idade
         if self.data_exame:
             result['data_exame'] = self.data_exame
         if self.bloqueio_av:

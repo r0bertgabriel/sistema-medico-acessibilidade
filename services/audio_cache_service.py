@@ -45,12 +45,30 @@ class AudioCacheService:
         return {}
     
     def _salvar_indice(self):
-        """Salva índice de cache no arquivo JSON"""
+        """Salva índice de cache no arquivo JSON de forma atômica
+        
+        Usa write-to-temp-then-rename para garantir atomicidade:
+        - Escreve em arquivo temporário
+        - Rename é operação atômica no Linux e Windows
+        - Previne corrupção se processo for interrompido
+        """
         try:
-            with open(self.cache_index_path, 'w', encoding='utf-8') as f:
+            # Escrever em arquivo temporário
+            temp_path = self.cache_index_path.with_suffix('.tmp')
+            with open(temp_path, 'w', encoding='utf-8') as f:
                 json.dump(self.cache_index, f, ensure_ascii=False, indent=2)
+            
+            # Rename é atômico - substitui arquivo antigo
+            temp_path.replace(self.cache_index_path)
         except Exception as e:
             print(f"⚠️ Erro ao salvar índice de cache: {e}")
+            # Tentar limpar arquivo temporário se existir
+            try:
+                temp_path = self.cache_index_path.with_suffix('.tmp')
+                if temp_path.exists():
+                    temp_path.unlink()
+            except:
+                pass
     
     def _limpar_texto_para_audio(self, texto: str) -> str:
         """Remove caracteres especiais do texto para geração de áudio
@@ -109,10 +127,24 @@ class AudioCacheService:
             audio_filename = self.cache_index[texto_hash]
             audio_path = self.audio_dir / audio_filename
             
-            # Verificar se arquivo realmente existe
+            # Validação robusta: verificar existência e tamanho
             if audio_path.exists():
-                print(f"✅ Cache HIT: {audio_filename}")
-                return f"audio/{audio_filename}"
+                try:
+                    file_size = audio_path.stat().st_size
+                    if file_size > 0:
+                        print(f"✅ Cache HIT: {audio_filename} ({file_size} bytes)")
+                        return f"audio/{audio_filename}"
+                    else:
+                        # Arquivo vazio ou corrompido
+                        print(f"⚠️ Arquivo de cache corrompido (0 bytes): {audio_filename}")
+                        audio_path.unlink()  # Remover arquivo corrompido
+                        del self.cache_index[texto_hash]
+                        self._salvar_indice()
+                except Exception as e:
+                    print(f"⚠️ Erro ao validar cache: {e}")
+                    # Remover entrada suspeita do índice
+                    del self.cache_index[texto_hash]
+                    self._salvar_indice()
             else:
                 # Arquivo não existe, remover do índice
                 print(f"⚠️ Arquivo de cache não encontrado: {audio_filename}")
@@ -132,7 +164,23 @@ class AudioCacheService:
         Returns:
             Caminho relativo do arquivo de áudio
         """
-        # Verificar cache primeiro
+        # Se tiver identificador, verificar primeiro se arquivo com esse identificador já existe
+        if identificador:
+            identificador_limpo = re.sub(r'[^\w\-]', '_', identificador)
+            # Procurar arquivos que comecem com esse identificador
+            pattern = f"{identificador_limpo}_*.mp3"
+            matching_files = list(self.audio_dir.glob(pattern))
+            
+            if matching_files:
+                # Arquivo já existe, usar o primeiro encontrado
+                existing_file = matching_files[0]
+                filename = existing_file.name
+                file_size = existing_file.stat().st_size
+                if file_size > 0:
+                    print(f"✅ Cache HIT por identificador: {filename} ({file_size} bytes)")
+                    return f"audio/{filename}"
+        
+        # Verificar cache por hash do texto
         cached_audio = self.verificar_cache(texto)
         if cached_audio:
             return cached_audio
@@ -141,12 +189,13 @@ class AudioCacheService:
         texto_hash = self._gerar_hash(texto)
         
         # Nome do arquivo baseado no hash + identificador opcional
+        # Usando 16 chars do hash para reduzir drasticamente colisões (1 em 18 quintilhões)
         if identificador:
             # Remove caracteres inválidos do identificador
             identificador = re.sub(r'[^\w\-]', '_', identificador)
-            filename = f"{identificador}_{texto_hash[:8]}.mp3"
+            filename = f"{identificador}_{texto_hash[:16]}.mp3"
         else:
-            filename = f"laudo_{texto_hash[:8]}.mp3"
+            filename = f"laudo_{texto_hash[:16]}.mp3"
         
         # Limpar texto para áudio
         texto_limpo = self._limpar_texto_para_audio(texto)

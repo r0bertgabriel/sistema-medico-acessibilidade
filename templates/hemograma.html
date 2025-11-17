@@ -335,6 +335,15 @@ function copiarLaudo() {
     });
 }
 
+// Anúncio inicial da página
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Formulario de análisis de hemograma completo. Complete los datos del paciente y valores hematológicos. Presione barra diagonal para ayuda completa.');
+        }
+    }, 500);
+});
+
 // Submeter formulário
 document.getElementById('formHemograma').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -384,6 +393,28 @@ document.getElementById('formHemograma').addEventListener('submit', async functi
         });
         
         const result = await response.json();
+        
+        // Simular processamento inteligente com mensagens progressivas
+        const loadingText = document.querySelector('#loading p');
+        const mensagens = [
+            'Analizando series celulares...',
+            'Evaluando serie roja (eritrocitos)...',
+            'Procesando serie blanca (leucocitos)...',
+            'Analizando plaquetas e índices...',
+            'Generando interpretación clínica...'
+        ];
+        
+        let mensagemIndex = 0;
+        const intervalo = setInterval(() => {
+            if (mensagemIndex < mensagens.length) {
+                loadingText.textContent = mensagens[mensagemIndex];
+                mensagemIndex++;
+            }
+        }, 1000); // Atualiza mensagem a cada 1 segundo
+        
+        // Aguardar 5 segundos antes de mostrar resultado
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        clearInterval(intervalo);
         
         // Esconder loading
         document.getElementById('loading').style.display = 'none';

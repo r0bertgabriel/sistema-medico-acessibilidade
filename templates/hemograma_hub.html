@@ -173,56 +173,59 @@
 
     <!-- Atalhos de Navegação -->
     <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 25px; margin-top: 30px;">
-        <h4 style="color: #92400e; margin-bottom: 15px; font-size: 1.4em;">⌨️ Atajos del Módulo Hemograma</h4>
+        <h4 style="color: #92400e; margin-bottom: 15px; font-size: 1.4em;">⌨️ Atajos de Navegación (Numpad)</h4>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
             <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">0</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Página Inicial</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
                 <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">1</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Nuevo Análisis</span>
+                <span style="color: #92400e; margin-left: 8px;">Hub ECG</span>
             </div>
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
                 <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">2</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Ver Ejemplos</span>
+                <span style="color: #92400e; margin-left: 8px;">Hub Hemograma</span>
             </div>
             
             <div style="background: white; padding: 12px; border-radius: 6px;">
-                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">0</kbd>
-                <span style="color: #92400e; margin-left: 8px;">Volver al Inicio</span>
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">3</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Análisis Hemograma</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #059669; color: white; padding: 4px 8px; border-radius: 3px;">7</kbd>
+                <span style="color: #059669; margin-left: 8px; font-weight: bold;">▶ Hemograma Normal</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #059669; color: white; padding: 4px 8px; border-radius: 3px;">8</kbd>
+                <span style="color: #059669; margin-left: 8px; font-weight: bold;">▶ Hemograma Anemia</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #059669; color: white; padding: 4px 8px; border-radius: 3px;">9</kbd>
+                <span style="color: #059669; margin-left: 8px; font-weight: bold;">▶ Hemog. Leucocitose</span>
+            </div>
+            
+            <div style="background: white; padding: 12px; border-radius: 6px;">
+                <kbd style="background: #92400e; color: white; padding: 4px 8px; border-radius: 3px;">/</kbd>
+                <span style="color: #92400e; margin-left: 8px;">Ayuda Completa</span>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-// Anunciar página ao carregar e registrar atalhos
+// Anunciar página ao carregar (usando atalhos globais definidos em keyboard.js)
 document.addEventListener('DOMContentLoaded', function() {
-    // Registrar atalhos contextuais
-    registrarAtalhos({
-        '1': {
-            descricao: 'Nuevo análisis de hemograma',
-            acao: function() {
-                window.location.href = '/hemograma/analise';
-            }
-        },
-        '2': {
-            descricao: 'Ver ejemplos clínicos de hemogramas',
-            acao: function() {
-                window.location.href = '/hemograma-resultados';
-            }
-        },
-        '0': {
-            descricao: 'Volver al inicio',
-            acao: function() {
-                window.location.href = '/';
-            }
-        }
-    });
-    
     // Anúncio inicial
     setTimeout(() => {
         if (typeof window.anunciar === 'function') {
-            window.anunciar('Módulo Hemograma Completo. Dos opciones: Presione 1 para nuevo análisis o 2 para ver ejemplos clínicos. Presione barra espaciadora para ayuda completa.');
+            window.anunciar('Hub Hemograma Completo. Presione 3 para nuevo análisis. Teclas 7, 8 y 9 reproducen ejemplos de hemograma. Presione barra diagonal para ayuda completa.');
         }
     }, 500);
 });

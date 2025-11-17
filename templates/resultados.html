@@ -100,13 +100,14 @@
 
 <p style="color: #6c757d; margin-bottom: 30px; font-size: 1.1em;">
     Seleccione uno de los pacientes en la cola a continuación para generar un informe automático con audio acelerado.
-    Estes casos demonstram diferentes cenários clínicos para análise.
+    Estos casos demuestran diferentes escenarios clínicos para análisis.
 </p>
 
 <!-- Resultado 1: Normal -->
 <div class="resultado-card">
     <h3>✅ ECG Normal</h3>
-    <p><strong>Paciente:</strong> Masculino, 45 anos</p>
+    <p><strong>Paciente:</strong> Carlos Rodríguez</p>
+    <p><strong>Género:</strong> Masculino | <strong>Edad:</strong> 45 años</p>
     <p><strong>Descripción:</strong> ECG de 12 derivaciones en reposo, ritmo sinusal estable, sin alteraciones significativas.</p>
     
     <p><strong>Hallazgos principales:</strong></p>
@@ -124,14 +125,16 @@
     
     <button class="btn" onclick="processarResultado('normal')" 
             aria-label="Generar informe del ECG normal">
-        🔬 Gerar Laudo deste Resultado
+        🔬 Generar Informe de este Resultado
     </button>
 </div>
 
 <!-- Resultado 2: Arritmia Sinusal -->
 <div class="resultado-card">
     <h3>⚠️ Arritmia Sinusal com Sobrecarga Atrial</h3>
-    <p><strong>Paciente:</strong> Feminino, 38 anos, referindo episódios de palpitações ao esforço leve</p>
+    <p><strong>Paciente:</strong> María Gómez</p>
+    <p><strong>Género:</strong> Femenino | <strong>Edad:</strong> 38 años</p>
+    <p><strong>Motivo:</strong> Episodios de palpitaciones al esfuerzo leve</p>
     <p><strong>Descripción:</strong> ECG de 12 derivações em repouso, ritmo sinusal com irregularidade respiratória.</p>
     
     <p><strong>Achados principais:</strong></p>
@@ -153,15 +156,17 @@
     <p><strong>Conclusión:</strong> ECG com ritmo sinusal com arritmia sinusal (variação respiratória) e sinais de sobrecarga atrial. Sugere avaliação adicional com ecocardiograma para dimensionamento atrial e investigação de causas (valvopatias, hipertensão, doença pulmonar).</p>
     
     <button class="btn" onclick="processarResultado('arritmia_sinusal')" 
-            aria-label="Gerar laudo do ECG com arritmia sinusal">
-        🔬 Gerar Laudo deste Resultado
+            aria-label="Generar informe del ECG con arritmia sinusal">
+        🔬 Generar Informe de este Resultado
     </button>
 </div>
 
 <!-- Resultado 3: Bloqueio Incompleto -->
 <div class="resultado-card">
     <h3>🔴 Bloqueio Incompleto do Ramo Direito</h3>
-    <p><strong>Paciente:</strong> Masculino, 52 anos, assintomático</p>
+    <p><strong>Paciente:</strong> José Martínez</p>
+    <p><strong>Género:</strong> Masculino | <strong>Edad:</strong> 52 años</p>
+    <p><strong>Condición:</strong> Asintomático</p>
     <p><strong>Descripción:</strong> ECG con bloqueo de rama derecha incompleto y alteraciones secundarias de la repolarización.</p>
     
     <p><strong>Hallazgos principales:</strong></p>
@@ -179,14 +184,14 @@
     <p><strong>Conclusión:</strong> ECG compatible con bloqueo de rama derecha <strong>incompleto</strong>. En paciente sin síntomas y sin hallazgos estructurales relevantes, suele tener buen pronóstico. Se sugiere correlación clínica y, si indicado (soplo, historia pulmonar o cardíaca), examen de eco o investigación adicional.</p>
     
     <button class="btn" onclick="processarResultado('bloqueio_ramo')" 
-            aria-label="Gerar laudo do ECG com bloqueio de ramo">
-        🔬 Gerar Laudo deste Resultado
+            aria-label="Generar informe del ECG con bloqueo de rama">
+        🔬 Generar Informe de este Resultado
     </button>
 </div>
 
 <div class="loading" id="loading-resultado" role="status" aria-live="polite">
     <div class="loading-spinner"></div>
-    <p style="margin-top: 15px; color: #dc2626; font-weight: 600;">Analisando ECG e gerando laudo em áudio...</p>
+    <p style="margin-top: 15px; color: #dc2626; font-weight: 600;">Analizando ECG y generando informe en audio...</p>
 </div>
 
 <div id="resultado-resultado" role="region" aria-live="polite" aria-label="Resultado del análisis do resultado">
@@ -269,24 +274,34 @@ async function processarResultado(tipo) {
             
             // Configurar áudio
             const audioPlayer = document.getElementById('audio-laudo-resultado');
+            
+            // Flag para garantir que só toca uma vez
+            let audioJaTocou = false;
+            
+            // Função para tentar reproduzir o áudio
+            const tentarReproducir = () => {
+                if (audioJaTocou) return;
+                audioJaTocou = true;
+                
+                console.log('🎵 Tentando reproduzir áudio do laudo (ignora mute de anúncios)...');
+                // IMPORTANTE: Laudos sempre reproduzem, independente do mute de anúncios
+                audioPlayer.play().then(() => {
+                    console.log('✅ Áudio do laudo reproduzido com sucesso');
+                }).catch(e => {
+                    console.log('⚠️ Auto-play bloqueado pelo navegador:', e);
+                    audioJaTocou = false; // Permite tentar novamente se falhar
+                });
+            };
+            
+            // Define o src e aguarda o load
             audioPlayer.src = resultado.audio_url;
             
-            // Aguarda 2 segundos antes de reproduzir (deixa tempo para anúncios)
-            // IMPORTANTE: Respeita o estado de mute global
-            setTimeout(() => {
-                if (!audioPlayer.paused) return; // Já está tocando
-                
-                // Verifica se áudio NÃO está mutado antes de reproduzir
-                const audioMutadoAtual = localStorage.getItem('audioMutado') === 'true';
-                if (!audioMutadoAtual) {
-                    // Auto-reproduzir áudio para acessibilidade
-                    audioPlayer.play().catch(e => {
-                        console.log('Auto-play bloqueado pelo navegador:', e);
-                    });
-                } else {
-                    console.log('🔇 Áudio do laudo não reproduzido (sistema mutado)');
-                }
-            }, 2000);
+            // Usa múltiplos eventos para garantir reprodução
+            audioPlayer.addEventListener('loadeddata', tentarReproducir, { once: true });
+            audioPlayer.addEventListener('canplaythrough', tentarReproducir, { once: true });
+            
+            // Força o carregamento
+            audioPlayer.load();
             
             // Focar no resultado
             document.getElementById('resultado-resultado').focus();
@@ -323,29 +338,9 @@ function voltarResultados() {
 
 // ===== ATALHOS CONTEXTUAIS DA PÁGINA DE RESULTADOS =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Registra atalhos específicos desta página
+    // Nota: Atalhos numéricos (0-5) são gerenciados globalmente em keyboard.js
+    // Registramos apenas atalhos de letras para ações específicas desta página
     registrarAtalhos({
-        '1': {
-            descricao: 'Processar resultado Normal',
-            acao: function() {
-                anunciar('Processando resultado Normal');
-                processarResultado('normal');
-            }
-        },
-        '2': {
-            descricao: 'Processar resultado Arritmia Sinusal',
-            acao: function() {
-                anunciar('Processando resultado Arritmia Sinusal');
-                processarResultado('arritmia_sinusal');
-            }
-        },
-        '3': {
-            descricao: 'Processar resultado Bloqueio de Ramo',
-            acao: function() {
-                anunciar('Processando resultado Bloqueio de Ramo');
-                processarResultado('bloqueio_ramo');
-            }
-        },
         'v': {
             descricao: 'Volver à lista de resultados',
             acao: function() {
@@ -411,10 +406,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Anuncia os atalhos ao carregar a página
-    setTimeout(() => {
-        anunciar('Página de resultados cargada. Três exemplos disponibles: Pressione 1 para E C G normal, 2 para arritmia sinusal, 3 para bloqueio de ramo. Presione barra espaciadora para ayuda completa.');
-    }, 1000);
+    // Verifica se deve reproduzir automaticamente um exemplo (vindo de atalho)
+    const autoplayTipo = sessionStorage.getItem('autoplay_tipo');
+    const autoplayExemplo = sessionStorage.getItem('autoplay_exemplo');
+    
+    console.log('🔍 Verificando autoplay:', { autoplayTipo, autoplayExemplo });
+    
+    if (autoplayTipo === 'ecg' && autoplayExemplo) {
+        console.log('✅ Autoplay detectado para ECG:', autoplayExemplo);
+        
+        // Remove os itens do sessionStorage
+        sessionStorage.removeItem('autoplay_tipo');
+        sessionStorage.removeItem('autoplay_exemplo');
+        
+        // Aguarda um pouco e depois reproduz
+        setTimeout(() => {
+            console.log('🎬 Executando autoplay de ECG...');
+            if (typeof processarResultado === 'function') {
+                processarResultado(autoplayExemplo);
+            } else {
+                console.error('❌ Função processarResultado não encontrada!');
+            }
+        }, 500);
+    } else {
+        // Anuncia os atalhos ao carregar a página (apenas se não for autoplay)
+        setTimeout(() => {
+            anunciar('Página de resultados de ECG cargada. Tres ejemplos disponibles: ECG normal, arritmia sinusal, y bloqueo de rama. Use los botones o presione barra diagonal para ver todos los atajos disponibles.');
+        }, 1000);
+    }
 });
 </script>
 {% endblock %}

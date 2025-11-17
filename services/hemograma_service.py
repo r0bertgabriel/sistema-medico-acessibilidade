@@ -118,7 +118,7 @@ class HemogramaService:
         exemplos = {
             "normal": {
                 "paciente": {
-                    "nome": "João da Silva",
+                    "nome": "Juan Silva",
                     "idade": 35,
                     "sexo": "M",
                     "data_coleta": "12/11/2025"
@@ -149,7 +149,7 @@ class HemogramaService:
             },
             "anemia": {
                 "paciente": {
-                    "nome": "Maria Santos",
+                    "nome": "María Santos",
                     "idade": 42,
                     "sexo": "F",
                     "data_coleta": "12/11/2025"

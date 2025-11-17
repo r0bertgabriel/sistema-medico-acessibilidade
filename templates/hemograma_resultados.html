@@ -32,13 +32,14 @@
             <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; border: 2px solid #10b981;">
                 <h4 style="color: #059669; margin-bottom: 10px;">✅ Hemograma Normal</h4>
                 <p style="color: #475569; margin-bottom: 15px; font-size: 0.95em;">
-                    <strong>Paciente:</strong> João Silva, 35 anos, M<br>
+                    <strong>Paciente:</strong> Juan Silva<br>
+                    <strong>Género:</strong> Masculino | <strong>Edad:</strong> 35 años<br>
                     <strong>Resultado:</strong> Todos los parámetros normales<br>
                     <strong>Status:</strong> NORMAL
                 </p>
                 <button onclick="carregarExemplo('normal')" class="btn" 
                         style="width: 100%; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    📊 Analisar Este Caso
+                    📊 Analizar Este Caso
                 </button>
             </div>
 
@@ -46,13 +47,14 @@
             <div style="background: #fef3c7; padding: 20px; border-radius: 8px; border: 2px solid #f59e0b;">
                 <h4 style="color: #d97706; margin-bottom: 10px;">⚠️ Anemia Microcítica</h4>
                 <p style="color: #475569; margin-bottom: 15px; font-size: 0.95em;">
-                    <strong>Paciente:</strong> Maria Santos, 42 anos, F<br>
+                    <strong>Paciente:</strong> María Santos<br>
+                    <strong>Género:</strong> Femenino | <strong>Edad:</strong> 42 años<br>
                     <strong>Hallazgos:</strong> Hb baja, VCM bajo<br>
                     <strong>Sospecha:</strong> Deficiencia de hierro
                 </p>
                 <button onclick="carregarExemplo('anemia')" class="btn" 
                         style="width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                    📊 Analisar Este Caso
+                    📊 Analizar Este Caso
                 </button>
             </div>
 
@@ -60,13 +62,14 @@
             <div style="background: #fef2f2; padding: 20px; border-radius: 8px; border: 2px solid #ef4444;">
                 <h4 style="color: #dc2626; margin-bottom: 10px;">🔴 Leucocitose</h4>
                 <p style="color: #475569; margin-bottom: 15px; font-size: 0.95em;">
-                    <strong>Paciente:</strong> Pedro Oliveira, 28 anos, M<br>
+                    <strong>Paciente:</strong> Pedro Oliveira<br>
+                    <strong>Género:</strong> Masculino | <strong>Edad:</strong> 28 años<br>
                     <strong>Hallazgos:</strong> Leucocitos ↑, Neutrófilos ↑<br>
                     <strong>Sospecha:</strong> Infección bacteriana
                 </p>
                 <button onclick="carregarExemplo('leucocitose')" class="btn" 
                         style="width: 100%; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
-                    📊 Analisar Este Caso
+                    📊 Analizar Este Caso
                 </button>
             </div>
 
@@ -74,13 +77,14 @@
             <div style="background: #f5f3ff; padding: 20px; border-radius: 8px; border: 2px solid #8b5cf6;">
                 <h4 style="color: #7c3aed; margin-bottom: 10px;">⚠️ Plaquetopenia</h4>
                 <p style="color: #475569; margin-bottom: 15px; font-size: 0.95em;">
-                    <strong>Paciente:</strong> Ana Costa, 55 anos, F<br>
+                    <strong>Paciente:</strong> Ana Costa<br>
+                    <strong>Género:</strong> Femenino | <strong>Edad:</strong> 55 años<br>
                     <strong>Hallazgos:</strong> Plaquetas < 100.000<br>
                     <strong>Suspeita:</strong> Trombocitopenia
                 </p>
                 <button onclick="carregarExemplo('plaquetopenia')" class="btn" 
                         style="width: 100%; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-                    📊 Analisar Este Caso
+                    📊 Analizar Este Caso
                 </button>
             </div>
         </div>
@@ -237,17 +241,35 @@ async function carregarExemplo(tipo) {
                 audioElement.pause();
                 audioElement.currentTime = 0;
                 
+                // Flag para garantir que só toca uma vez
+                let audioHemogramaJaTocou = false;
+                
+                // Função para tentar reproduzir o áudio
+                const tentarReproducirHemograma = () => {
+                    if (audioHemogramaJaTocou) return;
+                    audioHemogramaJaTocou = true;
+                    
+                    console.log('🎵 Tentando reproduzir áudio do hemograma (ignora mute de anúncios)...');
+                    // IMPORTANTE: Laudos sempre reproduzem, independente do mute de anúncios
+                    audioElement.play().then(() => {
+                        console.log('✅ Áudio do hemograma reproduzido com sucesso');
+                    }).catch(e => {
+                        console.warn('⚠️ Não foi possível reproduzir áudio automaticamente:', e);
+                        audioHemogramaJaTocou = false; // Permite tentar novamente se falhar
+                    });
+                };
+                
                 // Define novo áudio
                 audioElement.src = resultAnalise.audio_url;
                 audioElement.playbackRate = 1.35;
                 audioPlayer.style.display = 'block';
                 
-                // Tocar automaticamente após pequeno delay
-                setTimeout(() => {
-                    audioElement.play().catch(e => {
-                        console.warn('⚠️ Não foi possível reproduzir áudio automaticamente:', e);
-                    });
-                }, 300);
+                // Usa múltiplos eventos para garantir reprodução
+                audioElement.addEventListener('loadeddata', tentarReproducirHemograma, { once: true });
+                audioElement.addEventListener('canplaythrough', tentarReproducirHemograma, { once: true });
+                
+                // Força o carregamento
+                audioElement.load();
             }
             
             // Scroll para o FINAL da página para visualizar o áudio
@@ -315,11 +337,36 @@ function fecharResultado() {
 
 // Anunciar página ao carregar (usa a função global do audio.js)
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-        if (typeof window.anunciar === 'function') {
-            window.anunciar('Página de resultados de hemogramas. Cuatro ejemplos clínicos disponibles.');
-        }
-    }, 500);
+    // Verifica se deve reproduzir automaticamente um exemplo (vindo de atalho)
+    const autoplayTipo = sessionStorage.getItem('autoplay_tipo');
+    const autoplayExemplo = sessionStorage.getItem('autoplay_exemplo');
+    
+    console.log('🔍 Verificando autoplay hemograma:', { autoplayTipo, autoplayExemplo });
+    
+    if (autoplayTipo === 'hemograma' && autoplayExemplo) {
+        console.log('✅ Autoplay detectado para Hemograma:', autoplayExemplo);
+        
+        // Remove os itens do sessionStorage
+        sessionStorage.removeItem('autoplay_tipo');
+        sessionStorage.removeItem('autoplay_exemplo');
+        
+        // Aguarda um pouco e depois reproduz
+        setTimeout(() => {
+            console.log('🎬 Executando autoplay de Hemograma...');
+            if (typeof carregarExemplo === 'function') {
+                carregarExemplo(autoplayExemplo);
+            } else {
+                console.error('❌ Função carregarExemplo não encontrada!');
+            }
+        }, 500);
+    } else {
+        // Anuncia os atalhos ao carregar a página (apenas se não for autoplay)
+        setTimeout(() => {
+            if (typeof window.anunciar === 'function') {
+                window.anunciar('Página de resultados de hemogramas. Cuatro ejemplos clínicos disponibles.');
+            }
+        }, 500);
+    }
 });
 </script>
 {% endblock %}

@@ -328,12 +328,34 @@ document.getElementById('form-ecg').addEventListener('submit', async function(e)
             body: JSON.stringify(dados)
         });
         
-        const resultado = await response.json();
+        const result = await response.json();
+        
+        // Simular processamento inteligente com mensagens progressivas
+        const loadingText = document.querySelector('#loading p');
+        const mensagens = [
+            'Analizando datos del ECG...',
+            'Evaluando ritmo y frecuencia cardíaca...',
+            'Procesando segmentos e intervalos...',
+            'Generando interpretación clínica...',
+            'Preparando informe de audio...'
+        ];
+        
+        let mensagemIndex = 0;
+        const intervalo = setInterval(() => {
+            if (mensagemIndex < mensagens.length) {
+                loadingText.textContent = mensagens[mensagemIndex];
+                mensagemIndex++;
+            }
+        }, 1000); // Atualiza mensagem a cada 1 segundo
+        
+        // Aguardar 5 segundos antes de mostrar resultado
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        clearInterval(intervalo);
         
         // Esconder loading
         document.getElementById('loading').style.display = 'none';
         
-        if (resultado.success) {
+        if (result.success) {
             // Mostrar resultado
             document.getElementById('resultado').style.display = 'block';
             document.getElementById('laudo-texto').textContent = resultado.laudo_texto;
@@ -387,6 +409,13 @@ function copiarLaudo() {
 
 // ===== ATALHOS CONTEXTUAIS DA PÁGINA DE ANÁLISE =====
 document.addEventListener('DOMContentLoaded', function() {
+    // Anúncio inicial da página
+    setTimeout(() => {
+        if (typeof window.anunciar === 'function') {
+            window.anunciar('Formulario de análisis de ECG. Complete los campos y presione Enter para generar el informe. Presione barra diagonal para ayuda completa.');
+        }
+    }, 500);
+    
     // Registra atalhos específicos desta página
     registrarAtalhos({
         'Enter': {

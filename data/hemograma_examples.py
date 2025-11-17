@@ -9,7 +9,7 @@ def obter_exemplos_hemograma():
     
     return {
         "normal": DadosHemograma(
-            nome_paciente="João Silva",
+            nome_paciente="Juan Silva",
             idade=35,
             sexo="M",
             data_coleta="12/11/2025",
@@ -33,7 +33,7 @@ def obter_exemplos_hemograma():
         ),
         
         "anemia_microcitica": DadosHemograma(
-            nome_paciente="Maria Santos",
+            nome_paciente="María Santos",
             idade=42,
             sexo="F",
             data_coleta="12/11/2025",
@@ -123,7 +123,7 @@ def obter_exemplos_hemograma():
         ),
         
         "eosinofilia": DadosHemograma(
-            nome_paciente="Juliana Alves",
+            nome_paciente="Juliana Álvarez",
             idade=25,
             sexo="F",
             data_coleta="12/11/2025",

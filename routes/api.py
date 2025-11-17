@@ -267,9 +267,26 @@ def analisar_hemograma():
                 'avisos': validacao['avisos']
             }), 400
         
-        # Identificador para cache
-        nome_paciente = dados_json.get('paciente', {}).get('nome', '').replace(' ', '_').lower()
-        identificador = f"hemograma_{nome_paciente}" if nome_paciente else "hemograma"
+        # Criar identificador baseado em dados estruturados (para cache consistente)
+        paciente = dados_json.get('paciente', {})
+        nome_paciente = paciente.get('nome', '').replace(' ', '_').lower()
+        
+        # Gerar identificador único baseado nos dados principais (não no texto)
+        import hashlib
+        import json
+        # Usar apenas dados que realmente importam para o laudo (excluir data_coleta que varia)
+        dados_cache = {
+            'paciente': {
+                'nome': paciente.get('nome', ''),
+                'idade': paciente.get('idade', 0),
+                'sexo': paciente.get('sexo', '')
+            },
+            'serie_vermelha': dados_json.get('serie_vermelha', {}),
+            'serie_branca': dados_json.get('serie_branca', {}),
+            'plaquetas': dados_json.get('plaquetas', {})
+        }
+        dados_hash = hashlib.md5(json.dumps(dados_cache, sort_keys=True).encode()).hexdigest()[:8]
+        identificador = f"hemograma_{nome_paciente}_{dados_hash}" if nome_paciente else f"hemograma_{dados_hash}"
         
         # Analisar hemograma (passa identificador para cache)
         resultado = hemograma_service.processar_hemograma(dados_json, identificador=identificador)
