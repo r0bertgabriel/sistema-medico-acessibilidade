@@ -335,14 +335,15 @@ class AnalisadorHemograma:
         linhas.append("=" * 80)
         linhas.append("")
         
-        # Dados do paciente
-        linhas.append(f"Paciente: {self.dados.nome_paciente}")
-        linhas.append(f"Edad: {self.dados.idade} años")
-        linhas.append(f"Sexo: {'Masculino' if self.dados.sexo == 'M' else 'Femenino'}")
-        if self.dados.data_coleta:
-            linhas.append(f"Fecha de la recolección: {self.dados.data_coleta}")
-        linhas.append("")
+        # Datos del paciente
+        linhas.append("IDENTIFICACIÓN DEL PACIENTE")
         linhas.append("-" * 80)
+        linhas.append(f"Nombre: {self.dados.nome_paciente}")
+        linhas.append(f"Género: {'Masculino' if self.dados.sexo == 'M' else 'Femenino'}")
+        linhas.append(f"Edad: {self.dados.idade} años")
+        if self.dados.data_coleta:
+            linhas.append(f"Fecha de la Recolección: {self.dados.data_coleta}")
+        linhas.append("")
         
         # Série Vermelha
         linhas.append("ERITROGRAMA (SERIE ROJA)")
